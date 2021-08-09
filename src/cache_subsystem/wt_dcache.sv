@@ -10,7 +10,7 @@
 //
 // Author: Michael Schaffner <schaffner@iis.ee.ethz.ch>, ETH Zurich
 // Date: 13.09.2018
-// Description: Instruction cache that is compatible with openpiton.
+// Description: Write-Through Data cache that is compatible with openpiton.
 
 
 module wt_dcache import ariane_pkg::*; import wt_cache_pkg::*; #(

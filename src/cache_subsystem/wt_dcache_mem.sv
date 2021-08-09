@@ -10,7 +10,7 @@
 //
 // Author: Michael Schaffner <schaffner@iis.ee.ethz.ch>, ETH Zurich
 // Date: 13.09.2018
-// Description: Memory arrays, arbiter and tag comparison for wb dcache.
+// Description: Memory arrays, arbiter and tag comparison for WT dcache.
 //
 //
 // Notes: 1) all ports can trigger a readout of all ways, and the way where the tag hits is selected

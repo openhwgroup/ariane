@@ -10,7 +10,7 @@
 //
 // Author: Michael Schaffner <schaffner@iis.ee.ethz.ch>, ETH Zurich
 // Date: 13.09.2018
-// Description: coalescing write buffer for wb dcache
+// Description: coalescing write buffer for WT dcache
 //
 // A couple of notes:
 //

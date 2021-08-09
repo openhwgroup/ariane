@@ -10,7 +10,7 @@
 //
 // Author: Michael Schaffner <schaffner@iis.ee.ethz.ch>, ETH Zurich
 // Date: 13.09.2018
-// Description: miss controller for wb dcache. Note that the current assumption
+// Description: miss controller for WT dcache. Note that the current assumption
 // is that the port with the highest index issues writes instead of reads.
 
 
