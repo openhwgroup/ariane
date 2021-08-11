@@ -217,6 +217,12 @@ src :=  $(filter-out src/ariane_regfile.sv, $(wildcard src/*.sv))              \
         tb/common/SimDTM.sv                                                    \
         tb/common/SimJTAG.sv
 
+# filter dromajo stuff if dromajo is not activated
+ifndef DROMAJO
+	src :=  $(filter-out src/dromajo_ram.sv, $(src))
+	src :=  $(filter-out bootrom/dromajo_bootrom.sv, $(src))
+endif
+
 src := $(addprefix $(root-dir), $(src))
 
 uart_src := $(wildcard fpga/src/apb_uart/src/*.vhd)
