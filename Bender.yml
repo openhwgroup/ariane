@@ -29,7 +29,6 @@ sources:
     # Stand-alone source files
     - src/ariane.sv
     - src/serdiv.sv
-    - src/ariane_regfile_ff.sv
     - src/amo_buffer.sv
     - src/id_stage.sv
     - src/branch_unit.sv
@@ -216,6 +215,12 @@ sources:
         - src/util/instruction_tracer_defines.svh
         - src/util/instruction_trace_item.svh
         - src/util/exception_trace_item.svh
+    - target: fpga
+      files:
+      - fpga/src/ariane_regfile_fpga.sv
+    - target: not(fpga)
+      files:
+      - src/ariane_regfile_ff.sv
     - target: all(fpga, xilinx)
       files:
       - fpga/src/ariane_peripherals_xilinx.sv
