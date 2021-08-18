@@ -97,6 +97,12 @@ module mult import ariane_pkg::*; (
                 operand_b = fu_data_i.operand_b;
                 word_op_d = 1'b0;
             end
+
+            // workaround for case -1/1
+            if (div_signed && operand_a == -1 && operand_b == 1) begin
+                operand_a = -2;
+                operand_b = 2;
+		        end
         end
     end
 
