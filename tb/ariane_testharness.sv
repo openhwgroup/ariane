@@ -525,6 +525,10 @@ module ariane_testharness #(
     .data_i ( rdata        )
   );
 
+
+  logic [AXI_ADDRESS_WIDTH-1:0] addr_sram;
+  assign addr_sram = addr - ariane_soc::DRAMBase;
+
   sram #(
     .DATA_WIDTH ( AXI_DATA_WIDTH ),
 `ifdef DROMAJO
@@ -536,7 +540,7 @@ module ariane_testharness #(
     .rst_ni     ( rst_ni                                                                      ),
     .req_i      ( req                                                                         ),
     .we_i       ( we                                                                          ),
-    .addr_i     ( addr[$clog2(NUM_WORDS)-1+$clog2(AXI_DATA_WIDTH/8):$clog2(AXI_DATA_WIDTH/8)] ),
+    .addr_i     ( addr_sram[$clog2(NUM_WORDS)-1+$clog2(AXI_DATA_WIDTH/8):$clog2(AXI_DATA_WIDTH/8)] ),
     .wdata_i    ( wdata                                                                       ),
     .be_i       ( be                                                                          ),
     .rdata_o    ( rdata                                                                       )
