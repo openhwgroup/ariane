@@ -253,8 +253,8 @@ module frontend import ariane_pkg::*; #(
     btb_update_t btb_update;
 
     // assert on branch, deassert when resolved
-    logic speculative_q,speculative_d;
-    assign speculative_d = (speculative_q && !resolved_branch_i.valid || |is_branch || |is_return || |is_jalr) && !flush_i;
+    logic speculative_q, speculative_d;
+    assign speculative_d = ((speculative_q && !resolved_branch_i.valid) || |is_branch || |is_return || |is_jalr) && !flush_i && !replay;
     assign icache_dreq_o.spec = speculative_d;
 
     assign bht_update.valid = resolved_branch_i.valid
