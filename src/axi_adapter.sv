@@ -29,25 +29,25 @@ module axi_adapter #(
   input  ariane_axi::ad_req_t              type_i,
   output logic                             gnt_o,
   output logic [AXI_ID_WIDTH-1:0]          gnt_id_o,
-  input  logic [63:0]                      addr_i,
+  input  logic [riscv::XLEN-1:0]           addr_i,
   input  logic                             we_i,
-  input  logic [(DATA_WIDTH/64)-1:0][63:0] wdata_i,
-  input  logic [(DATA_WIDTH/64)-1:0][7:0]  be_i,
+  input  logic [(DATA_WIDTH/riscv::XLEN)-1:0][riscv::XLEN-1:0] wdata_i,
+  input  logic [(DATA_WIDTH/riscv::XLEN)-1:0][(riscv::XLEN/8)-1:0]  be_i,
   input  logic [1:0]                       size_i,
   input  logic [AXI_ID_WIDTH-1:0]          id_i,
   // read port
   output logic                             valid_o,
-  output logic [(DATA_WIDTH/64)-1:0][63:0] rdata_o,
+  output logic [(DATA_WIDTH/riscv::XLEN)-1:0][riscv::XLEN-1:0] rdata_o,
   output logic [AXI_ID_WIDTH-1:0]          id_o,
   // critical word - read port
-  output logic [63:0]                      critical_word_o,
+  output logic [riscv::XLEN-1:0]                      critical_word_o,
   output logic                             critical_word_valid_o,
   // AXI port
   output ariane_axi::req_t                 axi_req_o,
   input  ariane_axi::resp_t                axi_resp_i
 );
-  localparam BURST_SIZE = DATA_WIDTH/64-1;
-  localparam ADDR_INDEX = ($clog2(DATA_WIDTH/64) > 0) ? $clog2(DATA_WIDTH/64) : 1;
+  localparam BURST_SIZE = DATA_WIDTH/riscv::XLEN-1;
+  localparam ADDR_INDEX = ($clog2(DATA_WIDTH/riscv::XLEN) > 0) ? $clog2(DATA_WIDTH/riscv::XLEN) : 1;
 
   enum logic [3:0] {
     IDLE, WAIT_B_VALID, WAIT_AW_READY, WAIT_LAST_W_READY, WAIT_LAST_W_READY_AW_READY, WAIT_AW_READY_BURST,
@@ -56,9 +56,9 @@ module axi_adapter #(
 
   // counter for AXI transfers
   logic [ADDR_INDEX-1:0] cnt_d, cnt_q;
-  logic [(DATA_WIDTH/64)-1:0][63:0] cache_line_d, cache_line_q;
+  logic [(DATA_WIDTH/riscv::XLEN)-1:0][riscv::XLEN-1:0] cache_line_d, cache_line_q;
   // save the address for a read, as we allow for non-cacheline aligned accesses
-  logic [(DATA_WIDTH/64)-1:0] addr_offset_d, addr_offset_q;
+  logic [(DATA_WIDTH/riscv::XLEN)-1:0] addr_offset_d, addr_offset_q;
   logic [AXI_ID_WIDTH-1:0]    id_d, id_q;
   logic [ADDR_INDEX-1:0]      index;
 
@@ -81,7 +81,7 @@ module axi_adapter #(
     axi_req_o.ar_valid  = 1'b0;
     // in case of a single request or wrapping transfer we can simply begin at the address, if we want to request a cache-line
     // with an incremental transfer we need to output the corresponding base address of the cache line
-    axi_req_o.ar.addr   = (CRITICAL_WORD_FIRST || type_i == ariane_axi::SINGLE_REQ) ? addr_i : { addr_i[63:CACHELINE_BYTE_OFFSET], {{CACHELINE_BYTE_OFFSET}{1'b0}}};
+    axi_req_o.ar.addr   = (CRITICAL_WORD_FIRST || type_i == ariane_axi::SINGLE_REQ) ? addr_i : { addr_i[(riscv::XLEN-1):CACHELINE_BYTE_OFFSET], {{CACHELINE_BYTE_OFFSET}{1'b0}}};
     axi_req_o.ar.prot   = 3'b0;
     axi_req_o.ar.region = 4'b0;
     axi_req_o.ar.len    = 8'b0;

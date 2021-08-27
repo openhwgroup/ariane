@@ -7,6 +7,8 @@ mcs := $(work-dir)/ariane_xilinx.mcs
 ip-dir := xilinx
 ips := xlnx_axi_clock_converter.xci  \
        xlnx_axi_dwidth_converter.xci \
+       xlnx_axi_dwidth_converter_dm_master.xci \
+       xlnx_axi_dwidth_converter_dm_slave.xci \
        xlnx_axi_quad_spi.xci         \
        xlnx_axi_gpio.xci             \
        xlnx_clk_gen.xci              \
