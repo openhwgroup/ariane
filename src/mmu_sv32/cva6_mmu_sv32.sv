@@ -78,6 +78,9 @@ module cva6_mmu_sv32 import ariane_pkg::*; #(
     input  logic [15:0][riscv::PLEN-3:0]    pmpaddr_i
 );
 
+    // Do not elaborate for 64-bit CVA6
+    if (riscv::XLEN == 32) begin
+
     logic                   iaccess_err;   // insufficient privilege to access this instruction page
     logic                   daccess_err;   // insufficient privilege to access this data page
     logic                   ptw_active;    // PTW is currently walking a page table
@@ -447,4 +450,5 @@ module cva6_mmu_sv32 import ariane_pkg::*; #(
             dtlb_is_4M_q     <=  dtlb_is_4M_n;
         end
     end
+    end // riscv::XLEN == 32
 endmodule
