@@ -1,0 +1,49 @@
+Check no LSU Fault/Exception and correct access propagation
+- LOAD+STORE allowed ahb_periph regions
+- LOAD allowed D-scratchpad
+- LOAD+STORE allowed I-scratchpad (preload mode)
+- LOAD+STORE allowed D-$
+
+Check no FETCH Fault/Exception and correct access propagation
+- FETCH allowed I-$
+- FETCH allowed I-scratchpad (functional mode)
+
+Check LSU Fault/Exception and NO access propagation
+- LOAD+STORE disabled ahb_periph (still specified ?)
+- LOAD+STORE forbidden ahb_periph regions (if definable)
+- LOAD+STORE disabled D-scratchpad (still specified ?)
+- LOAD forbidden D-scratchpad (if definable)
+- STORE D-scratchpad (PMP related ?)
+- LOAD+STORE disabled I-scratchpad (still specified ?)
+- LOAD+STORE I-scratchpad (functional mode) (PMP related ?)
+- LOAD+STORE forbidden I-scratchpad (if definable)
+- LOAD+STORE forbidden D-$ (if definable)
+- LOAD+STORE I-$ (inexistent path)(NB: can D-$ and I-$ addresses be defined overlapping ?)
+- LOAD+STORE unallocated System Memory (inexistent path)
+
+Check FETCH Fault/Exception and NO access propagation
+- FETCH forbidden I-$ (if definable)
+- FETCH disabled I-scratchpad (still specified ?)
+- FETCH I-scratchpad (preload mode)
+- FETCH forbidden I-scratchpad (if definable)
+- FETCH D-scratchpad (inexistent path) (not PMP related)
+- FETCH ahb_periph (inexistent path) (not PMP related)
+- FETCH unallocated System Memory (inexistent path) (not PMP related)
+
+
+
+///////////////////////////////////////////////////////////////////////////////////
+
+QUESTION: which Enable bits are kept (I-scratchpad, D-scratchpad, ahb_periph) ?
+
+QUESTION: Do the PMP settings automatically align with the dynamic enabling of scratchpads and ahb_periph ?
+
+QUESTION: Memory attributes and caches controllers are not related to PMP, right ?
+
+QUESTION: is System Memory accesses = mandatorily I-$ and/or D-$ accesses ?
+QUESTION: can D-$ and I-$ addresses be defined overlapping ?
+
+QUESTION: In current design, scratchpads SRAMs are not at CVA6's top level, ain't they ?
+
+
+///////////////////////////////////////////////////////////////////////////////////
