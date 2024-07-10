@@ -1,29 +1,37 @@
+///////////////////////////////////////////////////////////////////////////////////
+INITIAL VERIF PLAN (cv32a6_embedded_copro): list of memory regions
+///////////////////////////////////////////////////////////////////////////////////
+
+
+
 Check no LSU Fault/Exception and correct access propagation
 - LOAD+STORE allowed ahb_periph regions
 - LOAD allowed D-scratchpad
 - LOAD+STORE allowed I-scratchpad (preload mode)
 - LOAD+STORE allowed D-$
+- LOAD+STORE system memory
 
 Check no FETCH Fault/Exception and correct access propagation
 - FETCH allowed I-$
 - FETCH allowed I-scratchpad (functional mode)
+- FETCH system memory
 
 Check LSU Fault/Exception and NO access propagation
-- LOAD+STORE disabled ahb_periph (still specified ?)
+- LOAD+STORE disabled ahb_periph (if enabling/disabling still specified)
 - LOAD+STORE forbidden ahb_periph regions (if definable)
-- LOAD+STORE disabled D-scratchpad (still specified ?)
+- LOAD+STORE disabled D-scratchpad (if enabling/disabling still specified)
 - LOAD forbidden D-scratchpad (if definable)
-- STORE D-scratchpad (PMP related ?)
-- LOAD+STORE disabled I-scratchpad (still specified ?)
-- LOAD+STORE I-scratchpad (functional mode) (PMP related ?)
+- STORE D-scratchpad (maybe not PMP related, but structurally forbidden)
+- LOAD+STORE disabled I-scratchpad (if enabling/disabling still specified)
+- LOAD+STORE I-scratchpad (functional mode) (maybe not PMP related, but structurally forbidden)
 - LOAD+STORE forbidden I-scratchpad (if definable)
 - LOAD+STORE forbidden D-$ (if definable)
-- LOAD+STORE I-$ (inexistent path)(NB: can D-$ and I-$ addresses be defined overlapping ?)
+- LOAD+STORE I-$ (inexistent path)
 - LOAD+STORE unallocated System Memory (inexistent path)
 
 Check FETCH Fault/Exception and NO access propagation
 - FETCH forbidden I-$ (if definable)
-- FETCH disabled I-scratchpad (still specified ?)
+- FETCH disabled I-scratchpad (if enabling/disabling still specified)
 - FETCH I-scratchpad (preload mode)
 - FETCH forbidden I-scratchpad (if definable)
 - FETCH D-scratchpad (inexistent path) (not PMP related)
@@ -33,17 +41,1682 @@ Check FETCH Fault/Exception and NO access propagation
 
 
 ///////////////////////////////////////////////////////////////////////////////////
-
-QUESTION: which Enable bits are kept (I-scratchpad, D-scratchpad, ahb_periph) ?
-
-QUESTION: Do the PMP settings automatically align with the dynamic enabling of scratchpads and ahb_periph ?
-
-QUESTION: Memory attributes and caches controllers are not related to PMP, right ?
-
-QUESTION: is System Memory accesses = mandatorily I-$ and/or D-$ accesses ?
-QUESTION: can D-$ and I-$ addresses be defined overlapping ?
-
-QUESTION: In current design, scratchpads SRAMs are not at CVA6's top level, ain't they ?
-
-
+ADDITONAL VERIF PLAN
 ///////////////////////////////////////////////////////////////////////////////////
+
+[we assume there is only 1 hart in cv32a6]
+
+[we assume MXLEN is always 32bits]
+
+[we assume XLEN=MXLEN=32, so the PMP address registers are XLEN bits long, so no zero-extension needed]
+
+[we assume there is no region with hardwired privileges in PMP]
+
+[we assume the PMP granularity is 4 bytes (G=0)]
+
+[we assume there are 8 HW implemented PMP entries]
+
+[we assume no virtual memory is implemented]
+[we assume page-based virtual memory is not implemented]
+
+[give the list of all physical memory regions]
+
+[check the role/definitions of mstatus.MPRV and mstatus.MPP later]
+
+////////////////////////////
+
+TB01 => FTR01-h
+[check that all violations are trapped at the processor]
+[any time there is an access-fault type, check it matches the access-type]
+
+//TODO: TB02
+Determine how to use SV to factorize the similar tests
+
+////////////////////////////
+
+TST01 => FTR07-b
+[determine the PMP granularity 2^(G+2) bytes by writing zero to pmp(0)cfg, then writing all ones to pmpaddr(0), then reading back pmpaddr(0). G is the index G of the least-significant bit set]
+
+TST02 (group) => FTR02-d
+  [check that all 8 HW implemented PMP entries are writable/readable in M-mode (L=0)]
+  [check that no HW implemented PMP entry are writable/readable in S or U modes (L=0)]
+    - before any configuration, check all pmp(i)cfg and pmpaddr(i) are M-mode read zero
+TST02-1
+[configure 1 PMP entry ([FTR02-b1]: maybe mandatorily the first one): with L=0,
+  - check for PMP entry (i) where L=0, pmp(i)cfg and pmpaddr(i) are writable/readable in M-mode only]
+TST02-2
+[configure 2 PMP entries ([FTR02-b1]: maybe mandatorily the 2 first ones): both with L=0,
+  - check for PMP entry (i) where L=0, pmp(i)cfg and pmpaddr(i) are writable/readable in M-mode only]
+TST02-3
+[configure N PMP entries ([FTR02-b1]: maybe mandatorily the N first ones): all with L=0,
+  - check for PMP entry (i) where L=0, pmp(i)cfg and pmpaddr(i) are writable/readable in M-mode only]
+TST02-4
+[configure 8 PMP entries: all with L=0,
+  - check for PMP entry (i) where L=0, pmp(i)cfg and pmpaddr(i) are writable/readable in M-mode only]
+
+TST03 (group) => FTR08-a and FTR08-b
+  [check that HW implemented PMP entries are not writable/readable in M-mode (L=1)]
+  [check that no HW implemented PMP entry are writable/readable in S or U modes (L=1)]
+    - before any configuration, check all pmp(i)cfg and pmpaddr(i) are M-mode read zero
+TST03-1
+[configure 1 PMP entry ([FTR02-b1]: maybe mandatorily the first one): with L=1,
+  - check for PMP entry (i) where L=1, pmp(i)cfg and pmpaddr(i) are effectively locked whatever the SW mode => FTR08-a
+  - check only hart reset unlocks all => FTR08-b
+  - check reset values: all pmp(i)cfg and pmpaddr(i) are M-mode read zero]
+TST03-2
+[configure 2 PMP entries ([FTR02-b1]: maybe mandatorily the 2 first ones): both with L=1,
+  - check for PMP entry (i) where L=1, pmp(i)cfg and pmpaddr(i) are effectively locked whatever the SW mode => FTR08-a
+  - check only hart reset unlocks all => FTR08-b
+  - check reset values: all pmp(i)cfg and pmpaddr(i) are M-mode read zero]
+TST03-3
+[configure 2 PMP entries ([FTR02-b1]: maybe mandatorily the 2 first ones): one with L=1 and one with L=0,
+  - check for PMP entry (i) where L=1, pmp(i)cfg and pmpaddr(i) are effectively locked whatever the SW mode => FTR08-a
+  - check locked PMP entry (i) has no effect on unlocked PMP entry (j)
+  - check for PMP entry (i) where L=0, pmp(i)cfg and pmpaddr(i) are writable/readable in M-mode only
+  - check only hart reset unlocks all => FTR08-b
+  - check reset values: all pmp(i)cfg and pmpaddr(i) are M-mode read zero]
+TST03-4
+[configure N PMP entries ([FTR02-b1]: maybe mandatorily the N first ones): at least one with L=1 and one with L=0,
+  - check for PMP entry (i) where L=1, pmp(i)cfg and pmpaddr(i) are effectively locked whatever the SW mode => FTR08-a
+  - check locked PMP entry (i) has no effect on unlocked PMP entry (j)
+  - check for PMP entry (i) where L=0, pmp(i)cfg and pmpaddr(i) are writable/readable in M-mode only
+  - check only hart reset unlocks all => FTR08-b
+  - check reset values: all pmp(i)cfg and pmpaddr(i) are M-mode read zero]
+TST03-5
+[configure 8 PMP entries: at least one with L=1 and one with L=0,
+  - check for PMP entry (i) where L=1, pmp(i)cfg and pmpaddr(i) are effectively locked whatever the SW mode => FTR08-a
+  - check locked PMP entry (i) has no effect on unlocked PMP entry (j)
+  - check for PMP entry (i) where L=0, pmp(i)cfg and pmpaddr(i) are writable/readable in M-mode only
+  - check only hart reset unlocks all => FTR08-b
+  - check reset values: all pmp(i)cfg and pmpaddr(i) are M-mode read zero]
+
+TST04 => FTR02-b1 and FTR02-b2
+[check if the lowest-numbered PMP CSRs must be programmed first before programming higher-numbred ones]
+TST04-1 extends TST02-1
+[configure any PMP entry, but the first one
+  - check for configured PMP entry (i), pmp(i)cfg and pmpaddr(i) are writable/readable in M-mode only
+  - check for not configured PMP entry (i), pmp(i)cfg and pmpaddr(i) are M-mode read zero]
+TST04-2 extends TST02-2
+[configure 2 non-adjacent PMP entries (highest-numbered ones first) (avoid the first PMP entry)
+  - check for configured PMP entry (i), pmp(i)cfg and pmpaddr(i) are writable/readable in M-mode only
+  - check for not configured PMP entry (i), pmp(i)cfg and pmpaddr(i) are M-mode read zero]
+TST04-3 extends TST02-3
+[configure N PMP entries (highest-numbered ones first) (as non-adjacent as possible, and avoid the first PMP entry)
+  - check for configured PMP entry (i), pmp(i)cfg and pmpaddr(i) are writable/readable in M-mode only
+  - check for not configured PMP entry (i), pmp(i)cfg and pmpaddr(i) are M-mode read zero]
+TST04-4 extends TST02-4
+[configure 8 PMP entries (highest-numbered ones first)
+  - check for configured PMP entry (i), pmp(i)cfg and pmpaddr(i) are writable/readable in M-mode only]
+
+TST05 => FTR01-c and FTR01-c-extended
+[check all regions are configurable in M-mode to make sure none is hardwired]
+[regions hardwired privileges might only ever be visible in M-mode]
+TST05-1 extends TST02-4
+  - check the written pmp(i)cfg and pmpaddr(i) values can be read exactly the same as written
+TST05-2 extends TST03-5
+  - check the written pmp(i)cfg and pmpaddr(i) values can be read exactly the same as written (before hart reset)
+
+TST06 => FTR04-a
+[PMP CSR fields are WARL: PMP entry combinations with R=0 and W=1 are reserved/can't be read]
+[permissions fields could be randomly written; should we try randomization ?]
+TST06-1 extends TST02-4
+  - write totally random values to pmp(i)cfg and pmpaddr(i)
+  - check all pmp(i)cfg and pmpaddr(i) can be read exactly the same as written except for the reserved combinations with R=0 and W=1
+TST06-2 extends TST03-5
+  - write totally random values to pmp(i)cfg and pmpaddr(i)
+  - check all pmp(i)cfg and pmpaddr(i) can be read exactly the same as written except for the reserved combinations with R=0 and W=1 (before hart reset)
+
+////////////////////////////
+
+TST10-1 => FTR09-e
+[check M-mode access succeeds if no PMP entry matches]
+TST10-2 => FTR09-e-question
+[check M-mode access succeeds if no PMP entry defined]
+
+TST10-3 => FTR09-f
+[check S or U mode access fails when no PMP entry matching and at least one PMP entry implemented]
+TST10-4 => FTR09-f-question
+[check S or U mode access fails when no PMP entry implemented]
+
+//TODO: how to disable a PMP entry already written ? is hart reset mandatory ?
+
+////////////////////////////
+
+TST11 (group) => FTR01-d
+  [PMP check on instruction fetch where effective privilege mode is S or U:
+    - choose an executable pmp region and address range
+    - choose only one PMP entry (i) ([FTR02-b1]: maybe mandatorily the 1st one)
+    - choose pmpcfg(i).A=NA4
+    - single access instruction fetch in S and U mode]
+  [create scenarios where PMP entries with A=2 (NA4) and with/without matching permissions
+    - check only NA4 defined addresses are matching]
+TST11-11
+[with L=0 => FTR08-e2-2 (refers to FTR09-d2-2),
+  - configure the PMP entry with execute permissions for the PMP region
+  - fetch an instruction from that region (with exact address-matching)
+  - check no access-fault exception]
+TST11-12
+[with L=0 => FTR08-e2-2 (refers to FTR09-d2-2),
+  - configure the PMP entry without execute permissions for the PMP region
+  - fetch an instruction from that region (with exact address-matching)
+  - check instruction fetch access-fault exception raised => FTR04-b]
+TST11-13
+[with L=0 => FTR08-e2-2 (refers to FTR09-d2-2),
+  - configure the PMP entry with execute permissions for the PMP region
+  - fetch an instruction from outside all PMP defined regions
+  - check instruction fetch access-fault exception raised]
+TST11-14
+[with L=1 => FTR08-e1 (refers to FTR01-f) (refers to FTR09-d2-1),
+  - configure the PMP entry with execute permissions for the PMP region
+  - fetch an instruction from that region (with exact address-matching)
+  - check no access-fault exception]
+TST11-15
+[with L=1 => FTR08-e1 (refers to FTR01-f) (refers to FTR09-d2-1),
+  - configure the PMP entry without execute permissions for the PMP region
+  - fetch an instruction from that region (with exact address-matching)
+  - check instruction fetch access-fault exception raised => FTR04-b]
+TST11-16
+[with L=1 => FTR08-e1 (refers to FTR01-f) (refers to FTR09-d2-1),
+  - configure the PMP entry with execute permissions for the PMP region
+  - fetch an instruction from outside all PMP defined regions
+  - check instruction fetch access-fault exception raised]
+
+---------------------------
+
+TST11 (group) => FTR01-d
+  [PMP check on load or load-reserved instruction where effective privilege mode is S or U:
+    - choose a data readable pmp region and address range
+    - choose only one PMP entry (i) ([FTR02-b1]: maybe mandatorily the 1st one)
+    - choose pmpcfg(i).A=NA4
+    - single access data load in S and U mode when the bit mstatus.MPRV=0]
+  [create scenarios where PMP entries with A=2 (NA4) and with/without matching permissions
+    - check only NA4 defined addresses are matching]
+TST11-21
+[with L=0 => FTR08-e2-2 (refers to FTR09-d2-2),
+  - configure the PMP entry with read permissions for the PMP region
+  - execute a load or load-reserved instruction from that region (with exact address-matching)
+  - check no access-fault exception]
+TST11-22
+[with L=0 => FTR08-e2-2 (refers to FTR09-d2-2),
+  - configure the PMP entry without read permissions for the PMP region
+  - execute a load or load-reserved instruction from that region (with exact address-matching)
+  - check load access-fault exception raised => FTR04-c]
+TST11-23
+[with L=0 => FTR08-e2-2 (refers to FTR09-d2-2),
+  - configure the PMP entry with read permissions for the PMP region
+  - execute a load or load-reserved instruction from outside all PMP defined regions
+  - check load access-fault exception raised]
+TST11-24
+[with L=1 => FTR08-e1 (refers to FTR01-f) (refers to FTR09-d2-1),
+  - configure the PMP entry with read permissions for the PMP region
+  - execute a load or load-reserved instruction from that region (with exact address-matching)
+  - check no access-fault exception]
+TST11-25
+[with L=1 => FTR08-e1 (refers to FTR01-f) (refers to FTR09-d2-1),
+  - configure the PMP entry without read permissions for the PMP region
+  - execute a load or load-reserved instruction from that region (with exact address-matching)
+  - check load access-fault exception raised => FTR04-c]
+TST11-26
+[with L=1 => FTR08-e1 (refers to FTR01-f) (refers to FTR09-d2-1),
+  - configure the PMP entry with read permissions for the PMP region
+  - execute a load or load-reserved instruction from outside all PMP defined regions
+  - check load access-fault exception raised]
+
+---------------------------
+
+TST11 (group) => FTR01-d
+  [PMP check on store, store-conditional, or AMO instruction where effective privilege mode is S or U:
+    - choose a data writable pmp region and address range
+    - choose only one PMP entry (i) ([FTR02-b1]: maybe mandatorily the 1st one)
+    - choose pmpcfg(i).A=NA4
+    - single access data store in S and U mode when the bit mstatus.MPRV=0]
+  [create scenarios where PMP entries with A=2 (NA4) and with/without matching permissions
+    - check only NA4 defined addresses are matching]
+TST11-31
+[with L=0 => FTR08-e2-2 (refers to FTR09-d2-2),
+  - configure the PMP entry with write permissions for the PMP region
+  - execute a store, store-conditional, or AMO instruction to that region (with exact address-matching)
+  - check no access-fault exception]
+TST11-32
+[with L=0 => FTR08-e2-2 (refers to FTR09-d2-2),
+  - configure the PMP entry without write permissions for the PMP region
+  - execute a store, store-conditional, or AMO instruction to that region (with exact address-matching)
+  - check store access-fault exception raised => FTR04-d]
+TST11-33
+[with L=0 => FTR08-e2-2 (refers to FTR09-d2-2),
+  - configure the PMP entry with write permissions for the PMP region
+  - execute a store, store-conditional, or AMO instruction to outside all PMP defined regions
+  - check store access-fault exception raised]
+TST11-34
+[with L=1 => FTR08-e1 (refers to FTR01-f) (refers to FTR09-d2-1),
+  - configure the PMP entry with write permissions for the PMP region
+  - execute a store, store-conditional, or AMO instruction to that region (with exact address-matching)
+  - check no access-fault exception]
+TST11-35
+[with L=1 => FTR08-e1 (refers to FTR01-f) (refers to FTR09-d2-1),
+  - configure the PMP entry without write permissions for the PMP region
+  - execute a store, store-conditional, or AMO instruction to that region (with exact address-matching)
+  - check store access-fault exception raised => FTR04-d]
+TST11-36
+[with L=1 => FTR08-e1 (refers to FTR01-f) (refers to FTR09-d2-1),
+  - configure the PMP entry with write permissions for the PMP region
+  - execute a store, store-conditional, or AMO instruction to outside all PMP defined regions
+  - check store access-fault exception raised]
+
+---------------------------
+
+TST11 (group) => FTR01-d
+  [PMP check on load or load-reserved instruction where effective privilege mode is S or U:
+    - choose a data readable pmp region and address range
+    - choose only one PMP entry (i) ([FTR02-b1]: maybe mandatorily the 1st one)
+    - choose pmpcfg(i).A=NA4
+    - single access data load in any mode when the bit mstatus.MPRV=1 and the mstatus.MPP contains S or U]
+  [create scenarios where PMP entries with A=2 (NA4) and with/without matching permissions
+    - check only NA4 defined addresses are matching]
+TST11-41
+[with L=0 => FTR08-e2-2 (refers to FTR09-d2-2),
+  - configure the PMP entry with read permissions for the PMP region
+  - execute a load or load-reserved instruction from that region (with exact address-matching)
+  - check no access-fault exception]
+TST11-42
+[with L=0 => FTR08-e2-2 (refers to FTR09-d2-2),
+  - configure the PMP entry without read permissions for the PMP region
+  - execute a load or load-reserved instruction from that region (with exact address-matching)
+  - check load access-fault exception raised => FTR04-c]
+TST11-43
+[with L=0 => FTR08-e2-2 (refers to FTR09-d2-2),
+  - configure the PMP entry with read permissions for the PMP region
+  - execute a load or load-reserved instruction from outside all PMP defined regions
+  - check load access-fault exception raised]
+TST11-44
+[with L=1 => FTR08-e1 (refers to FTR01-f) (refers to FTR09-d2-1),
+  - configure the PMP entry with read permissions for the PMP region
+  - execute a load or load-reserved instruction from that region (with exact address-matching)
+  - check no access-fault exception]
+TST11-45
+[with L=1 => FTR08-e1 (refers to FTR01-f) (refers to FTR09-d2-1),
+  - configure the PMP entry without read permissions for the PMP region
+  - execute a load or load-reserved instruction from that region (with exact address-matching)
+  - check load access-fault exception raised => FTR04-c]
+TST11-46
+[with L=1 => FTR08-e1 (refers to FTR01-f) (refers to FTR09-d2-1),
+  - configure the PMP entry with read permissions for the PMP region
+  - execute a load or load-reserved instruction from outside all PMP defined regions
+  - check load access-fault exception raised]
+
+---------------------------
+
+TST11 (group) => FTR01-d
+  [PMP check on store, store-conditional, or AMO instruction where effective privilege mode is S or U:
+    - choose a data writable pmp region and address range
+    - choose only one PMP entry (i) ([FTR02-b1]: maybe mandatorily the 1st one)
+    - choose pmpcfg(i).A=NA4
+    - single access data store in any mode when the bit mstatus.MPRV=1 and the mstatus.MPP contains S or U]
+  [create scenarios where PMP entries with A=2 (NA4) and with/without matching permissions
+    - check only NA4 defined addresses are matching]
+TST11-51
+[with L=0 => FTR08-e2-2 (refers to FTR09-d2-2),
+  - configure the PMP entry with write permissions for the PMP region
+  - execute a store, store-conditional, or AMO instruction to that region (with exact address-matching)
+  - check no access-fault exception]
+TST11-52
+[with L=0 => FTR08-e2-2 (refers to FTR09-d2-2),
+  - configure the PMP entry without write permissions for the PMP region
+  - execute a store, store-conditional, or AMO instruction to that region (with exact address-matching)
+  - check store access-fault exception raised => FTR04-d]
+TST11-53
+[with L=0 => FTR08-e2-2 (refers to FTR09-d2-2),
+  - configure the PMP entry with write permissions for the PMP region
+  - execute a store, store-conditional, or AMO instruction to outside all PMP defined regions
+  - check store access-fault exception raised]
+TST11-54
+[with L=1 => FTR08-e1 (refers to FTR01-f) (refers to FTR09-d2-1),
+  - configure the PMP entry with write permissions for the PMP region
+  - execute a store, store-conditional, or AMO instruction to that region (with exact address-matching)
+  - check no access-fault exception]
+TST11-55
+[with L=1 => FTR08-e1 (refers to FTR01-f) (refers to FTR09-d2-1),
+  - configure the PMP entry without write permissions for the PMP region
+  - execute a store, store-conditional, or AMO instruction to that region (with exact address-matching)
+  - check store access-fault exception raised => FTR04-d]
+TST11-56
+[with L=1 => FTR08-e1 (refers to FTR01-f) (refers to FTR09-d2-1),
+  - configure the PMP entry with write permissions for the PMP region
+  - execute a store, store-conditional, or AMO instruction to outside all PMP defined regions
+  - check store access-fault exception raised]
+
+////////////////////////////
+
+TST12 (group) => FTR01-f
+  [PMP check on instruction fetch where effective privilege mode is M:
+    - choose an executable pmp region and address range
+    - choose only one PMP entry (i) ([FTR02-b1]: maybe mandatorily the 1st one)
+    - choose pmpcfg(i).A=NA4
+    - single access instruction fetch in M mode]
+  [create scenarios where PMP entries with A=2 (NA4) and with/without matching permissions
+    - check only NA4 defined addresses are matching]
+TST12-11
+[with L=0 => FTR08-e2-1 (refers to  FTR09-d1),
+  - configure the PMP entry with execute permissions for the PMP region
+  - fetch an instruction from that region (with exact address-matching)
+  - check no access-fault exception]
+TST12-12
+[with L=0 => FTR08-e2-1 (refers to  FTR09-d1),
+  - configure the PMP entry without execute permissions for the PMP region
+  - fetch an instruction from that region (with exact address-matching)
+  - check no access-fault exception]
+TST12-13
+[with L=0 => FTR08-e2-1 (refers to  FTR09-d1),
+  - configure the PMP entry with execute permissions for the PMP region
+  - fetch an instruction from outside all PMP defined regions
+  - check no access-fault exception] //TODO: CHECK IF M-MODE ALLOWED
+TST12-14
+[with L=1 => FTR08-e1 (refers to FTR01-f) (refers to FTR09-d2-1),
+  - configure the PMP entry with execute permissions for the PMP region
+  - fetch an instruction from that region (with exact address-matching)
+  - check no access-fault exception]
+TST12-15
+[with L=1 => FTR08-e1 (refers to FTR01-f) (refers to FTR09-d2-1),
+  - configure the PMP entry without execute permissions for the PMP region
+  - fetch an instruction from that region (with exact address-matching)
+  - check instruction fetch access-fault exception raised => FTR04-b]
+TST12-16
+[with L=1 => FTR08-e1 (refers to FTR01-f) (refers to FTR09-d2-1),
+  - configure the PMP entry with execute permissions for the PMP region
+  - fetch an instruction from outside all PMP defined regions
+  - check no access-fault exception] //TODO: CHECK IF M-MODE ALLOWED
+
+---------------------------
+
+TST12 (group) => FTR01-f
+  [PMP check on load or load-reserved instruction where effective privilege mode is M:
+    - choose a data readable pmp region and address range
+    - choose only one PMP entry (i) ([FTR02-b1]: maybe mandatorily the 1st one)
+    - choose pmpcfg(i).A=NA4
+    - single access data load in M mode when the bit mstatus.MPRV=0]
+  [create scenarios where PMP entries with A=2 (NA4) and with/without matching permissions
+    - check only NA4 defined addresses are matching]
+TST12-21
+[with L=0 => FTR08-e2-1 (refers to  FTR09-d1)
+  - configure the PMP entry with read permissions for the PMP region
+  - execute a load or load-reserved instruction from that region (with exact address-matching)
+  - check no access-fault exception]
+TST12-22
+[with L=0 => FTR08-e2-1 (refers to  FTR09-d1)
+  - configure the PMP entry without read permissions for the PMP region
+  - execute a load or load-reserved instruction from that region (with exact address-matching)
+  - check no access-fault exception]
+TST12-23
+[with L=0 => FTR08-e2-1 (refers to  FTR09-d1)
+  - configure the PMP entry with read permissions for the PMP region
+  - execute a load or load-reserved instruction from outside all PMP defined regions
+  - check no access-fault exception] //TODO: CHECK IF M-MODE ALLOWED
+TST12-24
+[with L=1 => FTR08-e1 (refers to FTR01-f) (refers to FTR09-d2-1),
+  - configure the PMP entry with read permissions for the PMP region
+  - execute a load or load-reserved instruction from that region (with exact address-matching)
+  - check no access-fault exception]
+TST12-25
+[with L=1 => FTR08-e1 (refers to FTR01-f) (refers to FTR09-d2-1),
+  - configure the PMP entry without read permissions for the PMP region
+  - execute a load or load-reserved instruction from that region (with exact address-matching)
+  - check load access-fault exception raised => FTR04-c]
+TST12-26
+[with L=1 => FTR08-e1 (refers to FTR01-f) (refers to FTR09-d2-1),
+  - configure the PMP entry with read permissions for the PMP region
+  - execute a load or load-reserved instruction from outside all PMP defined regions
+  - check no access-fault exception] //TODO: CHECK IF M-MODE ALLOWED
+
+---------------------------
+
+TST12 (group) => FTR01-f
+  [PMP check on store, store-conditional, or AMO instruction where effective privilege mode is M:
+    - choose a data writable pmp region and address range
+    - choose only one PMP entry (i) ([FTR02-b1]: maybe mandatorily the 1st one)
+    - choose pmpcfg(i).A=NA4
+    - single access data store in M mode when the bit mstatus.MPRV=0]
+  [create scenarios where PMP entries with A=2 (NA4) and with/without matching permissions
+    - check only NA4 defined addresses are matching]
+TST12-31
+[with L=0 => FTR08-e2-1 (refers to  FTR09-d1)
+  - configure the PMP entry with write permissions for the PMP region
+  - execute a store, store-conditional, or AMO instruction to that region (with exact address-matching)
+  - check no access-fault exception]
+TST12-32
+[with L=0 => FTR08-e2-1 (refers to  FTR09-d1)
+  - configure the PMP entry without write permissions for the PMP region
+  - execute a store, store-conditional, or AMO instruction to that region (with exact address-matching)
+  - check no access-fault exception]
+TST12-33
+[with L=0 => FTR08-e2-1 (refers to  FTR09-d1)
+  - configure the PMP entry with write permissions for the PMP region
+  - execute a store, store-conditional, or AMO instruction to outside all PMP defined regions
+  - check no access-fault exception] //TODO: CHECK IF M-MODE ALLOWED
+TST12-34
+[with L=1 => FTR08-e1 (refers to FTR01-f) (refers to FTR09-d2-1),
+  - configure the PMP entry with write permissions for the PMP region
+  - execute a store, store-conditional, or AMO instruction to that region (with exact address-matching)
+  - check no access-fault exception]
+TST12-35
+[with L=1 => FTR08-e1 (refers to FTR01-f) (refers to FTR09-d2-1),
+  - configure the PMP entry without write permissions for the PMP region
+  - execute a store, store-conditional, or AMO instruction to that region (with exact address-matching)
+  - check store access-fault exception raised => FTR04-d]
+TST12-36
+[with L=1 => FTR08-e1 (refers to FTR01-f) (refers to FTR09-d2-1),
+  - configure the PMP entry with write permissions for the PMP region
+  - execute a store, store-conditional, or AMO instruction to outside all PMP defined regions
+  - check no access-fault exception] //TODO: CHECK IF M-MODE ALLOWED
+
+---------------------------
+
+TST12 (group) => FTR01-f
+  [PMP check on load or load-reserved instruction where effective privilege mode is M:
+    - choose a data readable pmp region and address range
+    - choose only one PMP entry (i) ([FTR02-b1]: maybe mandatorily the 1st one)
+    - choose pmpcfg(i).A=NA4
+    - single access data load in any mode when the bit mstatus.MPRV=1 and the mstatus.MPP contains M (TODO: CHECK IF MAKING SENSE)]
+  [create scenarios where PMP entries with A=2 (NA4) and with/without matching permissions
+    - check only NA4 defined addresses are matching]
+TST12-41
+[with L=0 => FTR08-e2-1 (refers to  FTR09-d1)
+  - configure the PMP entry with read permissions for the PMP region
+  - execute a load or load-reserved instruction from that region (with exact address-matching)
+  - check no access-fault exception]
+TST12-42
+[with L=0 => FTR08-e2-1 (refers to  FTR09-d1)
+  - configure the PMP entry without read permissions for the PMP region
+  - execute a load or load-reserved instruction from that region (with exact address-matching)
+  - check no access-fault exception]
+TST12-43
+[with L=0 => FTR08-e2-1 (refers to  FTR09-d1)
+  - configure the PMP entry with read permissions for the PMP region
+  - execute a load or load-reserved instruction from outside all PMP defined regions
+  - check no access-fault exception] //TODO: CHECK IF M-MODE ALLOWED
+TST12-44
+[with L=1 => FTR08-e1 (refers to FTR01-f) (refers to FTR09-d2-1),
+  - configure the PMP entry with read permissions for the PMP region
+  - execute a load or load-reserved instruction from that region (with exact address-matching)
+  - check no access-fault exception]
+TST12-45
+[with L=1 => FTR08-e1 (refers to FTR01-f) (refers to FTR09-d2-1),
+  - configure the PMP entry without read permissions for the PMP region
+  - execute a load or load-reserved instruction from that region (with exact address-matching)
+  - check load access-fault exception raised => FTR04-c]
+TST12-46
+[with L=1 => FTR08-e1 (refers to FTR01-f) (refers to FTR09-d2-1),
+  - configure the PMP entry with read permissions for the PMP region
+  - execute a load or load-reserved instruction from outside all PMP defined regions
+  - check no access-fault exception] //TODO: CHECK IF M-MODE ALLOWED
+
+---------------------------
+
+TST12 (group) => FTR01-f
+  [PMP check on store, store-conditional, or AMO instruction where effective privilege mode is M:
+    - choose a data writable pmp region and address range
+    - choose only one PMP entry (i) ([FTR02-b1]: maybe mandatorily the 1st one)
+    - choose pmpcfg(i).A=NA4
+    - single access data store in any mode when the bit mstatus.MPRV=1 and the mstatus.MPP contains M (TODO: CHECK IF MAKING SENSE)]
+  [create scenarios where PMP entries with A=2 (NA4) and with/without matching permissions
+    - check only NA4 defined addresses are matching]
+TST12-51
+[with L=0 => FTR08-e2-1 (refers to  FTR09-d1)
+  - configure the PMP entry with write permissions for the PMP region
+  - execute a store, store-conditional, or AMO instruction to that region (with exact address-matching)
+  - check no access-fault exception]
+TST12-52
+[with L=0 => FTR08-e2-1 (refers to  FTR09-d1)
+  - configure the PMP entry without write permissions for the PMP region
+  - execute a store, store-conditional, or AMO instruction to that region (with exact address-matching)
+  - check no access-fault exception]
+TST12-53
+[with L=0 => FTR08-e2-1 (refers to  FTR09-d1)
+  - configure the PMP entry with write permissions for the PMP region
+  - execute a store, store-conditional, or AMO instruction to outside all PMP defined regions
+  - check no access-fault exception] //TODO: CHECK IF M-MODE ALLOWED
+TST12-54
+[with L=1 => FTR08-e1 (refers to FTR01-f) (refers to FTR09-d2-1),
+  - configure the PMP entry with write permissions for the PMP region
+  - execute a store, store-conditional, or AMO instruction to that region (with exact address-matching)
+  - check no access-fault exception]
+TST12-55
+[with L=1 => FTR08-e1 (refers to FTR01-f) (refers to FTR09-d2-1),
+  - configure the PMP entry without write permissions for the PMP region
+  - execute a store, store-conditional, or AMO instruction to that region (with exact address-matching)
+  - check store access-fault exception raised => FTR04-d]
+TST12-56
+[with L=1 => FTR08-e1 (refers to FTR01-f) (refers to FTR09-d2-1),
+  - configure the PMP entry with write permissions for the PMP region
+  - execute a store, store-conditional, or AMO instruction to outside all PMP defined regions
+  - check no access-fault exception] //TODO: CHECK IF M-MODE ALLOWED
+
+////////////////////////////
+//TODO: complete specificities for A=NAPOT
+
+TST13 (group)
+  [same as TST11 (group), but with pmpcfg(i).A=NAPOT]
+TST13-11
+  [same as TST11-11 (group), but with pmpcfg(i).A=NAPOT]
+TST13-12
+  [same as TST11-12 (group), but with pmpcfg(i).A=NAPOT]
+TST13-13
+  [same as TST11-13 (group), but with pmpcfg(i).A=NAPOT]
+TST13-14
+  [same as TST11-14 (group), but with pmpcfg(i).A=NAPOT]
+TST13-15
+  [same as TST11-15 (group), but with pmpcfg(i).A=NAPOT]
+TST13-16
+  [same as TST11-16 (group), but with pmpcfg(i).A=NAPOT]
+
+---------------------------
+
+TST13 (group)
+  [same as TST11 (group), but with pmpcfg(i).A=NAPOT]
+TST13-21
+  [same as TST11-21 (group), but with pmpcfg(i).A=NAPOT]
+TST13-22
+  [same as TST11-22 (group), but with pmpcfg(i).A=NAPOT]
+TST13-23
+  [same as TST11-23 (group), but with pmpcfg(i).A=NAPOT]
+TST13-24
+  [same as TST11-24 (group), but with pmpcfg(i).A=NAPOT]
+TST13-25
+  [same as TST11-25 (group), but with pmpcfg(i).A=NAPOT]
+TST13-26
+  [same as TST11-26 (group), but with pmpcfg(i).A=NAPOT]
+
+---------------------------
+
+TST13 (group)
+  [same as TST11 (group), but with pmpcfg(i).A=NAPOT]
+TST13-31
+  [same as TST11-31 (group), but with pmpcfg(i).A=NAPOT]
+TST13-32
+  [same as TST11-32 (group), but with pmpcfg(i).A=NAPOT]
+TST13-33
+  [same as TST11-33 (group), but with pmpcfg(i).A=NAPOT]
+TST13-34
+  [same as TST11-34 (group), but with pmpcfg(i).A=NAPOT]
+TST13-35
+  [same as TST11-35 (group), but with pmpcfg(i).A=NAPOT]
+TST13-36
+  [same as TST11-36 (group), but with pmpcfg(i).A=NAPOT]
+
+---------------------------
+
+TST13 (group)
+  [same as TST11 (group), but with pmpcfg(i).A=NAPOT]
+TST13-41
+  [same as TST11-41 (group), but with pmpcfg(i).A=NAPOT]
+TST13-42
+  [same as TST11-42 (group), but with pmpcfg(i).A=NAPOT]
+TST13-43
+  [same as TST11-43 (group), but with pmpcfg(i).A=NAPOT]
+TST13-44
+  [same as TST11-44 (group), but with pmpcfg(i).A=NAPOT]
+TST13-45
+  [same as TST11-45 (group), but with pmpcfg(i).A=NAPOT]
+TST13-46
+  [same as TST11-46 (group), but with pmpcfg(i).A=NAPOT]
+
+---------------------------
+
+TST13 (group)
+  [same as TST11 (group), but with pmpcfg(i).A=NAPOT]
+TST13-51
+  [same as TST11-51 (group), but with pmpcfg(i).A=NAPOT]
+TST13-52
+  [same as TST11-52 (group), but with pmpcfg(i).A=NAPOT]
+TST13-53
+  [same as TST11-53 (group), but with pmpcfg(i).A=NAPOT]
+TST13-54
+  [same as TST11-54 (group), but with pmpcfg(i).A=NAPOT]
+TST13-55
+  [same as TST11-55 (group), but with pmpcfg(i).A=NAPOT]
+TST13-56
+  [same as TST11-56 (group), but with pmpcfg(i).A=NAPOT]
+
+////////////////////////////
+
+TST14 (group)
+  [same as TST12 (group), but with pmpcfg(i).A=NAPOT]
+TST14-11
+  [same as TST12-11 (group), but with pmpcfg(i).A=NAPOT]
+TST14-12
+  [same as TST12-12 (group), but with pmpcfg(i).A=NAPOT]
+TST14-13
+  [same as TST12-13 (group), but with pmpcfg(i).A=NAPOT]
+TST14-14
+  [same as TST12-14 (group), but with pmpcfg(i).A=NAPOT]
+TST14-15
+  [same as TST12-15 (group), but with pmpcfg(i).A=NAPOT]
+TST14-16
+  [same as TST12-16 (group), but with pmpcfg(i).A=NAPOT]
+
+---------------------------
+
+TST14 (group)
+  [same as TST12 (group), but with pmpcfg(i).A=NAPOT]
+TST14-21
+  [same as TST12-21 (group), but with pmpcfg(i).A=NAPOT]
+TST14-22
+  [same as TST12-22 (group), but with pmpcfg(i).A=NAPOT]
+TST14-23
+  [same as TST12-23 (group), but with pmpcfg(i).A=NAPOT]
+TST14-24
+  [same as TST12-24 (group), but with pmpcfg(i).A=NAPOT]
+TST14-25
+  [same as TST12-25 (group), but with pmpcfg(i).A=NAPOT]
+TST14-26
+  [same as TST12-26 (group), but with pmpcfg(i).A=NAPOT]
+
+---------------------------
+
+TST14 (group)
+  [same as TST12 (group), but with pmpcfg(i).A=NAPOT]
+TST14-31
+  [same as TST12-31 (group), but with pmpcfg(i).A=NAPOT]
+TST14-32
+  [same as TST12-32 (group), but with pmpcfg(i).A=NAPOT]
+TST14-33
+  [same as TST12-33 (group), but with pmpcfg(i).A=NAPOT]
+TST14-34
+  [same as TST12-34 (group), but with pmpcfg(i).A=NAPOT]
+TST14-35
+  [same as TST12-35 (group), but with pmpcfg(i).A=NAPOT]
+TST14-36
+  [same as TST12-36 (group), but with pmpcfg(i).A=NAPOT]
+
+---------------------------
+
+TST14 (group)
+  [same as TST12 (group), but with pmpcfg(i).A=NAPOT]
+TST14-41
+  [same as TST12-41 (group), but with pmpcfg(i).A=NAPOT]
+TST14-42
+  [same as TST12-42 (group), but with pmpcfg(i).A=NAPOT]
+TST14-43
+  [same as TST12-43 (group), but with pmpcfg(i).A=NAPOT]
+TST14-44
+  [same as TST12-44 (group), but with pmpcfg(i).A=NAPOT]
+TST14-45
+  [same as TST12-45 (group), but with pmpcfg(i).A=NAPOT]
+TST14-46
+  [same as TST12-46 (group), but with pmpcfg(i).A=NAPOT]
+
+---------------------------
+
+TST14 (group)
+  [same as TST12 (group), but with pmpcfg(i).A=NAPOT]
+TST14-51
+  [same as TST12-51 (group), but with pmpcfg(i).A=NAPOT]
+TST14-52
+  [same as TST12-52 (group), but with pmpcfg(i).A=NAPOT]
+TST14-53
+  [same as TST12-53 (group), but with pmpcfg(i).A=NAPOT]
+TST14-54
+  [same as TST12-54 (group), but with pmpcfg(i).A=NAPOT]
+TST14-55
+  [same as TST12-55 (group), but with pmpcfg(i).A=NAPOT]
+TST14-56
+  [same as TST12-56 (group), but with pmpcfg(i).A=NAPOT]
+
+////////////////////////////
+//TODO: complete specificities for A=TOR
+
+TST15 (group) => FTR06-a
+  [same as TST11 (group), but with pmpcfg(i).A=TOR]
+TST15-11
+  [same as TST11-11 (group), but with pmpcfg(i).A=TOR]
+TST15-12
+  [same as TST11-12 (group), but with pmpcfg(i).A=TOR]
+TST15-13
+  [same as TST11-13 (group), but with pmpcfg(i).A=TOR]
+TST15-14
+  [same as TST11-14 (group), but with pmpcfg(i).A=TOR]
+TST15-15
+  [same as TST11-15 (group), but with pmpcfg(i).A=TOR]
+TST15-16
+  [same as TST11-16 (group), but with pmpcfg(i).A=TOR]
+
+---------------------------
+
+TST15 (group) => FTR06-a
+  [same as TST11 (group), but with pmpcfg(i).A=TOR]
+TST15-21
+  [same as TST11-21 (group), but with pmpcfg(i).A=TOR]
+TST15-22
+  [same as TST11-22 (group), but with pmpcfg(i).A=TOR]
+TST15-23
+  [same as TST11-23 (group), but with pmpcfg(i).A=TOR]
+TST15-24
+  [same as TST11-24 (group), but with pmpcfg(i).A=TOR]
+TST15-25
+  [same as TST11-25 (group), but with pmpcfg(i).A=TOR]
+TST15-26
+  [same as TST11-26 (group), but with pmpcfg(i).A=TOR]
+
+---------------------------
+
+TST15 (group) => FTR06-a
+  [same as TST11 (group), but with pmpcfg(i).A=TOR]
+TST15-31
+  [same as TST11-31 (group), but with pmpcfg(i).A=TOR]
+TST15-32
+  [same as TST11-32 (group), but with pmpcfg(i).A=TOR]
+TST15-33
+  [same as TST11-33 (group), but with pmpcfg(i).A=TOR]
+TST15-34
+  [same as TST11-34 (group), but with pmpcfg(i).A=TOR]
+TST15-35
+  [same as TST11-35 (group), but with pmpcfg(i).A=TOR]
+TST15-36
+  [same as TST11-36 (group), but with pmpcfg(i).A=TOR]
+
+---------------------------
+
+TST15 (group) => FTR06-a
+  [same as TST11 (group), but with pmpcfg(i).A=TOR]
+TST15-41
+  [same as TST11-41 (group), but with pmpcfg(i).A=TOR]
+TST15-42
+  [same as TST11-42 (group), but with pmpcfg(i).A=TOR]
+TST15-43
+  [same as TST11-43 (group), but with pmpcfg(i).A=TOR]
+TST15-44
+  [same as TST11-44 (group), but with pmpcfg(i).A=TOR]
+TST15-45
+  [same as TST11-45 (group), but with pmpcfg(i).A=TOR]
+TST15-46
+  [same as TST11-46 (group), but with pmpcfg(i).A=TOR]
+
+---------------------------
+
+TST15 (group) => FTR06-a
+  [same as TST11 (group), but with pmpcfg(i).A=TOR]
+TST15-51
+  [same as TST11-51 (group), but with pmpcfg(i).A=TOR]
+TST15-52
+  [same as TST11-52 (group), but with pmpcfg(i).A=TOR]
+TST15-53
+  [same as TST11-53 (group), but with pmpcfg(i).A=TOR]
+TST15-54
+  [same as TST11-54 (group), but with pmpcfg(i).A=TOR]
+TST15-55
+  [same as TST11-55 (group), but with pmpcfg(i).A=TOR]
+TST15-56
+  [same as TST11-56 (group), but with pmpcfg(i).A=TOR]
+
+////////////////////////////
+
+TST16 (group) => FTR06-a
+  [same as TST12 (group), but with pmpcfg(i).A=TOR]
+TST16-11
+  [same as TST12-11 (group), but with pmpcfg(i).A=TOR]
+TST16-12
+  [same as TST12-12 (group), but with pmpcfg(i).A=TOR]
+TST16-13
+  [same as TST12-13 (group), but with pmpcfg(i).A=TOR]
+TST16-14
+  [same as TST12-14 (group), but with pmpcfg(i).A=TOR]
+TST16-15
+  [same as TST12-15 (group), but with pmpcfg(i).A=TOR]
+TST16-16
+  [same as TST12-16 (group), but with pmpcfg(i).A=TOR]
+
+---------------------------
+
+TST16 (group) => FTR06-a
+  [same as TST12 (group), but with pmpcfg(i).A=TOR]
+TST16-21
+  [same as TST12-21 (group), but with pmpcfg(i).A=TOR]
+TST16-22
+  [same as TST12-22 (group), but with pmpcfg(i).A=TOR]
+TST16-23
+  [same as TST12-23 (group), but with pmpcfg(i).A=TOR]
+TST16-24
+  [same as TST12-24 (group), but with pmpcfg(i).A=TOR]
+TST16-25
+  [same as TST12-25 (group), but with pmpcfg(i).A=TOR]
+TST16-26
+  [same as TST12-26 (group), but with pmpcfg(i).A=TOR]
+
+---------------------------
+
+TST16 (group) => FTR06-a
+  [same as TST12 (group), but with pmpcfg(i).A=TOR]
+TST16-31
+  [same as TST12-31 (group), but with pmpcfg(i).A=TOR]
+TST16-32
+  [same as TST12-32 (group), but with pmpcfg(i).A=TOR]
+TST16-33
+  [same as TST12-33 (group), but with pmpcfg(i).A=TOR]
+TST16-34
+  [same as TST12-34 (group), but with pmpcfg(i).A=TOR]
+TST16-35
+  [same as TST12-35 (group), but with pmpcfg(i).A=TOR]
+TST16-36
+  [same as TST12-36 (group), but with pmpcfg(i).A=TOR]
+
+---------------------------
+
+TST16 (group) => FTR06-a
+  [same as TST12 (group), but with pmpcfg(i).A=TOR]
+TST16-41
+  [same as TST12-41 (group), but with pmpcfg(i).A=TOR]
+TST16-42
+  [same as TST12-42 (group), but with pmpcfg(i).A=TOR]
+TST16-43
+  [same as TST12-43 (group), but with pmpcfg(i).A=TOR]
+TST16-44
+  [same as TST12-44 (group), but with pmpcfg(i).A=TOR]
+TST16-45
+  [same as TST12-45 (group), but with pmpcfg(i).A=TOR]
+TST16-46
+  [same as TST12-46 (group), but with pmpcfg(i).A=TOR]
+
+---------------------------
+
+TST16 (group) => FTR06-a
+  [same as TST12 (group), but with pmpcfg(i).A=TOR]
+TST16-51
+  [same as TST12-51 (group), but with pmpcfg(i).A=TOR]
+TST16-52
+  [same as TST12-52 (group), but with pmpcfg(i).A=TOR]
+TST16-53
+  [same as TST12-53 (group), but with pmpcfg(i).A=TOR]
+TST16-54
+  [same as TST12-54 (group), but with pmpcfg(i).A=TOR]
+TST16-55
+  [same as TST12-55 (group), but with pmpcfg(i).A=TOR]
+TST16-56
+  [same as TST12-56 (group), but with pmpcfg(i).A=TOR]
+
+////////////////////////////
+//TODO: complete specificities for A=OFF
+
+TST17 (group)
+  [same as TST11 (group), but with pmpcfg(i).A=OFF]
+TST17-11
+  [same as TST11-11 (group), but with pmpcfg(i).A=OFF
+  - check instruction fetch access-fault exception raised]
+TST17-12
+  [same as TST11-12 (group), but with pmpcfg(i).A=OFF]
+TST17-13
+  [same as TST11-13 (group), but with pmpcfg(i).A=OFF]
+TST17-14
+  [same as TST11-14 (group), but with pmpcfg(i).A=OFF
+  - check instruction fetch access-fault exception raised]
+TST17-15
+  [same as TST11-15 (group), but with pmpcfg(i).A=OFF]
+TST17-16
+  [same as TST11-16 (group), but with pmpcfg(i).A=OFF]
+
+---------------------------
+
+TST17 (group)
+  [same as TST11 (group), but with pmpcfg(i).A=OFF]
+TST17-21
+  [same as TST11-21 (group), but with pmpcfg(i).A=OFF
+  - check instruction fetch access-fault exception raised]
+TST17-22
+  [same as TST11-22 (group), but with pmpcfg(i).A=OFF]
+TST17-23
+  [same as TST11-23 (group), but with pmpcfg(i).A=OFF]
+TST17-24
+  [same as TST11-24 (group), but with pmpcfg(i).A=OFF
+  - check instruction fetch access-fault exception raised]
+TST17-25
+  [same as TST11-25 (group), but with pmpcfg(i).A=OFF]
+TST17-26
+  [same as TST11-26 (group), but with pmpcfg(i).A=OFF]
+
+---------------------------
+
+TST17 (group)
+  [same as TST11 (group), but with pmpcfg(i).A=OFF]
+TST17-31
+  [same as TST11-31 (group), but with pmpcfg(i).A=OFF
+  - check instruction fetch access-fault exception raised]
+TST17-32
+  [same as TST11-32 (group), but with pmpcfg(i).A=OFF]
+TST17-33
+  [same as TST11-33 (group), but with pmpcfg(i).A=OFF]
+TST17-34
+  [same as TST11-34 (group), but with pmpcfg(i).A=OFF
+  - check instruction fetch access-fault exception raised]
+TST17-35
+  [same as TST11-35 (group), but with pmpcfg(i).A=OFF]
+TST17-36
+  [same as TST11-36 (group), but with pmpcfg(i).A=OFF]
+
+---------------------------
+
+TST17 (group)
+  [same as TST11 (group), but with pmpcfg(i).A=OFF]
+TST17-41
+  [same as TST11-41 (group), but with pmpcfg(i).A=OFF
+  - check instruction fetch access-fault exception raised]
+TST17-42
+  [same as TST11-42 (group), but with pmpcfg(i).A=OFF]
+TST17-43
+  [same as TST11-43 (group), but with pmpcfg(i).A=OFF]
+TST17-44
+  [same as TST11-44 (group), but with pmpcfg(i).A=OFF
+  - check instruction fetch access-fault exception raised]
+TST17-45
+  [same as TST11-45 (group), but with pmpcfg(i).A=OFF]
+TST17-46
+  [same as TST11-46 (group), but with pmpcfg(i).A=OFF]
+
+---------------------------
+
+TST17 (group)
+  [same as TST11 (group), but with pmpcfg(i).A=OFF]
+TST17-51
+  [same as TST11-51 (group), but with pmpcfg(i).A=OFF
+  - check instruction fetch access-fault exception raised]
+TST17-52
+  [same as TST11-52 (group), but with pmpcfg(i).A=OFF]
+TST17-53
+  [same as TST11-53 (group), but with pmpcfg(i).A=OFF]
+TST17-54
+  [same as TST11-54 (group), but with pmpcfg(i).A=OFF
+  - check instruction fetch access-fault exception raised]
+TST17-55
+  [same as TST11-55 (group), but with pmpcfg(i).A=OFF]
+TST17-56
+  [same as TST11-56 (group), but with pmpcfg(i).A=OFF]
+
+////////////////////////////
+
+TST18 (group)
+  [same as TST12 (group), but with pmpcfg(i).A=OFF]
+TST18-11
+  [same as TST12-11 (group), but with pmpcfg(i).A=OFF
+  - check instruction fetch access-fault exception raised]
+TST18-12
+  [same as TST12-12 (group), but with pmpcfg(i).A=OFF]
+TST18-13
+  [same as TST12-13 (group), but with pmpcfg(i).A=OFF]
+TST18-14
+  [same as TST12-14 (group), but with pmpcfg(i).A=OFF
+  - check instruction fetch access-fault exception raised]
+TST18-15
+  [same as TST12-15 (group), but with pmpcfg(i).A=OFF]
+TST18-16
+  [same as TST12-16 (group), but with pmpcfg(i).A=OFF]
+
+---------------------------
+
+TST18 (group)
+  [same as TST12 (group), but with pmpcfg(i).A=OFF]
+TST18-21
+  [same as TST12-21 (group), but with pmpcfg(i).A=OFF
+  - check instruction fetch access-fault exception raised]
+TST18-22
+  [same as TST12-22 (group), but with pmpcfg(i).A=OFF]
+TST18-23
+  [same as TST12-23 (group), but with pmpcfg(i).A=OFF]
+TST18-24
+  [same as TST12-24 (group), but with pmpcfg(i).A=OFF
+  - check instruction fetch access-fault exception raised]
+TST18-25
+  [same as TST12-25 (group), but with pmpcfg(i).A=OFF]
+TST18-26
+  [same as TST12-26 (group), but with pmpcfg(i).A=OFF]
+
+---------------------------
+
+TST18 (group)
+  [same as TST12 (group), but with pmpcfg(i).A=OFF]
+TST18-31
+  [same as TST12-31 (group), but with pmpcfg(i).A=OFF
+  - check instruction fetch access-fault exception raised]
+TST18-32
+  [same as TST12-32 (group), but with pmpcfg(i).A=OFF]
+TST18-33
+  [same as TST12-33 (group), but with pmpcfg(i).A=OFF]
+TST18-34
+  [same as TST12-34 (group), but with pmpcfg(i).A=OFF
+  - check instruction fetch access-fault exception raised]
+TST18-35
+  [same as TST12-35 (group), but with pmpcfg(i).A=OFF]
+TST18-36
+  [same as TST12-36 (group), but with pmpcfg(i).A=OFF]
+
+---------------------------
+
+TST18 (group)
+  [same as TST12 (group), but with pmpcfg(i).A=OFF]
+TST18-41
+  [same as TST12-41 (group), but with pmpcfg(i).A=OFF
+  - check instruction fetch access-fault exception raised]
+TST18-42
+  [same as TST12-42 (group), but with pmpcfg(i).A=OFF]
+TST18-43
+  [same as TST12-43 (group), but with pmpcfg(i).A=OFF]
+TST18-44
+  [same as TST12-44 (group), but with pmpcfg(i).A=OFF
+  - check instruction fetch access-fault exception raised]
+TST18-45
+  [same as TST12-45 (group), but with pmpcfg(i).A=OFF]
+TST18-46
+  [same as TST12-46 (group), but with pmpcfg(i).A=OFF]
+
+---------------------------
+
+TST18 (group)
+  [same as TST12 (group), but with pmpcfg(i).A=OFF]
+TST18-51
+  [same as TST12-51 (group), but with pmpcfg(i).A=OFF
+  - check instruction fetch access-fault exception raised]
+TST18-52
+  [same as TST12-52 (group), but with pmpcfg(i).A=OFF]
+TST18-53
+  [same as TST12-53 (group), but with pmpcfg(i).A=OFF]
+TST18-54
+  [same as TST12-54 (group), but with pmpcfg(i).A=OFF
+  - check instruction fetch access-fault exception raised]
+TST18-55
+  [same as TST12-55 (group), but with pmpcfg(i).A=OFF]
+TST18-56
+  [same as TST12-56 (group), but with pmpcfg(i).A=OFF]
+
+////////////////////////////
+
+TST21 (group)
+  [create scenarios where PMP entries with A=2 (NA4) and with/without matching permissions
+    - check only NA4 defined addresses are matching]
+TST21-1 = extension of (TST11-11, TST11-21, TST11-31, TST11-41, TST11-51,
+                        TST11-12, TST11-22, TST11-32, TST11-42, TST11-52,
+                        TST11-13, TST11-23, TST11-33, TST11-43, TST11-53,
+                        TST11-14, TST11-24, TST11-34, TST11-44, TST11-54,
+                        TST11-15, TST11-25, TST11-35, TST11-45, TST11-55,
+                        TST11-16, TST11-26, TST11-36, TST11-46, TST11-56,
+                        TST12-11, TST12-21, TST12-31, TST12-41, TST12-51,
+                        TST12-12, TST12-22, TST12-32, TST12-42, TST12-52,
+                        TST12-13, TST12-23, TST12-33, TST12-43, TST12-53,
+                        TST12-14, TST12-24, TST12-34, TST12-44, TST12-54,
+                        TST12-15, TST12-25, TST12-35, TST12-45, TST12-55,
+                        TST12-16, TST12-26, TST12-36, TST12-46, TST12-56)
+[configure only one (any, but the first one) PMP entry
+  - use A=NA4 for the PMP entry configuration
+  - execute the chosen kind of access
+  - should be same result]
+TST21-2 = extension of compatible pair of (TST11-11, TST11-21, TST11-31, TST11-41, TST11-51,
+                        									 TST11-12, TST11-22, TST11-32, TST11-42, TST11-52,
+                        									 TST11-13, TST11-23, TST11-33, TST11-43, TST11-53,
+                        									 TST11-14, TST11-24, TST11-34, TST11-44, TST11-54,
+                        									 TST11-15, TST11-25, TST11-35, TST11-45, TST11-55,
+                        									 TST11-16, TST11-26, TST11-36, TST11-46, TST11-56,
+                        									 TST12-11, TST12-21, TST12-31, TST12-41, TST12-51,
+                        									 TST12-12, TST12-22, TST12-32, TST12-42, TST12-52,
+                        									 TST12-13, TST12-23, TST12-33, TST12-43, TST12-53,
+                        									 TST12-14, TST12-24, TST12-34, TST12-44, TST12-54,
+                        									 TST12-15, TST12-25, TST12-35, TST12-45, TST12-55,
+                        									 TST12-16, TST12-26, TST12-36, TST12-46, TST12-56)
+[configure 2 non-adjacent PMP entries (highest-numbered ones first) (avoid the first PMP entry)
+  - use A=NA4 for each PMP entry configuration
+  - execute the 2 kinds of accesses (if possible to chain due to potential access-fault exception)
+  - should be same 2 results]
+TST21-3 = extension of compatible group(N) of (TST11-11, TST11-21, TST11-31, TST11-41, TST11-51,
+                        											 TST11-12, TST11-22, TST11-32, TST11-42, TST11-52,
+                        											 TST11-13, TST11-23, TST11-33, TST11-43, TST11-53,
+                        											 TST11-14, TST11-24, TST11-34, TST11-44, TST11-54,
+                        											 TST11-15, TST11-25, TST11-35, TST11-45, TST11-55,
+                        											 TST11-16, TST11-26, TST11-36, TST11-46, TST11-56,
+                        											 TST12-11, TST12-21, TST12-31, TST12-41, TST12-51,
+                        											 TST12-12, TST12-22, TST12-32, TST12-42, TST12-52,
+                        											 TST12-13, TST12-23, TST12-33, TST12-43, TST12-53,
+                        											 TST12-14, TST12-24, TST12-34, TST12-44, TST12-54,
+                        											 TST12-15, TST12-25, TST12-35, TST12-45, TST12-55,
+                        											 TST12-16, TST12-26, TST12-36, TST12-46, TST12-56)
+[configure N PMP entries (highest-numbered ones first) (as non-adjacent as possible, and avoid the first PMP entry)
+  - use A=NA4 for each PMP entry configuration
+  - execute the N kinds of accesses (if possible to chain due to potential access-fault exception)
+  - should be same N results]
+TST21-4 = extension of compatible group(8) of (TST11-11, TST11-21, TST11-31, TST11-41, TST11-51,
+                        											 TST11-12, TST11-22, TST11-32, TST11-42, TST11-52,
+                        											 TST11-13, TST11-23, TST11-33, TST11-43, TST11-53,
+                        											 TST11-14, TST11-24, TST11-34, TST11-44, TST11-54,
+                        											 TST11-15, TST11-25, TST11-35, TST11-45, TST11-55,
+                        											 TST11-16, TST11-26, TST11-36, TST11-46, TST11-56,
+                        											 TST12-11, TST12-21, TST12-31, TST12-41, TST12-51,
+                        											 TST12-12, TST12-22, TST12-32, TST12-42, TST12-52,
+                        											 TST12-13, TST12-23, TST12-33, TST12-43, TST12-53,
+                        											 TST12-14, TST12-24, TST12-34, TST12-44, TST12-54,
+                        											 TST12-15, TST12-25, TST12-35, TST12-45, TST12-55,
+                        											 TST12-16, TST12-26, TST12-36, TST12-46, TST12-56)
+[configure 8 PMP entries (highest-numbered ones first)
+  - use A=NA4 for each PMP entry configuration
+  - execute the 8 kinds of accesses (if possible to chain due to potential access-fault exception)
+  - should be same 8 results]
+
+---------------------------
+
+TST22 (group)
+  [create scenarios where PMP entries with A=3 (NAPOT) and with/without matching permissions
+    - check only NAPOT defined addresses are matching]
+TST22-1 = extension of (TST13-11, TST13-21, TST13-31, TST13-41, TST13-51,
+                        TST13-12, TST13-22, TST13-32, TST13-42, TST13-52,
+                        TST13-13, TST13-23, TST13-33, TST13-43, TST13-53,
+                        TST13-14, TST13-24, TST13-34, TST13-44, TST13-54,
+                        TST13-15, TST13-25, TST13-35, TST13-45, TST13-55,
+                        TST13-16, TST13-26, TST13-36, TST13-46, TST13-56,
+                        TST14-11, TST14-21, TST14-31, TST14-41, TST14-51,
+                        TST14-12, TST14-22, TST14-32, TST14-42, TST14-52,
+                        TST14-13, TST14-23, TST14-33, TST14-43, TST14-53,
+                        TST14-14, TST14-24, TST14-34, TST14-44, TST14-54,
+                        TST14-15, TST14-25, TST14-35, TST14-45, TST14-55,
+                        TST14-16, TST14-26, TST14-36, TST14-46, TST14-56)
+[configure only one (any, but the first one) PMP entry
+  - use A=NAPOT for the PMP entry configuration
+  - execute the chosen kind of access
+  - should be same result]
+TST22-2 = extension of compatible pair of (TST13-11, TST13-21, TST13-31, TST13-41, TST13-51,
+                        									 TST13-12, TST13-22, TST13-32, TST13-42, TST13-52,
+                        									 TST13-13, TST13-23, TST13-33, TST13-43, TST13-53,
+                        									 TST13-14, TST13-24, TST13-34, TST13-44, TST13-54,
+                        									 TST13-15, TST13-25, TST13-35, TST13-45, TST13-55,
+                        									 TST13-16, TST13-26, TST13-36, TST13-46, TST13-56,
+                        									 TST14-11, TST14-21, TST14-31, TST14-41, TST14-51,
+                        									 TST14-12, TST14-22, TST14-32, TST14-42, TST14-52,
+                        									 TST14-13, TST14-23, TST14-33, TST14-43, TST14-53,
+                        									 TST14-14, TST14-24, TST14-34, TST14-44, TST14-54,
+                        									 TST14-15, TST14-25, TST14-35, TST14-45, TST14-55,
+                        									 TST14-16, TST14-26, TST14-36, TST14-46, TST14-56)
+[configure 2 non-adjacent PMP entries (highest-numbered ones first) (avoid the first PMP entry)
+  - use A=NAPOT for each PMP entry configuration
+  - execute the 2 kinds of accesses (if possible to chain due to potential access-fault exception)
+  - should be same 2 results]
+TST22-3 = extension of compatible group(N) of (TST13-11, TST13-21, TST13-31, TST13-41, TST13-51,
+                        											 TST13-12, TST13-22, TST13-32, TST13-42, TST13-52,
+                        											 TST13-13, TST13-23, TST13-33, TST13-43, TST13-53,
+                        											 TST13-14, TST13-24, TST13-34, TST13-44, TST13-54,
+                        											 TST13-15, TST13-25, TST13-35, TST13-45, TST13-55,
+                        											 TST13-16, TST13-26, TST13-36, TST13-46, TST13-56,
+                        											 TST14-11, TST14-21, TST14-31, TST14-41, TST14-51,
+                        											 TST14-12, TST14-22, TST14-32, TST14-42, TST14-52,
+                        											 TST14-13, TST14-23, TST14-33, TST14-43, TST14-53,
+                        											 TST14-14, TST14-24, TST14-34, TST14-44, TST14-54,
+                        											 TST14-15, TST14-25, TST14-35, TST14-45, TST14-55,
+                        											 TST14-16, TST14-26, TST14-36, TST14-46, TST14-56)
+[configure N PMP entries (highest-numbered ones first) (as non-adjacent as possible, and avoid the first PMP entry)
+  - use A=NAPOT for each PMP entry configuration
+  - execute the N kinds of accesses (if possible to chain due to potential access-fault exception)
+  - should be same N results]
+TST22-4 = extension of compatible group(8) of (TST13-11, TST13-21, TST13-31, TST13-41, TST13-51,
+                        											 TST13-12, TST13-22, TST13-32, TST13-42, TST13-52,
+                        											 TST13-13, TST13-23, TST13-33, TST13-43, TST13-53,
+                        											 TST13-14, TST13-24, TST13-34, TST13-44, TST13-54,
+                        											 TST13-15, TST13-25, TST13-35, TST13-45, TST13-55,
+                        											 TST13-16, TST13-26, TST13-36, TST13-46, TST13-56,
+                        											 TST14-11, TST14-21, TST14-31, TST14-41, TST14-51,
+                        											 TST14-12, TST14-22, TST14-32, TST14-42, TST14-52,
+                        											 TST14-13, TST14-23, TST14-33, TST14-43, TST14-53,
+                        											 TST14-14, TST14-24, TST14-34, TST14-44, TST14-54,
+                        											 TST14-15, TST14-25, TST14-35, TST14-45, TST14-55,
+                        											 TST14-16, TST14-26, TST14-36, TST14-46, TST14-56)
+[configure 8 PMP entries (highest-numbered ones first)
+  - use A=NAPOT for each PMP entry configuration
+  - execute the 8 kinds of accesses (if possible to chain due to potential access-fault exception)
+  - should be same 8 results]
+
+---------------------------
+
+TST23 (group) => 
+  [create scenarios where PMP entries with A=1 (TOR) and with/without matching permissions
+    - pmpaddr(iÅ1) < pmpaddr(i), pmpcfg(i).A=TOR and pmpcfg(i-1) with/without matching permissions
+    - check only TOR defined addresses are matching]
+TST23-1 = extension of (TST15-11, TST15-21, TST15-31, TST15-41, TST15-51,
+                        TST15-12, TST15-22, TST15-32, TST15-42, TST15-52,
+                        TST15-13, TST15-23, TST15-33, TST15-43, TST15-53,
+                        TST15-14, TST15-24, TST15-34, TST15-44, TST15-54,
+                        TST15-15, TST15-25, TST15-35, TST15-45, TST15-55,
+                        TST15-16, TST15-26, TST15-36, TST15-46, TST15-56,
+                        TST16-11, TST16-21, TST16-31, TST16-41, TST16-51,
+                        TST16-12, TST16-22, TST16-32, TST16-42, TST16-52,
+                        TST16-13, TST16-23, TST16-33, TST16-43, TST16-53,
+                        TST16-14, TST16-24, TST16-34, TST16-44, TST16-54,
+                        TST16-15, TST16-25, TST16-35, TST16-45, TST16-55,
+                        TST16-16, TST16-26, TST16-36, TST16-46, TST16-56)
+[configure only one (any, but the first one) PMP entry
+  - execute the chosen kind of access
+  - should be same result]
+TST23-2 = extension of compatible pair of (TST15-11, TST15-21, TST15-31, TST15-41, TST15-51,
+                        									 TST15-12, TST15-22, TST15-32, TST15-42, TST15-52,
+                        									 TST15-13, TST15-23, TST15-33, TST15-43, TST15-53,
+                        									 TST15-14, TST15-24, TST15-34, TST15-44, TST15-54,
+                        									 TST15-15, TST15-25, TST15-35, TST15-45, TST15-55,
+                        									 TST15-16, TST15-26, TST15-36, TST15-46, TST15-56,
+                        									 TST16-11, TST16-21, TST16-31, TST16-41, TST16-51,
+                        									 TST16-12, TST16-22, TST16-32, TST16-42, TST16-52,
+                        									 TST16-13, TST16-23, TST16-33, TST16-43, TST16-53,
+                        									 TST16-14, TST16-24, TST16-34, TST16-44, TST16-54,
+                        									 TST16-15, TST16-25, TST16-35, TST16-45, TST16-55,
+                        									 TST16-16, TST16-26, TST16-36, TST16-46, TST16-56)
+[configure 2 non-adjacent PMP entries (highest-numbered ones first) (avoid the first PMP entry)
+  - execute the 2 kinds of accesses (if possible to chain due to potential access-fault exception)
+  - should be same 2 results]
+TST23-3 = extension of compatible group(N) of (TST15-11, TST15-21, TST15-31, TST15-41, TST15-51,
+                        											 TST15-12, TST15-22, TST15-32, TST15-42, TST15-52,
+                        											 TST15-13, TST15-23, TST15-33, TST15-43, TST15-53,
+                        											 TST15-14, TST15-24, TST15-34, TST15-44, TST15-54,
+                        											 TST15-15, TST15-25, TST15-35, TST15-45, TST15-55,
+                        											 TST15-16, TST15-26, TST15-36, TST15-46, TST15-56,
+                        											 TST16-11, TST16-21, TST16-31, TST16-41, TST16-51,
+                        											 TST16-12, TST16-22, TST16-32, TST16-42, TST16-52,
+                        											 TST16-13, TST16-23, TST16-33, TST16-43, TST16-53,
+                        											 TST16-14, TST16-24, TST16-34, TST16-44, TST16-54,
+                        											 TST16-15, TST16-25, TST16-35, TST16-45, TST16-55,
+                        											 TST16-16, TST16-26, TST16-36, TST16-46, TST16-56)
+[configure N PMP entries (highest-numbered ones first) (as non-adjacent as possible, and avoid the first PMP entry)
+  - execute the N kinds of accesses (if possible to chain due to potential access-fault exception)
+  - should be same N results]
+TST23-4 = extension of compatible group(8) of (TST15-11, TST15-21, TST15-31, TST15-41, TST15-51,
+                        											 TST15-12, TST15-22, TST15-32, TST15-42, TST15-52,
+                        											 TST15-13, TST15-23, TST15-33, TST15-43, TST15-53,
+                        											 TST15-14, TST15-24, TST15-34, TST15-44, TST15-54,
+                        											 TST15-15, TST15-25, TST15-35, TST15-45, TST15-55,
+                        											 TST15-16, TST15-26, TST15-36, TST15-46, TST15-56,
+                        											 TST16-11, TST16-21, TST16-31, TST16-41, TST16-51,
+                        											 TST16-12, TST16-22, TST16-32, TST16-42, TST16-52,
+                        											 TST16-13, TST16-23, TST16-33, TST16-43, TST16-53,
+                        											 TST16-14, TST16-24, TST16-34, TST16-44, TST16-54,
+                        											 TST16-15, TST16-25, TST16-35, TST16-45, TST16-55,
+                        											 TST16-16, TST16-26, TST16-36, TST16-46, TST16-56)
+[configure 8 PMP entries (highest-numbered ones first)
+  - execute the 8 kinds of accesses (if possible to chain due to potential access-fault exception)
+  - should be same 8 results]
+
+---------------------------
+
+TST24 (group) => FTR09-g
+  [create scenarios where PMP entries with A=0 (OFF) and with matching permissions
+    - check no address matching for those PMP entries]
+  [create scenarios where all PMP entries with A=0 (OFF) and with matching permissions
+    - check no address matching for all PMP entries]
+  [check S or U mode access fails when all A=OFF with at least one PMP entry implemented] => FTR09-g
+TST24-1 = extension of (TST17-11, TST17-21, TST17-31, TST17-41, TST17-51,
+                        TST17-13, TST17-23, TST17-33, TST17-43, TST17-53,
+                        TST17-14, TST17-24, TST17-34, TST17-44, TST17-54,
+                        TST17-16, TST17-26, TST17-36, TST17-46, TST17-56,
+                        TST18-14, TST18-24, TST18-34, TST18-44, TST18-54, //TODO: M-mode may not raise an exception
+                        TST18-16, TST18-26, TST18-36, TST18-46, TST18-56) //TODO: M-mode may not raise an exception
+                        //TODO: SHOULD WE ADD (TST18-11, TST18-21, TST18-31, TST18-41, TST18-51,
+                                               TST18-13, TST18-23, TST18-33, TST18-43, TST18-53) ?
+[configure only one (any, but the first one) PMP entry
+  - execute the chosen kind of access
+  - check appropriate access-fault exception raised]
+TST24-2 = extension of compatible pair of (TST17-11, TST17-21, TST17-31, TST17-41, TST17-51,
+                         									 TST17-13, TST17-23, TST17-33, TST17-43, TST17-53,
+                         									 TST17-14, TST17-24, TST17-34, TST17-44, TST17-54,
+                         									 TST17-16, TST17-26, TST17-36, TST17-46, TST17-56,
+                         									 TST18-14, TST18-24, TST18-34, TST18-44, TST18-54, //TODO: M-mode may not raise an exception
+                         									 TST18-16, TST18-26, TST18-36, TST18-46, TST18-56) //TODO: M-mode may not raise an exception
+                        //TODO: SHOULD WE ADD (TST18-11, TST18-21, TST18-31, TST18-41, TST18-51,
+                                               TST18-13, TST18-23, TST18-33, TST18-43, TST18-53) ?
+[configure 2 non-adjacent PMP entries (highest-numbered ones first) (avoid the first PMP entry)
+  - execute the 2 kinds of accesses (if possible to chain due to access-fault)
+  - check 2 appropriate access-fault exceptions raised]
+TST24-3 = extension of compatible group(N) of (TST17-11, TST17-21, TST17-31, TST17-41, TST17-51,
+                          										 TST17-13, TST17-23, TST17-33, TST17-43, TST17-53,
+                          										 TST17-14, TST17-24, TST17-34, TST17-44, TST17-54,
+                          										 TST17-16, TST17-26, TST17-36, TST17-46, TST17-56,
+                          										 TST18-14, TST18-24, TST18-34, TST18-44, TST18-54, //TODO: M-mode may not raise an exception
+                          										 TST18-16, TST18-26, TST18-36, TST18-46, TST18-56) //TODO: M-mode may not raise an exception
+                        //TODO: SHOULD WE ADD (TST18-11, TST18-21, TST18-31, TST18-41, TST18-51,
+                                               TST18-13, TST18-23, TST18-33, TST18-43, TST18-53) ?
+[configure N PMP entries (highest-numbered ones first) (as non-adjacent as possible, and avoid the first PMP entry)
+  - execute the N kinds of accesses (if possible to chain due to access-fault)
+  - check N appropriate access-fault exceptions raised]
+TST24-4 = extension of compatible group(8) of (TST17-11, TST17-21, TST17-31, TST17-41, TST17-51,
+                        											 TST17-13, TST17-23, TST17-33, TST17-43, TST17-53,
+                        											 TST17-14, TST17-24, TST17-34, TST17-44, TST17-54,
+                        											 TST17-16, TST17-26, TST17-36, TST17-46, TST17-56,
+                        											 TST18-14, TST18-24, TST18-34, TST18-44, TST18-54, //TODO: M-mode may not raise an exception
+                        											 TST18-16, TST18-26, TST18-36, TST18-46, TST18-56) //TODO: M-mode may not raise an exception
+                        //TODO: SHOULD WE ADD (TST18-11, TST18-21, TST18-31, TST18-41, TST18-51,
+                                               TST18-13, TST18-23, TST18-33, TST18-43, TST18-53) ?
+[configure 8 PMP entries (highest-numbered ones first)
+  - execute the 8 kinds of accesses (if possible to chain due to access-fault)
+  - check 8 appropriate access-fault exceptions raised]
+
+---------------------------
+
+//TO COMPLETE => FTR06-b
+TST25 = same as TST15+TST16 (groups) with PMP entry (0) with pmpaddr(0) > 0
+TST26 = same as TST15+TST16 (groups) with PMP entry (0) with pmpaddr(0) = 0
+  [create scenario where PMP entry pmpcfg(0) with TOR:
+    - pmpaddr(0) > 0
+    - pmpaddr(0) = 0]
+
+//TO COMPLETE => FTR06-c
+TST27 = same as TST23-2 but with pmpaddr(i) Å pmpaddr(i-1) and with pmpcfg(i) and pmpcfg(i-1) correct
+  [create scenario where PMP entry pmpcfg(i) with TOR:
+    - pmpaddr(i) Å pmpaddr(i-1) and PMP entry pmpcfg(i-1) correct]
+  [create scenario where PMP entry pmpcfg(0) with TOR:
+    - pmpaddr(0) >= pmpaddr(1/2/3/Å)]
+
+////////////////////////////
+
+TST31 (group) => FTR08-a and FTR08-b
+  [create scenario where L=0 for PMP entry (i)
+    - check pmp(i)cfg and pmpaddr(i) are writable in M-mode only]
+  [create scenario where L=1 for PMP entry (i)
+    - check pmp(i)cfg and pmpaddr(i) are effectively locked whatever the mode]
+  [create scenario where PMP entries are locked L=1
+    - check only the hart reset unlocks all PMP entries]
+TST31-1 = extension of (TST11-14, TST11-24, TST11-34, TST11-44, TST11-54,
+                        TST12-14, TST12-24, TST12-34, TST12-44, TST12-54)
+[configure only one ([FTR02-b1]: maybe mandatorily the 1st) PMP entry: with L=1
+  - check for PMP entry (i) where L=1, pmp(i)cfg and pmpaddr(i) are effectively locked whatever the SW mode => FTR08-a
+  - check only hart reset unlocks all => FTR08-b
+  - check reset values: all pmp(i)cfg and pmpaddr(i) are M-mode read zero]
+TST31-2 = extension of compatible pair of (TST11-14, TST11-24, TST11-34, TST11-44, TST11-54,
+                                           TST12-14, TST12-24, TST12-34, TST12-44, TST12-54)
+[configure 2 PMP entries ([FTR02-b1]: maybe mandatorily the 2 first ones): both with L=1
+  - check for PMP entry (i) where L=1, pmp(i)cfg and pmpaddr(i) are effectively locked whatever the SW mode => FTR08-a
+  - check only hart reset unlocks all => FTR08-b
+  - check reset values: all pmp(i)cfg and pmpaddr(i) are M-mode read zero]
+TST31-3 = extension of compatible pair of (TST11-11, TST11-21, TST11-31, TST11-41, TST11-51,
+                                           TST11-14, TST11-24, TST11-34, TST11-44, TST11-54,
+                                           TST12-11, TST12-21, TST12-31, TST12-41, TST12-51,
+                                           TST12-14, TST12-24, TST12-34, TST12-44, TST12-54)
+[configure 2 PMP entries ([FTR02-b1]: maybe mandatorily the 2 first ones): one with L=1 and the other with L=0,
+  - check for PMP entry (i) where L=1, pmp(i)cfg and pmpaddr(i) are effectively locked whatever the SW mode => FTR08-a
+  - check locked PMP entry (i) has no effect on unlocked PMP entry (j)
+  - check for PMP entry (i) where L=0, pmp(i)cfg and pmpaddr(i) are writable/readable in M-mode only
+  - check only hart reset unlocks all => FTR08-b
+  - check reset values: all pmp(i)cfg and pmpaddr(i) are M-mode read zero]
+TST31-4 = extension of compatible group(N) of (TST11-14, TST11-24, TST11-34, TST11-44, TST11-54,
+                                               TST12-14, TST12-24, TST12-34, TST12-44, TST12-54)
+[configure N PMP entries ([FTR02-b1]: maybe mandatorily the N first ones): all with L=1
+  - check for PMP entry (i) where L=1, pmp(i)cfg and pmpaddr(i) are effectively locked whatever the SW mode => FTR08-a
+  - check only hart reset unlocks all => FTR08-b
+  - check reset values: all pmp(i)cfg and pmpaddr(i) are M-mode read zero]
+TST31-5 = extension of compatible group(N) of (TST11-11, TST11-21, TST11-31, TST11-41, TST11-51,
+                                               TST11-14, TST11-24, TST11-34, TST11-44, TST11-54,
+                                               TST12-11, TST12-21, TST12-31, TST12-41, TST12-51,
+                                               TST12-14, TST12-24, TST12-34, TST12-44, TST12-54)
+[configure N PMP entries ([FTR02-b1]: maybe mandatorily the N first ones): at least one with L=1 and one with L=0,
+  - check for PMP entry (i) where L=1, pmp(i)cfg and pmpaddr(i) are effectively locked whatever the SW mode => FTR08-a
+  - check locked PMP entry (i) has no effect on unlocked PMP entry (j)
+  - check for PMP entry (i) where L=0, pmp(i)cfg and pmpaddr(i) are writable/readable in M-mode only
+  - check only hart reset unlocks all => FTR08-b
+  - check reset values: all pmp(i)cfg and pmpaddr(i) are M-mode read zero]
+TST31-6 = extension of compatible group(8) of (TST11-14, TST11-24, TST11-34, TST11-44, TST11-54,
+                                               TST12-14, TST12-24, TST12-34, TST12-44, TST12-54)
+[configure 8 PMP entries: all with L=1
+  - check for PMP entry (i) where L=1, pmp(i)cfg and pmpaddr(i) are effectively locked whatever the SW mode => FTR08-a
+  - check only hart reset unlocks all => FTR08-b
+  - check reset values: all pmp(i)cfg and pmpaddr(i) are M-mode read zero]
+TST31-7 = extension of compatible group(8) of (TST11-11, TST11-21, TST11-31, TST11-41, TST11-51,
+                                           		 TST11-14, TST11-24, TST11-34, TST11-44, TST11-54,
+                                           		 TST12-11, TST12-21, TST12-31, TST12-41, TST12-51,
+                                           		 TST12-14, TST12-24, TST12-34, TST12-44, TST12-54)
+[configure 8 PMP entries: at least one with L=1 and one with L=0,
+  - check for PMP entry (i) where L=1, pmp(i)cfg and pmpaddr(i) are effectively locked whatever the SW mode => FTR08-a
+  - check locked PMP entry (i) has no effect on unlocked PMP entry (j)
+  - check for PMP entry (i) where L=0, pmp(i)cfg and pmpaddr(i) are writable/readable in M-mode only
+  - check only hart reset unlocks all => FTR08-b
+  - check reset values: all pmp(i)cfg and pmpaddr(i) are M-mode read zero]
+
+---------------------------
+
+TST32 (group) => FTR08-a and FTR08-b
+  [create scenario where pmp(i)cfg.L=1 and pmp(i)cfg.A=NAPOT for PMP entry (i)]
+TST32-1 = same as TST31-1 but with extension of (TST13-14, TST13-24, TST13-34, TST13-44, TST13-54,
+                                                 TST14-14, TST14-24, TST14-34, TST14-44, TST14-54)
+TST32-2 = same as TST31-2 but with extension of (TST13-14, TST13-24, TST13-34, TST13-44, TST13-54,
+                                                 TST14-14, TST14-24, TST14-34, TST14-44, TST14-54)
+TST32-3 = same as TST31-3 but with extension of (TST13-11, TST13-21, TST13-31, TST13-41, TST13-51,
+                                           			 TST13-14, TST13-24, TST13-34, TST13-44, TST13-54,
+                                           			 TST14-11, TST14-21, TST14-31, TST14-41, TST14-51,
+                                           			 TST14-14, TST14-24, TST14-34, TST14-44, TST14-54)
+TST32-4 = same as TST31-4 but with extension of (TST13-14, TST13-24, TST13-34, TST13-44, TST13-54,
+                                                 TST14-14, TST14-24, TST14-34, TST14-44, TST14-54)
+TST32-5 = same as TST31-5 but with extension of (TST13-11, TST13-21, TST13-31, TST13-41, TST13-51,
+                                               	 TST13-14, TST13-24, TST13-34, TST13-44, TST13-54,
+                                               	 TST14-11, TST14-21, TST14-31, TST14-41, TST14-51,
+                                               	 TST14-14, TST14-24, TST14-34, TST14-44, TST14-54)
+TST32-6 = same as TST31-6 but with extension of (TST13-14, TST13-24, TST13-34, TST13-44, TST13-54,
+                                                 TST14-14, TST14-24, TST14-34, TST14-44, TST14-54)
+TST32-7 = same as TST31-7 but with extension of (TST13-11, TST13-21, TST13-31, TST13-41, TST13-51,
+                                           		 	 TST13-14, TST13-24, TST13-34, TST13-44, TST13-54,
+                                           		 	 TST14-11, TST14-21, TST14-31, TST14-41, TST14-51,
+                                           		 	 TST14-14, TST14-24, TST14-34, TST14-44, TST14-54)
+
+---------------------------
+
+TST33 (group) => FTR08-a and FTR08-b
+  [create scenario where pmp(i)cfg.L=1 and pmp(i)cfg.A=TOR for PMP entry (i)
+    - additionally, check writes to pmpaddr(i-1) are ignored]
+TST33-1 = same as TST31-1 but with extension of (TST15-14, TST15-24, TST15-34, TST15-44, TST15-54,
+                                                 TST16-14, TST16-24, TST16-34, TST16-44, TST16-54)
+TST33-2 = same as TST31-2 but with extension of (TST15-14, TST15-24, TST15-34, TST15-44, TST15-54,
+                                                 TST16-14, TST16-24, TST16-34, TST16-44, TST16-54)
+TST33-3 = same as TST31-3 but with extension of (TST15-11, TST15-21, TST15-31, TST15-41, TST15-51,
+                                           			 TST15-14, TST15-24, TST15-34, TST15-44, TST15-54,
+                                           			 TST16-11, TST16-21, TST16-31, TST16-41, TST16-51,
+                                           			 TST16-14, TST16-24, TST16-34, TST16-44, TST16-54)
+TST33-4 = same as TST31-4 but with extension of (TST15-14, TST15-24, TST15-34, TST15-44, TST15-54,
+                                                 TST16-14, TST16-24, TST16-34, TST16-44, TST16-54)
+TST33-5 = same as TST31-5 but with extension of (TST15-11, TST15-21, TST15-31, TST15-41, TST15-51,
+                                               	 TST15-14, TST15-24, TST15-34, TST15-44, TST15-54,
+                                               	 TST16-11, TST16-21, TST16-31, TST16-41, TST16-51,
+                                               	 TST16-14, TST16-24, TST16-34, TST16-44, TST16-54)
+TST33-6 = same as TST31-6 but with extension of (TST15-14, TST15-24, TST15-34, TST15-44, TST15-54,
+                                                 TST16-14, TST16-24, TST16-34, TST16-44, TST16-54)
+TST33-7 = same as TST31-7 but with extension of (TST15-11, TST15-21, TST15-31, TST15-41, TST15-51,
+                                           		 	 TST15-14, TST15-24, TST15-34, TST15-44, TST15-54,
+                                           		 	 TST16-11, TST16-21, TST16-31, TST16-41, TST16-51,
+                                           		 	 TST16-14, TST16-24, TST16-34, TST16-44, TST16-54)
+
+---------------------------
+
+TST34 (group) => FTR08-a and FTR08-b
+  [create scenario where pmp(i)cfg.A=OFF, then pmp(i)cfg.L=1 for PMP entry (i)
+    - check writes to pmp(i)cfg are ignored]
+TST34-1 = same as TST31-1 but with extension of (TST17-14, TST17-24, TST17-34, TST17-44, TST17-54,
+                                                 TST18-14, TST18-24, TST18-34, TST18-44, TST18-54)
+TST34-2 = same as TST31-2 but with extension of (TST17-14, TST17-24, TST17-34, TST17-44, TST17-54,
+                                                 TST18-14, TST18-24, TST18-34, TST18-44, TST18-54)
+TST34-3 = same as TST31-3 but with extension of (TST17-11, TST17-21, TST17-31, TST17-41, TST17-51,
+                                           			 TST17-14, TST17-24, TST17-34, TST17-44, TST17-54,
+                                           			 TST18-11, TST18-21, TST18-31, TST18-41, TST18-51,
+                                           			 TST18-14, TST18-24, TST18-34, TST18-44, TST18-54)
+TST34-4 = same as TST31-4 but with extension of (TST17-14, TST17-24, TST17-34, TST17-44, TST17-54,
+                                                 TST18-14, TST18-24, TST18-34, TST18-44, TST18-54)
+TST34-5 = same as TST31-5 but with extension of (TST17-11, TST17-21, TST17-31, TST17-41, TST17-51,
+                                               	 TST17-14, TST17-24, TST17-34, TST17-44, TST17-54,
+                                               	 TST18-11, TST18-21, TST18-31, TST18-41, TST18-51,
+                                               	 TST18-14, TST18-24, TST18-34, TST18-44, TST18-54)
+TST34-6 = same as TST31-6 but with extension of (TST17-14, TST17-24, TST17-34, TST17-44, TST17-54,
+                                                 TST18-14, TST18-24, TST18-34, TST18-44, TST18-54)
+TST34-7 = same as TST31-7 but with extension of (TST17-11, TST17-21, TST17-31, TST17-41, TST17-51,
+                                           		 	 TST17-14, TST17-24, TST17-34, TST17-44, TST17-54,
+                                           		 	 TST18-11, TST18-21, TST18-31, TST18-41, TST18-51,
+                                           		 	 TST18-14, TST18-24, TST18-34, TST18-44, TST18-54)
+
+---------------------------
+
+TST39 (group) => FTR08-a and FTR08-b
+  [create scenario where pmp(i)cfg.L=1 and pmp(i)cfg.A=NA4/NAPOT/TOR/OFF for PMP entry (i)]
+TST39-1 = same as TST31-1 but with extension of (TST1*-14, TST1*-24, TST1*-34, TST1*-44, TST1*-54)
+TST39-2 = same as TST31-2 but with extension of (TST1*-14, TST1*-24, TST1*-34, TST1*-44, TST1*-54)
+TST39-3 = same as TST31-3 but with extension of (TST1*-11, TST1*-21, TST1*-31, TST1*-41, TST1*-51,
+                                           			 TST1*-14, TST1*-24, TST1*-34, TST1*-44, TST1*-54)
+TST39-4 = same as TST31-4 but with extension of (TST1*-14, TST1*-24, TST1*-34, TST1*-44, TST1*-54)
+TST39-5 = same as TST31-5 but with extension of (TST1*-11, TST1*-21, TST1*-31, TST1*-41, TST1*-51,
+                                               	 TST1*-14, TST1*-24, TST1*-34, TST1*-44, TST1*-54)
+TST39-6 = same as TST31-6 but with extension of (TST1*-14, TST1*-24, TST1*-34, TST1*-44, TST1*-54)
+TST39-7 = same as TST31-7 but with extension of (TST1*-11, TST1*-21, TST1*-31, TST1*-41, TST1*-51,
+                                           		 	 TST1*-14, TST1*-24, TST1*-34, TST1*-44, TST1*-54)
+
+////////////////////////////
+
+TST42 (group) => FTR02-b1
+  [check if the lowest-numbered PMP CSRs must be programmed for higher-numbered ones to be taken into account in PMP checks]
+TST42-1 = extension of (TST11-11, TST11-21, TST11-31, TST11-41, TST11-51,
+                        TST11-14, TST11-24, TST11-34, TST11-44, TST11-54,
+                        TST12-14, TST12-24, TST12-34, TST12-44, TST12-54,
+                        TST13-11, TST13-21, TST13-31, TST13-41, TST13-51,
+                        TST13-14, TST13-24, TST13-34, TST13-44, TST13-54,
+                        TST14-14, TST14-24, TST14-34, TST14-44, TST14-54,
+                        TST15-11, TST15-21, TST15-31, TST15-41, TST15-51,
+                        TST15-14, TST15-24, TST15-34, TST15-44, TST15-54,
+                        TST16-14, TST16-24, TST16-34, TST16-44, TST16-54)
+[configure only one (any, but the first one) PMP entry
+  - execute the chosen kind of access several times
+  - check no access-fault exception]
+TST42-2 = extension of compatible pair of (TST11-11, TST11-21, TST11-31, TST11-41, TST11-51,
+                        									 TST11-14, TST11-24, TST11-34, TST11-44, TST11-54,
+                        									 TST12-14, TST12-24, TST12-34, TST12-44, TST12-54,
+                        									 TST13-11, TST13-21, TST13-31, TST13-41, TST13-51,
+                        									 TST13-14, TST13-24, TST13-34, TST13-44, TST13-54,
+                        									 TST14-14, TST14-24, TST14-34, TST14-44, TST14-54,
+                        									 TST15-11, TST15-21, TST15-31, TST15-41, TST15-51,
+                        									 TST15-14, TST15-24, TST15-34, TST15-44, TST15-54,
+                        									 TST16-14, TST16-24, TST16-34, TST16-44, TST16-54)
+[configure 2 non-adjacent PMP entries (highest-numbered ones first) (avoid the first PMP entry)
+  - execute the 2 kinds of accesses several times
+  - check no access-fault exception]
+TST42-3 = extension of compatible group(N) of (TST11-11, TST11-21, TST11-31, TST11-41, TST11-51,
+                        									  	 TST11-14, TST11-24, TST11-34, TST11-44, TST11-54,
+                        									  	 TST12-14, TST12-24, TST12-34, TST12-44, TST12-54,
+                        											 TST13-11, TST13-21, TST13-31, TST13-41, TST13-51,
+                        											 TST13-14, TST13-24, TST13-34, TST13-44, TST13-54,
+                        											 TST14-14, TST14-24, TST14-34, TST14-44, TST14-54,
+                        											 TST15-11, TST15-21, TST15-31, TST15-41, TST15-51,
+                        											 TST15-14, TST15-24, TST15-34, TST15-44, TST15-54,
+                        											 TST16-14, TST16-24, TST16-34, TST16-44, TST16-54)
+[configure N PMP entries (highest-numbered ones first) (as non-adjacent as possible, and avoid the first PMP entry)
+  - execute all the kinds of accesses several times
+  - check no access-fault exception]
+
+////////////////////////////
+
+TST51 (group) => FTR09-a, FTR09-b and FTR09-c
+  [create scenarios where 2 PMP entries with same pmpaddr
+    - one without matching permissions or with A=OFF
+    - one with matching permissions and A=NA4/NAPOT/TOR
+    - any of them can be the lowest-numbered PMP entry]
+TST51-1
+[configure 2 PMP entries
+  - configure the lowest-numbered PMP entry with  (TST11-12, TST11-22, TST11-32, TST11-42, TST11-52,
+                        									 				 TST11-15, TST11-25, TST11-35, TST11-45, TST11-55,
+                        									 				 TST12-12, TST12-22, TST12-32, TST12-42, TST12-52,
+                        									 				 TST12-15, TST12-25, TST12-35, TST12-45, TST12-55,
+                                                   TST13-12, TST13-22, TST13-32, TST13-42, TST13-52,
+                        									 				 TST13-15, TST13-25, TST13-35, TST13-45, TST13-55,
+                        									 				 TST14-12, TST14-22, TST14-32, TST14-42, TST14-52,
+                        									 				 TST14-15, TST14-25, TST14-35, TST14-45, TST14-55,
+                                                   TST15-12, TST15-22, TST15-32, TST15-42, TST15-52,
+                        									 				 TST15-15, TST15-25, TST15-35, TST15-45, TST15-55,
+                        									 				 TST16-12, TST16-22, TST16-32, TST16-42, TST16-52,
+                        									 				 TST16-15, TST16-25, TST16-35, TST16-45, TST16-55,
+                                                   TST17-12, TST17-22, TST17-32, TST17-42, TST17-52,
+                        									 				 TST17-15, TST17-25, TST17-35, TST17-45, TST17-55,
+                        									 				 TST18-12, TST18-22, TST18-32, TST18-42, TST18-52,
+                        									 				 TST18-15, TST18-25, TST18-35, TST18-45, TST18-55)
+  - configure the highest-numbered PMP entry with  (TST11-11, TST11-21, TST11-31, TST11-41, TST11-51,
+                        									 				  TST11-14, TST11-24, TST11-34, TST11-44, TST11-54,
+                        									 				  TST12-11, TST12-21, TST12-31, TST12-41, TST12-51,
+                        									 				  TST12-14, TST12-24, TST12-34, TST12-44, TST12-54,
+                                                    TST13-11, TST13-21, TST13-31, TST13-41, TST13-51,
+                        									 					TST13-14, TST13-24, TST13-34, TST13-44, TST13-54,
+                        									 					TST14-11, TST14-21, TST14-31, TST14-41, TST14-51,
+                        									 					TST14-14, TST14-24, TST14-34, TST14-44, TST14-54,
+                                                    TST15-11, TST15-21, TST15-31, TST15-41, TST15-51,
+                        									 				  TST15-14, TST15-24, TST15-34, TST15-44, TST15-54,
+                        									 				  TST16-11, TST16-21, TST16-31, TST16-41, TST16-51,
+                        									 				  TST16-14, TST16-24, TST16-34, TST16-44, TST16-54)
+  - execute the associated access
+  - check associated access-fault exception raised]
+TST51-2
+[configure 2 PMP entries
+  - configure the lowest-numbered PMP entry with  (TST11-11, TST11-21, TST11-31, TST11-41, TST11-51,
+                        									 				 TST11-14, TST11-24, TST11-34, TST11-44, TST11-54,
+                        									 				 TST12-11, TST12-21, TST12-31, TST12-41, TST12-51,
+                        									 				 TST12-14, TST12-24, TST12-34, TST12-44, TST12-54,
+                                                   TST13-11, TST13-21, TST13-31, TST13-41, TST13-51,
+                        									 				 TST13-14, TST13-24, TST13-34, TST13-44, TST13-54,
+                        									 				 TST14-11, TST14-21, TST14-31, TST14-41, TST14-51,
+                        									 				 TST14-14, TST14-24, TST14-34, TST14-44, TST14-54,
+                                                   TST15-11, TST15-21, TST15-31, TST15-41, TST15-51,
+                        									 				 TST15-14, TST15-24, TST15-34, TST15-44, TST15-54,
+                        									 				 TST16-11, TST16-21, TST16-31, TST16-41, TST16-51,
+                        									 				 TST16-14, TST16-24, TST16-34, TST16-44, TST16-54)
+  - configure the highest-numbered PMP entry with  (TST11-12, TST11-22, TST11-32, TST11-42, TST11-52,
+                        									 				  TST11-15, TST11-25, TST11-35, TST11-45, TST11-55,
+                        									 				  TST12-12, TST12-22, TST12-32, TST12-42, TST12-52,
+                        									 				  TST12-15, TST12-25, TST12-35, TST12-45, TST12-55,
+                                                    TST13-12, TST13-22, TST13-32, TST13-42, TST13-52,
+                        									 				  TST13-15, TST13-25, TST13-35, TST13-45, TST13-55,
+                        									 				  TST14-12, TST14-22, TST14-32, TST14-42, TST14-52,
+                        									 				  TST14-15, TST14-25, TST14-35, TST14-45, TST14-55,
+                                                    TST15-12, TST15-22, TST15-32, TST15-42, TST15-52,
+                        									 				  TST15-15, TST15-25, TST15-35, TST15-45, TST15-55,
+                        									 				  TST16-12, TST16-22, TST16-32, TST16-42, TST16-52,
+                        									 				  TST16-15, TST16-25, TST16-35, TST16-45, TST16-55,
+                                                    TST17-12, TST17-22, TST17-32, TST17-42, TST17-52,
+                        									 				  TST17-15, TST17-25, TST17-35, TST17-45, TST17-55,
+                        									 				  TST18-12, TST18-22, TST18-32, TST18-42, TST18-52,
+                        									 				  TST18-15, TST18-25, TST18-35, TST18-45, TST18-55)
+  - execute the associated access
+  - check no access-fault exception]
+
+// //IMPOSSIBLE TO IMPLEMENT (4-BYTE GRANUARITY) => FTR09-a
+// [implement checks for priority:
+//  for each access length (1byte, 2bytes, 3bytes or 4bytes)
+//       for each byte position on the 32bits bus
+//            for each kind of permissions/mode access settings
+//               - set a low-numbered any-single-byte-address-matching PMP entry with non-matching permissions/mode settings 
+//               - set a higher-numbered all-bytes-address-matching PMP entry with matching permissions/mode settings
+//               - set intermediate-numbered not-all-bytes-address-matching PMP entries with matching permissions/mode settings
+//               - NB: can be randomized
+//               - check the accesses fail (so reaching the low-numbered any-single-byte-address-matching PMP entry)
+//  for each access length (1byte, 2bytes, 3bytes or 4bytes)
+//       for each byte position on the 32bits bus
+//            for each kind of permissions/mode access settings
+//               - set a low-numbered all-bytes-address-matching PMP entry with matching permissions/mode settings 
+//               - set a higher-numbered any-single-byte-address-matching PMP entry with non-matching permissions/mode settings
+//               - set intermediate-numbered not-all-bytes-address-matching PMP entries with non-matching permissions/mode settings
+//               - NB: can be randomized
+//               - check the accesses pass (so reaching the low-numbered all-bytes-address-matching PMP entry)]
+
+// //IMPOSSIBLE TO IMPLEMENT (4-BYTE GRANUARITY) => FTR09-b and FTR09-c
+// [check access fails if only part of the access bytes are matching the PMP entry whatever the permissions and the mode]
+//  for each access length (1byte, 2bytes, 3bytes or 4bytes)
+//       for each byte position on the 32bits bus
+//            for each kind of permissions/mode access settings
+//               - set a low-numbered all-bytes-address-matching PMP entry with non-matching permissions/mode settings 
+//               - set a higher-numbered any-single-byte-address-matching PMP entry with matching permissions/mode settings
+//               - set intermediate-numbered not-all-bytes-address-matching PMP entries with matching permissions/mode settings
+//               - NB: can be randomized
+//               - check the accesses fail]
+
+////////////////////////////
+
+TST61 => FTR10-a
+[check multiple-accesses instructions not generating any access-fault exceptions]
+
+TST62
+[check multiple-accesses instructions generating access-fault exceptions with only one non-matching access]
+
+TST63
+[check multiple-accesses instructions generating access-fault exceptions with multiple non-matching accesses]
+
+TST64
+[create scenario where instruction-associated multiple accesses are not mutually atomic] //TODO: UNDERSTAND THE MEANING
+
+//TST65 => FTR10-c
+[create scenario with misaligned loads, stores, and instruction fetches generating multiple accesses for which:
+ - access-fault exception occurs at 1st, 2nd, Å last access
+ - other accesses succeed]
+[if floating-point is enabled, create scenario for floating-point store wider than XLEN bits (e.g. FSD instruction)
+
+
+
