@@ -99,12 +99,12 @@ TST02-1 (HIGH-PRIO)
   - check for PMP entry (i) where L=0 that pmp(i)cfg and pmpaddr(i) are not writable/readable in S or U modes
   - check for PMP entry (i) where L=0 that pmp(i)cfg and pmpaddr(i) are writable/readable in M-mode only
   - check for PMP entry (i) where L=0 that pmp(i)cfg and pmpaddr(i) are not writable/readable in S or U modes]
-TST02-2 = 2 times reuse/call of TST02-1
+TST02-2 (LOW-PRIO) = 2 times reuse/call of TST02-1
 [configure 2 PMP entries ([FTR02-b1]: maybe mandatorily the 2 first ones): both with L=0,
   - check for PMP entry (i) where L=0 that pmp(i)cfg and pmpaddr(i) are not writable/readable in S or U modes
   - check for PMP entry (i) where L=0 that pmp(i)cfg and pmpaddr(i) are writable/readable in M-mode only
   - check for PMP entry (i) where L=0 that pmp(i)cfg and pmpaddr(i) are not writable/readable in S or U modes]
-TST02-3 = N times reuse/call of TST02-1
+TST02-3 (LOW-PRIO) = N times reuse/call of TST02-1
 [configure N PMP entries ([FTR02-b1]: maybe mandatorily the N first ones): all with L=0,
   - check for PMP entry (i) where L=0 that pmp(i)cfg and pmpaddr(i) are not writable/readable in S or U modes
   - check for PMP entry (i) where L=0 that pmp(i)cfg and pmpaddr(i) are writable/readable in M-mode only
@@ -129,7 +129,7 @@ TST03-1 (HIGH-PRIO)
   - if possible, L value is a configurable parameter
   - check for PMP entry (i) where L=1 that pmp(i)cfg and pmpaddr(i) are effectively locked whatever the SW mode => FTR08-a
   - check for PMP entry (i) where L=1 that pmp(i)cfg and pmpaddr(i) are not writable/readable in S or U modes]
-TST03-2 = 2 times reuse/call of TST02-1
+TST03-2 (LOW-PRIO) = 2 times reuse/call of TST02-1
 [configure 2 PMP entries ([FTR02-b1]: maybe mandatorily the 2 first ones): both with L=1,
   - check for PMP entry (i) where L=1 that pmp(i)cfg and pmpaddr(i) are effectively locked whatever the SW mode => FTR08-a
   - check for PMP entry (i) where L=1 that pmp(i)cfg and pmpaddr(i) are not writable/readable in S or U modes]
@@ -140,7 +140,7 @@ TST03-3 (HIGH-PRIO) = 2 times reuse/call of TST02-1
   - check locked PMP entry (i) has no effect on unlocked PMP entry (j)
   - check for PMP entry (i) where L=0 that pmp(i)cfg and pmpaddr(i) are writable/readable in M-mode only
   - check for PMP entry (i) where L=0 that pmp(i)cfg and pmpaddr(i) are not writable/readable in S or U modes]
-TST03-4 = N times reuse/call of TST02-1
+TST03-4 (LOW-PRIO) = N times reuse/call of TST02-1
 [configure N PMP entries ([FTR02-b1]: maybe mandatorily the N first ones): at least one with L=1 and one with L=0,
   - check for PMP entry (i) where L=1 that pmp(i)cfg and pmpaddr(i) are effectively locked whatever the SW mode => FTR08-a
   - check for PMP entry (i) where L=1 that pmp(i)cfg and pmpaddr(i) are not writable/readable in S or U modes
@@ -157,37 +157,37 @@ TST03-5 (HIGH-PRIO) = 8 times reuse/call of TST02-1
 
 TST04 => FTR02-b1 and FTR02-b2
   [check if the lowest-numbered PMP CSRs must be programmed first before programming higher-numbered ones]
-TST04-1 extends TST02-1
+TST04-1 (LOW-PRIO) extends TST02-1
 [configure any PMP entry, but the first one
   - check for configured PMP entry (i), pmp(i)cfg and pmpaddr(i) are writable/readable in M-mode only
   - check for not configured PMP entry (i), pmp(i)cfg and pmpaddr(i) are M-mode read zero]
-TST04-2 extends TST02-2 (HIGH-PRIO)
+TST04-2 (HIGH-PRIO) extends TST02-2
 [configure 2 non-adjacent PMP entries (highest-numbered ones first) (avoid the first PMP entry)
   - check for configured PMP entry (i), pmp(i)cfg and pmpaddr(i) are writable/readable in M-mode only
   - check for not configured PMP entry (i), pmp(i)cfg and pmpaddr(i) are M-mode read zero]
-TST04-3 extends TST02-3
+TST04-3 (LOW-PRIO) extends TST02-3
 [configure N PMP entries (highest-numbered ones first) (as non-adjacent as possible, and avoid the first PMP entry)
   - check for configured PMP entry (i), pmp(i)cfg and pmpaddr(i) are writable/readable in M-mode only
   - check for not configured PMP entry (i), pmp(i)cfg and pmpaddr(i) are M-mode read zero]
-TST04-4 extends TST02-4 (HIGH-PRIO)
+TST04-4 (HIGH-PRIO) extends TST02-4
 [configure 8 PMP entries (highest-numbered ones first)
   - check for configured PMP entry (i), pmp(i)cfg and pmpaddr(i) are writable/readable in M-mode only]
 
 TST05 => FTR01-c and FTR01-c-extended
   [check all regions are configurable in M-mode to make sure none is hardwired]
   [regions hardwired privileges might only ever be visible in M-mode]
-TST05-1 extends TST02-4 (HIGH-PRIO)
+TST05-1 (HIGH-PRIO) extends TST02-4
   - check the written pmp(i)cfg and pmpaddr(i) values can be read exactly the same as written
-TST05-2 extends TST03-5
+TST05-2 (LOW-PRIO) extends TST03-5
   - check the written pmp(i)cfg and pmpaddr(i) values can be read exactly the same as written (before hart reset)
 
 TST06 => FTR04-a
 [PMP CSR fields are WARL: PMP entry combinations with R=0 and W=1 are reserved/can't be read]
 [permissions fields could be randomly written; should we try randomization ?]
-TST06-1 extends TST02-4 (HIGH-PRIO)
+TST06-1 (HIGH-PRIO) extends TST02-4
   - write totally random values to pmp(i)cfg and pmpaddr(i)
   - check all pmp(i)cfg and pmpaddr(i) can be read exactly the same as written except for the reserved combinations with R=0 and W=1
-TST06-2 extends TST03-5
+TST06-2 (LOW-PRIO) extends TST03-5
   - write totally random values to pmp(i)cfg and pmpaddr(i)
   - check all pmp(i)cfg and pmpaddr(i) can be read exactly the same as written except for the reserved combinations with R=0 and W=1 (before hart reset)
 
