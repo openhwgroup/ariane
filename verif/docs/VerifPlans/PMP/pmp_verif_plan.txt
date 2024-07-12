@@ -59,9 +59,20 @@ ADDITONAL VERIF PLAN
 [we assume no virtual memory is implemented]
 [we assume page-based virtual memory is not implemented]
 
-[give the list of all physical memory regions]
+[we assume the list of all physical memory regions]
+ - system memory regions
+ - I-$
+ - D-$
+ - I-scratchpad (preload mode)
+ - I-scratchpad (functional mode)
+ - D-scratchpad
+ - ahb_periph
 
-[check the role/definitions of mstatus.MPRV and mstatus.MPP later]
+[check the role/definitions of mstatus.MPRV and mstatus.MPP later] //TODO
+
+[we assume an already written PMP entry (i) can be disabled
+  - if L=0, by clearing pmpcfg(i)
+  - if L=1, only by hart reset]
 
 ////////////////////////////
 
@@ -74,69 +85,83 @@ Determine how to use SV to factorize the similar tests
 
 ////////////////////////////
 
-TST01 => FTR07-b
+TST01 (HIGH-PRIO) => FTR07-b
 [determine the PMP granularity 2^(G+2) bytes by writing zero to pmp(0)cfg, then writing all ones to pmpaddr(0), then reading back pmpaddr(0). G is the index G of the least-significant bit set]
 
 TST02 (group) => FTR02-d
   [check that all 8 HW implemented PMP entries are writable/readable in M-mode (L=0)]
   [check that no HW implemented PMP entry are writable/readable in S or U modes (L=0)]
-    - before any configuration, check all pmp(i)cfg and pmpaddr(i) are M-mode read zero
-TST02-1
+    - random values may be used
+    - before any configuration (after hart reset), check all pmp(i)cfg and pmpaddr(i) are M-mode read zero
+TST02-1 (HIGH-PRIO)
 [configure 1 PMP entry ([FTR02-b1]: maybe mandatorily the first one): with L=0,
-  - check for PMP entry (i) where L=0, pmp(i)cfg and pmpaddr(i) are writable/readable in M-mode only]
-TST02-2
+  - if possible, the PMP entry number is a configurable parameter
+  - check for PMP entry (i) where L=0 that pmp(i)cfg and pmpaddr(i) are not writable/readable in S or U modes
+  - check for PMP entry (i) where L=0 that pmp(i)cfg and pmpaddr(i) are writable/readable in M-mode only
+  - check for PMP entry (i) where L=0 that pmp(i)cfg and pmpaddr(i) are not writable/readable in S or U modes]
+TST02-2 = 2 times reuse/call of TST02-1
 [configure 2 PMP entries ([FTR02-b1]: maybe mandatorily the 2 first ones): both with L=0,
-  - check for PMP entry (i) where L=0, pmp(i)cfg and pmpaddr(i) are writable/readable in M-mode only]
-TST02-3
+  - check for PMP entry (i) where L=0 that pmp(i)cfg and pmpaddr(i) are not writable/readable in S or U modes
+  - check for PMP entry (i) where L=0 that pmp(i)cfg and pmpaddr(i) are writable/readable in M-mode only
+  - check for PMP entry (i) where L=0 that pmp(i)cfg and pmpaddr(i) are not writable/readable in S or U modes]
+TST02-3 = N times reuse/call of TST02-1
 [configure N PMP entries ([FTR02-b1]: maybe mandatorily the N first ones): all with L=0,
-  - check for PMP entry (i) where L=0, pmp(i)cfg and pmpaddr(i) are writable/readable in M-mode only]
-TST02-4
+  - check for PMP entry (i) where L=0 that pmp(i)cfg and pmpaddr(i) are not writable/readable in S or U modes
+  - check for PMP entry (i) where L=0 that pmp(i)cfg and pmpaddr(i) are writable/readable in M-mode only
+  - check for PMP entry (i) where L=0 that pmp(i)cfg and pmpaddr(i) are not writable/readable in S or U modes]
+TST02-4 (HIGH-PRIO) = 8 times reuse/call of TST02-1
 [configure 8 PMP entries: all with L=0,
-  - check for PMP entry (i) where L=0, pmp(i)cfg and pmpaddr(i) are writable/readable in M-mode only]
+  - check for PMP entry (i) where L=0 that pmp(i)cfg and pmpaddr(i) are not writable/readable in S or U modes
+  - check for PMP entry (i) where L=0 that pmp(i)cfg and pmpaddr(i) are writable/readable in M-mode only
+  - check for PMP entry (i) where L=0 that pmp(i)cfg and pmpaddr(i) are not writable/readable in S or U modes]
 
 TST03 (group) => FTR08-a and FTR08-b
   [check that HW implemented PMP entries are not writable/readable in M-mode (L=1)]
   [check that no HW implemented PMP entry are writable/readable in S or U modes (L=1)]
     - before any configuration, check all pmp(i)cfg and pmpaddr(i) are M-mode read zero
-TST03-1
+    - configure PMP entry (i) with L=1 (or 0):  pmp(i)cfg and pmpaddr(i) maybe random values
+    - execute following tests specific checks
+    - check only hart reset unlocks all => FTR08-b
+    - check reset values: all pmp(i)cfg and pmpaddr(i) are M-mode read zero
+TST03-1 (HIGH-PRIO)
 [configure 1 PMP entry ([FTR02-b1]: maybe mandatorily the first one): with L=1,
-  - check for PMP entry (i) where L=1, pmp(i)cfg and pmpaddr(i) are effectively locked whatever the SW mode => FTR08-a
-  - check only hart reset unlocks all => FTR08-b
-  - check reset values: all pmp(i)cfg and pmpaddr(i) are M-mode read zero]
-TST03-2
+  - if possible, the PMP entry number is a configurable parameter
+  - if possible, L value is a configurable parameter
+  - check for PMP entry (i) where L=1 that pmp(i)cfg and pmpaddr(i) are effectively locked whatever the SW mode => FTR08-a
+  - check for PMP entry (i) where L=1 that pmp(i)cfg and pmpaddr(i) are not writable/readable in S or U modes]
+TST03-2 = 2 times reuse/call of TST02-1
 [configure 2 PMP entries ([FTR02-b1]: maybe mandatorily the 2 first ones): both with L=1,
-  - check for PMP entry (i) where L=1, pmp(i)cfg and pmpaddr(i) are effectively locked whatever the SW mode => FTR08-a
-  - check only hart reset unlocks all => FTR08-b
-  - check reset values: all pmp(i)cfg and pmpaddr(i) are M-mode read zero]
-TST03-3
+  - check for PMP entry (i) where L=1 that pmp(i)cfg and pmpaddr(i) are effectively locked whatever the SW mode => FTR08-a
+  - check for PMP entry (i) where L=1 that pmp(i)cfg and pmpaddr(i) are not writable/readable in S or U modes]
+TST03-3 (HIGH-PRIO) = 2 times reuse/call of TST02-1
 [configure 2 PMP entries ([FTR02-b1]: maybe mandatorily the 2 first ones): one with L=1 and one with L=0,
-  - check for PMP entry (i) where L=1, pmp(i)cfg and pmpaddr(i) are effectively locked whatever the SW mode => FTR08-a
+  - check for PMP entry (i) where L=1 that pmp(i)cfg and pmpaddr(i) are effectively locked whatever the SW mode => FTR08-a
+  - check for PMP entry (i) where L=1 that pmp(i)cfg and pmpaddr(i) are not writable/readable in S or U modes
   - check locked PMP entry (i) has no effect on unlocked PMP entry (j)
-  - check for PMP entry (i) where L=0, pmp(i)cfg and pmpaddr(i) are writable/readable in M-mode only
-  - check only hart reset unlocks all => FTR08-b
-  - check reset values: all pmp(i)cfg and pmpaddr(i) are M-mode read zero]
-TST03-4
+  - check for PMP entry (i) where L=0 that pmp(i)cfg and pmpaddr(i) are writable/readable in M-mode only
+  - check for PMP entry (i) where L=0 that pmp(i)cfg and pmpaddr(i) are not writable/readable in S or U modes]
+TST03-4 = N times reuse/call of TST02-1
 [configure N PMP entries ([FTR02-b1]: maybe mandatorily the N first ones): at least one with L=1 and one with L=0,
-  - check for PMP entry (i) where L=1, pmp(i)cfg and pmpaddr(i) are effectively locked whatever the SW mode => FTR08-a
+  - check for PMP entry (i) where L=1 that pmp(i)cfg and pmpaddr(i) are effectively locked whatever the SW mode => FTR08-a
+  - check for PMP entry (i) where L=1 that pmp(i)cfg and pmpaddr(i) are not writable/readable in S or U modes
   - check locked PMP entry (i) has no effect on unlocked PMP entry (j)
-  - check for PMP entry (i) where L=0, pmp(i)cfg and pmpaddr(i) are writable/readable in M-mode only
-  - check only hart reset unlocks all => FTR08-b
-  - check reset values: all pmp(i)cfg and pmpaddr(i) are M-mode read zero]
-TST03-5
+  - check for PMP entry (i) where L=0 that pmp(i)cfg and pmpaddr(i) are writable/readable in M-mode only
+  - check for PMP entry (i) where L=0 that pmp(i)cfg and pmpaddr(i) are not writable/readable in S or U modes]
+TST03-5 (HIGH-PRIO) = 8 times reuse/call of TST02-1
 [configure 8 PMP entries: at least one with L=1 and one with L=0,
-  - check for PMP entry (i) where L=1, pmp(i)cfg and pmpaddr(i) are effectively locked whatever the SW mode => FTR08-a
+  - check for PMP entry (i) where L=1 that pmp(i)cfg and pmpaddr(i) are effectively locked whatever the SW mode => FTR08-a
+  - check for PMP entry (i) where L=1 that pmp(i)cfg and pmpaddr(i) are not writable/readable in S or U modes
   - check locked PMP entry (i) has no effect on unlocked PMP entry (j)
-  - check for PMP entry (i) where L=0, pmp(i)cfg and pmpaddr(i) are writable/readable in M-mode only
-  - check only hart reset unlocks all => FTR08-b
-  - check reset values: all pmp(i)cfg and pmpaddr(i) are M-mode read zero]
+  - check for PMP entry (i) where L=0 that pmp(i)cfg and pmpaddr(i) are writable/readable in M-mode only
+  - check for PMP entry (i) where L=0 that pmp(i)cfg and pmpaddr(i) are not writable/readable in S or U modes]
 
 TST04 => FTR02-b1 and FTR02-b2
-[check if the lowest-numbered PMP CSRs must be programmed first before programming higher-numbred ones]
+  [check if the lowest-numbered PMP CSRs must be programmed first before programming higher-numbered ones]
 TST04-1 extends TST02-1
 [configure any PMP entry, but the first one
   - check for configured PMP entry (i), pmp(i)cfg and pmpaddr(i) are writable/readable in M-mode only
   - check for not configured PMP entry (i), pmp(i)cfg and pmpaddr(i) are M-mode read zero]
-TST04-2 extends TST02-2
+TST04-2 extends TST02-2 (HIGH-PRIO)
 [configure 2 non-adjacent PMP entries (highest-numbered ones first) (avoid the first PMP entry)
   - check for configured PMP entry (i), pmp(i)cfg and pmpaddr(i) are writable/readable in M-mode only
   - check for not configured PMP entry (i), pmp(i)cfg and pmpaddr(i) are M-mode read zero]
@@ -144,14 +169,14 @@ TST04-3 extends TST02-3
 [configure N PMP entries (highest-numbered ones first) (as non-adjacent as possible, and avoid the first PMP entry)
   - check for configured PMP entry (i), pmp(i)cfg and pmpaddr(i) are writable/readable in M-mode only
   - check for not configured PMP entry (i), pmp(i)cfg and pmpaddr(i) are M-mode read zero]
-TST04-4 extends TST02-4
+TST04-4 extends TST02-4 (HIGH-PRIO)
 [configure 8 PMP entries (highest-numbered ones first)
   - check for configured PMP entry (i), pmp(i)cfg and pmpaddr(i) are writable/readable in M-mode only]
 
 TST05 => FTR01-c and FTR01-c-extended
-[check all regions are configurable in M-mode to make sure none is hardwired]
-[regions hardwired privileges might only ever be visible in M-mode]
-TST05-1 extends TST02-4
+  [check all regions are configurable in M-mode to make sure none is hardwired]
+  [regions hardwired privileges might only ever be visible in M-mode]
+TST05-1 extends TST02-4 (HIGH-PRIO)
   - check the written pmp(i)cfg and pmpaddr(i) values can be read exactly the same as written
 TST05-2 extends TST03-5
   - check the written pmp(i)cfg and pmpaddr(i) values can be read exactly the same as written (before hart reset)
@@ -159,7 +184,7 @@ TST05-2 extends TST03-5
 TST06 => FTR04-a
 [PMP CSR fields are WARL: PMP entry combinations with R=0 and W=1 are reserved/can't be read]
 [permissions fields could be randomly written; should we try randomization ?]
-TST06-1 extends TST02-4
+TST06-1 extends TST02-4 (HIGH-PRIO)
   - write totally random values to pmp(i)cfg and pmpaddr(i)
   - check all pmp(i)cfg and pmpaddr(i) can be read exactly the same as written except for the reserved combinations with R=0 and W=1
 TST06-2 extends TST03-5
@@ -168,17 +193,15 @@ TST06-2 extends TST03-5
 
 ////////////////////////////
 
-TST10-1 => FTR09-e
+TST10-1 (HIGH-PRIO) => FTR09-e
 [check M-mode access succeeds if no PMP entry matches]
-TST10-2 => FTR09-e-question
+TST10-2 (HIGH-PRIO) => FTR09-e-question
 [check M-mode access succeeds if no PMP entry defined]
 
-TST10-3 => FTR09-f
+TST10-3 (HIGH-PRIO) => FTR09-f
 [check S or U mode access fails when no PMP entry matching and at least one PMP entry implemented]
-TST10-4 => FTR09-f-question
+TST10-4 (HIGH-PRIO) => FTR09-f-question
 [check S or U mode access fails when no PMP entry implemented]
-
-//TODO: how to disable a PMP entry already written ? is hart reset mandatory ?
 
 ////////////////////////////
 
@@ -186,36 +209,37 @@ TST11 (group) => FTR01-d
   [PMP check on instruction fetch where effective privilege mode is S or U:
     - choose an executable pmp region and address range
     - choose only one PMP entry (i) ([FTR02-b1]: maybe mandatorily the 1st one)
+    - if possible, the PMP entry number is a configurable parameter
     - choose pmpcfg(i).A=NA4
     - single access instruction fetch in S and U mode]
   [create scenarios where PMP entries with A=2 (NA4) and with/without matching permissions
     - check only NA4 defined addresses are matching]
-TST11-11
+TST11-11 (HIGH-PRIO)
 [with L=0 => FTR08-e2-2 (refers to FTR09-d2-2),
   - configure the PMP entry with execute permissions for the PMP region
   - fetch an instruction from that region (with exact address-matching)
   - check no access-fault exception]
-TST11-12
+TST11-12 (MEDIUM-PRIO)
 [with L=0 => FTR08-e2-2 (refers to FTR09-d2-2),
   - configure the PMP entry without execute permissions for the PMP region
   - fetch an instruction from that region (with exact address-matching)
   - check instruction fetch access-fault exception raised => FTR04-b]
-TST11-13
+TST11-13 (MEDIUM-PRIO)
 [with L=0 => FTR08-e2-2 (refers to FTR09-d2-2),
   - configure the PMP entry with execute permissions for the PMP region
   - fetch an instruction from outside all PMP defined regions
   - check instruction fetch access-fault exception raised]
-TST11-14
+TST11-14 (LOW-PRIO)
 [with L=1 => FTR08-e1 (refers to FTR01-f) (refers to FTR09-d2-1),
   - configure the PMP entry with execute permissions for the PMP region
   - fetch an instruction from that region (with exact address-matching)
   - check no access-fault exception]
-TST11-15
+TST11-15 (LOW-PRIO)
 [with L=1 => FTR08-e1 (refers to FTR01-f) (refers to FTR09-d2-1),
   - configure the PMP entry without execute permissions for the PMP region
   - fetch an instruction from that region (with exact address-matching)
   - check instruction fetch access-fault exception raised => FTR04-b]
-TST11-16
+TST11-16 (LOW-PRIO)
 [with L=1 => FTR08-e1 (refers to FTR01-f) (refers to FTR09-d2-1),
   - configure the PMP entry with execute permissions for the PMP region
   - fetch an instruction from outside all PMP defined regions
@@ -227,36 +251,37 @@ TST11 (group) => FTR01-d
   [PMP check on load or load-reserved instruction where effective privilege mode is S or U:
     - choose a data readable pmp region and address range
     - choose only one PMP entry (i) ([FTR02-b1]: maybe mandatorily the 1st one)
+    - if possible, the PMP entry number is a configurable parameter
     - choose pmpcfg(i).A=NA4
     - single access data load in S and U mode when the bit mstatus.MPRV=0]
   [create scenarios where PMP entries with A=2 (NA4) and with/without matching permissions
     - check only NA4 defined addresses are matching]
-TST11-21
+TST11-21 (HIGH-PRIO)
 [with L=0 => FTR08-e2-2 (refers to FTR09-d2-2),
   - configure the PMP entry with read permissions for the PMP region
   - execute a load or load-reserved instruction from that region (with exact address-matching)
   - check no access-fault exception]
-TST11-22
+TST11-22 (MEDIUM-PRIO)
 [with L=0 => FTR08-e2-2 (refers to FTR09-d2-2),
   - configure the PMP entry without read permissions for the PMP region
   - execute a load or load-reserved instruction from that region (with exact address-matching)
   - check load access-fault exception raised => FTR04-c]
-TST11-23
+TST11-23 (MEDIUM-PRIO)
 [with L=0 => FTR08-e2-2 (refers to FTR09-d2-2),
   - configure the PMP entry with read permissions for the PMP region
   - execute a load or load-reserved instruction from outside all PMP defined regions
   - check load access-fault exception raised]
-TST11-24
+TST11-24 (LOW-PRIO)
 [with L=1 => FTR08-e1 (refers to FTR01-f) (refers to FTR09-d2-1),
   - configure the PMP entry with read permissions for the PMP region
   - execute a load or load-reserved instruction from that region (with exact address-matching)
   - check no access-fault exception]
-TST11-25
+TST11-25 (LOW-PRIO)
 [with L=1 => FTR08-e1 (refers to FTR01-f) (refers to FTR09-d2-1),
   - configure the PMP entry without read permissions for the PMP region
   - execute a load or load-reserved instruction from that region (with exact address-matching)
   - check load access-fault exception raised => FTR04-c]
-TST11-26
+TST11-26 (LOW-PRIO)
 [with L=1 => FTR08-e1 (refers to FTR01-f) (refers to FTR09-d2-1),
   - configure the PMP entry with read permissions for the PMP region
   - execute a load or load-reserved instruction from outside all PMP defined regions
@@ -268,36 +293,37 @@ TST11 (group) => FTR01-d
   [PMP check on store, store-conditional, or AMO instruction where effective privilege mode is S or U:
     - choose a data writable pmp region and address range
     - choose only one PMP entry (i) ([FTR02-b1]: maybe mandatorily the 1st one)
+    - if possible, the PMP entry number is a configurable parameter
     - choose pmpcfg(i).A=NA4
     - single access data store in S and U mode when the bit mstatus.MPRV=0]
   [create scenarios where PMP entries with A=2 (NA4) and with/without matching permissions
     - check only NA4 defined addresses are matching]
-TST11-31
+TST11-31 (HIGH-PRIO)
 [with L=0 => FTR08-e2-2 (refers to FTR09-d2-2),
   - configure the PMP entry with write permissions for the PMP region
   - execute a store, store-conditional, or AMO instruction to that region (with exact address-matching)
   - check no access-fault exception]
-TST11-32
+TST11-32 (MEDIUM-PRIO)
 [with L=0 => FTR08-e2-2 (refers to FTR09-d2-2),
   - configure the PMP entry without write permissions for the PMP region
   - execute a store, store-conditional, or AMO instruction to that region (with exact address-matching)
   - check store access-fault exception raised => FTR04-d]
-TST11-33
+TST11-33 (MEDIUM-PRIO)
 [with L=0 => FTR08-e2-2 (refers to FTR09-d2-2),
   - configure the PMP entry with write permissions for the PMP region
   - execute a store, store-conditional, or AMO instruction to outside all PMP defined regions
   - check store access-fault exception raised]
-TST11-34
+TST11-34 (LOW-PRIO)
 [with L=1 => FTR08-e1 (refers to FTR01-f) (refers to FTR09-d2-1),
   - configure the PMP entry with write permissions for the PMP region
   - execute a store, store-conditional, or AMO instruction to that region (with exact address-matching)
   - check no access-fault exception]
-TST11-35
+TST11-35 (LOW-PRIO)
 [with L=1 => FTR08-e1 (refers to FTR01-f) (refers to FTR09-d2-1),
   - configure the PMP entry without write permissions for the PMP region
   - execute a store, store-conditional, or AMO instruction to that region (with exact address-matching)
   - check store access-fault exception raised => FTR04-d]
-TST11-36
+TST11-36 (LOW-PRIO)
 [with L=1 => FTR08-e1 (refers to FTR01-f) (refers to FTR09-d2-1),
   - configure the PMP entry with write permissions for the PMP region
   - execute a store, store-conditional, or AMO instruction to outside all PMP defined regions
@@ -309,36 +335,37 @@ TST11 (group) => FTR01-d
   [PMP check on load or load-reserved instruction where effective privilege mode is S or U:
     - choose a data readable pmp region and address range
     - choose only one PMP entry (i) ([FTR02-b1]: maybe mandatorily the 1st one)
+    - if possible, the PMP entry number is a configurable parameter
     - choose pmpcfg(i).A=NA4
     - single access data load in any mode when the bit mstatus.MPRV=1 and the mstatus.MPP contains S or U]
   [create scenarios where PMP entries with A=2 (NA4) and with/without matching permissions
     - check only NA4 defined addresses are matching]
-TST11-41
+TST11-41 (LOWEST-PRIO)
 [with L=0 => FTR08-e2-2 (refers to FTR09-d2-2),
   - configure the PMP entry with read permissions for the PMP region
   - execute a load or load-reserved instruction from that region (with exact address-matching)
   - check no access-fault exception]
-TST11-42
+TST11-42 (LOWEST-PRIO)
 [with L=0 => FTR08-e2-2 (refers to FTR09-d2-2),
   - configure the PMP entry without read permissions for the PMP region
   - execute a load or load-reserved instruction from that region (with exact address-matching)
   - check load access-fault exception raised => FTR04-c]
-TST11-43
+TST11-43 (LOWEST-PRIO)
 [with L=0 => FTR08-e2-2 (refers to FTR09-d2-2),
   - configure the PMP entry with read permissions for the PMP region
   - execute a load or load-reserved instruction from outside all PMP defined regions
   - check load access-fault exception raised]
-TST11-44
+TST11-44 (LOWEST-PRIO)
 [with L=1 => FTR08-e1 (refers to FTR01-f) (refers to FTR09-d2-1),
   - configure the PMP entry with read permissions for the PMP region
   - execute a load or load-reserved instruction from that region (with exact address-matching)
   - check no access-fault exception]
-TST11-45
+TST11-45 (LOWEST-PRIO)
 [with L=1 => FTR08-e1 (refers to FTR01-f) (refers to FTR09-d2-1),
   - configure the PMP entry without read permissions for the PMP region
   - execute a load or load-reserved instruction from that region (with exact address-matching)
   - check load access-fault exception raised => FTR04-c]
-TST11-46
+TST11-46 (LOWEST-PRIO)
 [with L=1 => FTR08-e1 (refers to FTR01-f) (refers to FTR09-d2-1),
   - configure the PMP entry with read permissions for the PMP region
   - execute a load or load-reserved instruction from outside all PMP defined regions
@@ -350,36 +377,37 @@ TST11 (group) => FTR01-d
   [PMP check on store, store-conditional, or AMO instruction where effective privilege mode is S or U:
     - choose a data writable pmp region and address range
     - choose only one PMP entry (i) ([FTR02-b1]: maybe mandatorily the 1st one)
+    - if possible, the PMP entry number is a configurable parameter
     - choose pmpcfg(i).A=NA4
     - single access data store in any mode when the bit mstatus.MPRV=1 and the mstatus.MPP contains S or U]
   [create scenarios where PMP entries with A=2 (NA4) and with/without matching permissions
     - check only NA4 defined addresses are matching]
-TST11-51
+TST11-51 (LOWEST-PRIO)
 [with L=0 => FTR08-e2-2 (refers to FTR09-d2-2),
   - configure the PMP entry with write permissions for the PMP region
   - execute a store, store-conditional, or AMO instruction to that region (with exact address-matching)
   - check no access-fault exception]
-TST11-52
+TST11-52 (LOWEST-PRIO)
 [with L=0 => FTR08-e2-2 (refers to FTR09-d2-2),
   - configure the PMP entry without write permissions for the PMP region
   - execute a store, store-conditional, or AMO instruction to that region (with exact address-matching)
   - check store access-fault exception raised => FTR04-d]
-TST11-53
+TST11-53 (LOWEST-PRIO)
 [with L=0 => FTR08-e2-2 (refers to FTR09-d2-2),
   - configure the PMP entry with write permissions for the PMP region
   - execute a store, store-conditional, or AMO instruction to outside all PMP defined regions
   - check store access-fault exception raised]
-TST11-54
+TST11-54 (LOWEST-PRIO)
 [with L=1 => FTR08-e1 (refers to FTR01-f) (refers to FTR09-d2-1),
   - configure the PMP entry with write permissions for the PMP region
   - execute a store, store-conditional, or AMO instruction to that region (with exact address-matching)
   - check no access-fault exception]
-TST11-55
+TST11-55 (LOWEST-PRIO)
 [with L=1 => FTR08-e1 (refers to FTR01-f) (refers to FTR09-d2-1),
   - configure the PMP entry without write permissions for the PMP region
   - execute a store, store-conditional, or AMO instruction to that region (with exact address-matching)
   - check store access-fault exception raised => FTR04-d]
-TST11-56
+TST11-56 (LOWEST-PRIO)
 [with L=1 => FTR08-e1 (refers to FTR01-f) (refers to FTR09-d2-1),
   - configure the PMP entry with write permissions for the PMP region
   - execute a store, store-conditional, or AMO instruction to outside all PMP defined regions
@@ -391,36 +419,37 @@ TST12 (group) => FTR01-f
   [PMP check on instruction fetch where effective privilege mode is M:
     - choose an executable pmp region and address range
     - choose only one PMP entry (i) ([FTR02-b1]: maybe mandatorily the 1st one)
+    - if possible, the PMP entry number is a configurable parameter
     - choose pmpcfg(i).A=NA4
     - single access instruction fetch in M mode]
   [create scenarios where PMP entries with A=2 (NA4) and with/without matching permissions
     - check only NA4 defined addresses are matching]
-TST12-11
+TST12-11 (LOW-PRIO)
 [with L=0 => FTR08-e2-1 (refers to  FTR09-d1),
   - configure the PMP entry with execute permissions for the PMP region
   - fetch an instruction from that region (with exact address-matching)
   - check no access-fault exception]
-TST12-12
+TST12-12 (LOW-PRIO)
 [with L=0 => FTR08-e2-1 (refers to  FTR09-d1),
   - configure the PMP entry without execute permissions for the PMP region
   - fetch an instruction from that region (with exact address-matching)
   - check no access-fault exception]
-TST12-13
+TST12-13 (LOW-PRIO)
 [with L=0 => FTR08-e2-1 (refers to  FTR09-d1),
   - configure the PMP entry with execute permissions for the PMP region
   - fetch an instruction from outside all PMP defined regions
   - check no access-fault exception] //TODO: CHECK IF M-MODE ALLOWED
-TST12-14
+TST12-14 (HIGH-PRIO)
 [with L=1 => FTR08-e1 (refers to FTR01-f) (refers to FTR09-d2-1),
   - configure the PMP entry with execute permissions for the PMP region
   - fetch an instruction from that region (with exact address-matching)
   - check no access-fault exception]
-TST12-15
+TST12-15 (MEDIUM-PRIO)
 [with L=1 => FTR08-e1 (refers to FTR01-f) (refers to FTR09-d2-1),
   - configure the PMP entry without execute permissions for the PMP region
   - fetch an instruction from that region (with exact address-matching)
   - check instruction fetch access-fault exception raised => FTR04-b]
-TST12-16
+TST12-16 (HIGH-PRIO)
 [with L=1 => FTR08-e1 (refers to FTR01-f) (refers to FTR09-d2-1),
   - configure the PMP entry with execute permissions for the PMP region
   - fetch an instruction from outside all PMP defined regions
@@ -432,36 +461,37 @@ TST12 (group) => FTR01-f
   [PMP check on load or load-reserved instruction where effective privilege mode is M:
     - choose a data readable pmp region and address range
     - choose only one PMP entry (i) ([FTR02-b1]: maybe mandatorily the 1st one)
+    - if possible, the PMP entry number is a configurable parameter
     - choose pmpcfg(i).A=NA4
     - single access data load in M mode when the bit mstatus.MPRV=0]
   [create scenarios where PMP entries with A=2 (NA4) and with/without matching permissions
     - check only NA4 defined addresses are matching]
-TST12-21
+TST12-21 (LOW-PRIO)
 [with L=0 => FTR08-e2-1 (refers to  FTR09-d1)
   - configure the PMP entry with read permissions for the PMP region
   - execute a load or load-reserved instruction from that region (with exact address-matching)
   - check no access-fault exception]
-TST12-22
+TST12-22 (LOW-PRIO)
 [with L=0 => FTR08-e2-1 (refers to  FTR09-d1)
   - configure the PMP entry without read permissions for the PMP region
   - execute a load or load-reserved instruction from that region (with exact address-matching)
   - check no access-fault exception]
-TST12-23
+TST12-23 (LOW-PRIO)
 [with L=0 => FTR08-e2-1 (refers to  FTR09-d1)
   - configure the PMP entry with read permissions for the PMP region
   - execute a load or load-reserved instruction from outside all PMP defined regions
   - check no access-fault exception] //TODO: CHECK IF M-MODE ALLOWED
-TST12-24
+TST12-24 (HIGH-PRIO)
 [with L=1 => FTR08-e1 (refers to FTR01-f) (refers to FTR09-d2-1),
   - configure the PMP entry with read permissions for the PMP region
   - execute a load or load-reserved instruction from that region (with exact address-matching)
   - check no access-fault exception]
-TST12-25
+TST12-25 (MEDIUM-PRIO)
 [with L=1 => FTR08-e1 (refers to FTR01-f) (refers to FTR09-d2-1),
   - configure the PMP entry without read permissions for the PMP region
   - execute a load or load-reserved instruction from that region (with exact address-matching)
   - check load access-fault exception raised => FTR04-c]
-TST12-26
+TST12-26 (HIGH-PRIO)
 [with L=1 => FTR08-e1 (refers to FTR01-f) (refers to FTR09-d2-1),
   - configure the PMP entry with read permissions for the PMP region
   - execute a load or load-reserved instruction from outside all PMP defined regions
@@ -473,36 +503,37 @@ TST12 (group) => FTR01-f
   [PMP check on store, store-conditional, or AMO instruction where effective privilege mode is M:
     - choose a data writable pmp region and address range
     - choose only one PMP entry (i) ([FTR02-b1]: maybe mandatorily the 1st one)
+    - if possible, the PMP entry number is a configurable parameter
     - choose pmpcfg(i).A=NA4
     - single access data store in M mode when the bit mstatus.MPRV=0]
   [create scenarios where PMP entries with A=2 (NA4) and with/without matching permissions
     - check only NA4 defined addresses are matching]
-TST12-31
+TST12-31 (LOW-PRIO)
 [with L=0 => FTR08-e2-1 (refers to  FTR09-d1)
   - configure the PMP entry with write permissions for the PMP region
   - execute a store, store-conditional, or AMO instruction to that region (with exact address-matching)
   - check no access-fault exception]
-TST12-32
+TST12-32 (LOW-PRIO)
 [with L=0 => FTR08-e2-1 (refers to  FTR09-d1)
   - configure the PMP entry without write permissions for the PMP region
   - execute a store, store-conditional, or AMO instruction to that region (with exact address-matching)
   - check no access-fault exception]
-TST12-33
+TST12-33 (LOW-PRIO)
 [with L=0 => FTR08-e2-1 (refers to  FTR09-d1)
   - configure the PMP entry with write permissions for the PMP region
   - execute a store, store-conditional, or AMO instruction to outside all PMP defined regions
   - check no access-fault exception] //TODO: CHECK IF M-MODE ALLOWED
-TST12-34
+TST12-34 (HIGH-PRIO)
 [with L=1 => FTR08-e1 (refers to FTR01-f) (refers to FTR09-d2-1),
   - configure the PMP entry with write permissions for the PMP region
   - execute a store, store-conditional, or AMO instruction to that region (with exact address-matching)
   - check no access-fault exception]
-TST12-35
+TST12-35 (MEDIUM-PRIO)
 [with L=1 => FTR08-e1 (refers to FTR01-f) (refers to FTR09-d2-1),
   - configure the PMP entry without write permissions for the PMP region
   - execute a store, store-conditional, or AMO instruction to that region (with exact address-matching)
   - check store access-fault exception raised => FTR04-d]
-TST12-36
+TST12-36 (HIGH-PRIO)
 [with L=1 => FTR08-e1 (refers to FTR01-f) (refers to FTR09-d2-1),
   - configure the PMP entry with write permissions for the PMP region
   - execute a store, store-conditional, or AMO instruction to outside all PMP defined regions
@@ -514,36 +545,37 @@ TST12 (group) => FTR01-f
   [PMP check on load or load-reserved instruction where effective privilege mode is M:
     - choose a data readable pmp region and address range
     - choose only one PMP entry (i) ([FTR02-b1]: maybe mandatorily the 1st one)
+    - if possible, the PMP entry number is a configurable parameter
     - choose pmpcfg(i).A=NA4
     - single access data load in any mode when the bit mstatus.MPRV=1 and the mstatus.MPP contains M (TODO: CHECK IF MAKING SENSE)]
   [create scenarios where PMP entries with A=2 (NA4) and with/without matching permissions
     - check only NA4 defined addresses are matching]
-TST12-41
+TST12-41 (LOWEST-PRIO)
 [with L=0 => FTR08-e2-1 (refers to  FTR09-d1)
   - configure the PMP entry with read permissions for the PMP region
   - execute a load or load-reserved instruction from that region (with exact address-matching)
   - check no access-fault exception]
-TST12-42
+TST12-42 (LOWEST-PRIO)
 [with L=0 => FTR08-e2-1 (refers to  FTR09-d1)
   - configure the PMP entry without read permissions for the PMP region
   - execute a load or load-reserved instruction from that region (with exact address-matching)
   - check no access-fault exception]
-TST12-43
+TST12-43 (LOWEST-PRIO)
 [with L=0 => FTR08-e2-1 (refers to  FTR09-d1)
   - configure the PMP entry with read permissions for the PMP region
   - execute a load or load-reserved instruction from outside all PMP defined regions
   - check no access-fault exception] //TODO: CHECK IF M-MODE ALLOWED
-TST12-44
+TST12-44 (LOWEST-PRIO)
 [with L=1 => FTR08-e1 (refers to FTR01-f) (refers to FTR09-d2-1),
   - configure the PMP entry with read permissions for the PMP region
   - execute a load or load-reserved instruction from that region (with exact address-matching)
   - check no access-fault exception]
-TST12-45
+TST12-45 (LOWEST-PRIO)
 [with L=1 => FTR08-e1 (refers to FTR01-f) (refers to FTR09-d2-1),
   - configure the PMP entry without read permissions for the PMP region
   - execute a load or load-reserved instruction from that region (with exact address-matching)
   - check load access-fault exception raised => FTR04-c]
-TST12-46
+TST12-46 (LOWEST-PRIO)
 [with L=1 => FTR08-e1 (refers to FTR01-f) (refers to FTR09-d2-1),
   - configure the PMP entry with read permissions for the PMP region
   - execute a load or load-reserved instruction from outside all PMP defined regions
@@ -555,36 +587,37 @@ TST12 (group) => FTR01-f
   [PMP check on store, store-conditional, or AMO instruction where effective privilege mode is M:
     - choose a data writable pmp region and address range
     - choose only one PMP entry (i) ([FTR02-b1]: maybe mandatorily the 1st one)
+    - if possible, the PMP entry number is a configurable parameter
     - choose pmpcfg(i).A=NA4
     - single access data store in any mode when the bit mstatus.MPRV=1 and the mstatus.MPP contains M (TODO: CHECK IF MAKING SENSE)]
   [create scenarios where PMP entries with A=2 (NA4) and with/without matching permissions
     - check only NA4 defined addresses are matching]
-TST12-51
+TST12-51 (LOWEST-PRIO)
 [with L=0 => FTR08-e2-1 (refers to  FTR09-d1)
   - configure the PMP entry with write permissions for the PMP region
   - execute a store, store-conditional, or AMO instruction to that region (with exact address-matching)
   - check no access-fault exception]
-TST12-52
+TST12-52 (LOWEST-PRIO)
 [with L=0 => FTR08-e2-1 (refers to  FTR09-d1)
   - configure the PMP entry without write permissions for the PMP region
   - execute a store, store-conditional, or AMO instruction to that region (with exact address-matching)
   - check no access-fault exception]
-TST12-53
+TST12-53 (LOWEST-PRIO)
 [with L=0 => FTR08-e2-1 (refers to  FTR09-d1)
   - configure the PMP entry with write permissions for the PMP region
   - execute a store, store-conditional, or AMO instruction to outside all PMP defined regions
   - check no access-fault exception] //TODO: CHECK IF M-MODE ALLOWED
-TST12-54
+TST12-54 (LOWEST-PRIO)
 [with L=1 => FTR08-e1 (refers to FTR01-f) (refers to FTR09-d2-1),
   - configure the PMP entry with write permissions for the PMP region
   - execute a store, store-conditional, or AMO instruction to that region (with exact address-matching)
   - check no access-fault exception]
-TST12-55
+TST12-55 (LOWEST-PRIO)
 [with L=1 => FTR08-e1 (refers to FTR01-f) (refers to FTR09-d2-1),
   - configure the PMP entry without write permissions for the PMP region
   - execute a store, store-conditional, or AMO instruction to that region (with exact address-matching)
   - check store access-fault exception raised => FTR04-d]
-TST12-56
+TST12-56 (LOWEST-PRIO)
 [with L=1 => FTR08-e1 (refers to FTR01-f) (refers to FTR09-d2-1),
   - configure the PMP entry with write permissions for the PMP region
   - execute a store, store-conditional, or AMO instruction to outside all PMP defined regions
@@ -595,170 +628,170 @@ TST12-56
 
 TST13 (group)
   [same as TST11 (group), but with pmpcfg(i).A=NAPOT]
-TST13-11
+TST13-11 (HIGH-PRIO)
   [same as TST11-11 (group), but with pmpcfg(i).A=NAPOT]
-TST13-12
+TST13-12 (MEDIUM-PRIO)
   [same as TST11-12 (group), but with pmpcfg(i).A=NAPOT]
-TST13-13
+TST13-13 (MEDIUM-PRIO)
   [same as TST11-13 (group), but with pmpcfg(i).A=NAPOT]
-TST13-14
+TST13-14 (LOW-PRIO)
   [same as TST11-14 (group), but with pmpcfg(i).A=NAPOT]
-TST13-15
+TST13-15 (LOW-PRIO)
   [same as TST11-15 (group), but with pmpcfg(i).A=NAPOT]
-TST13-16
+TST13-16 (LOW-PRIO)
   [same as TST11-16 (group), but with pmpcfg(i).A=NAPOT]
 
 ---------------------------
 
 TST13 (group)
   [same as TST11 (group), but with pmpcfg(i).A=NAPOT]
-TST13-21
+TST13-21 (HIGH-PRIO)
   [same as TST11-21 (group), but with pmpcfg(i).A=NAPOT]
-TST13-22
+TST13-22 (MEDIUM-PRIO)
   [same as TST11-22 (group), but with pmpcfg(i).A=NAPOT]
-TST13-23
+TST13-23 (MEDIUM-PRIO)
   [same as TST11-23 (group), but with pmpcfg(i).A=NAPOT]
-TST13-24
+TST13-24 (LOW-PRIO)
   [same as TST11-24 (group), but with pmpcfg(i).A=NAPOT]
-TST13-25
+TST13-25 (LOW-PRIO)
   [same as TST11-25 (group), but with pmpcfg(i).A=NAPOT]
-TST13-26
+TST13-26 (LOW-PRIO)
   [same as TST11-26 (group), but with pmpcfg(i).A=NAPOT]
 
 ---------------------------
 
 TST13 (group)
   [same as TST11 (group), but with pmpcfg(i).A=NAPOT]
-TST13-31
+TST13-31 (HIGH-PRIO)
   [same as TST11-31 (group), but with pmpcfg(i).A=NAPOT]
-TST13-32
+TST13-32 (MEDIUM-PRIO)
   [same as TST11-32 (group), but with pmpcfg(i).A=NAPOT]
-TST13-33
+TST13-33 (MEDIUM-PRIO)
   [same as TST11-33 (group), but with pmpcfg(i).A=NAPOT]
-TST13-34
+TST13-34 (LOW-PRIO)
   [same as TST11-34 (group), but with pmpcfg(i).A=NAPOT]
-TST13-35
+TST13-35 (LOW-PRIO)
   [same as TST11-35 (group), but with pmpcfg(i).A=NAPOT]
-TST13-36
+TST13-36 (LOW-PRIO)
   [same as TST11-36 (group), but with pmpcfg(i).A=NAPOT]
 
 ---------------------------
 
 TST13 (group)
   [same as TST11 (group), but with pmpcfg(i).A=NAPOT]
-TST13-41
+TST13-41 (LOWEST-PRIO)
   [same as TST11-41 (group), but with pmpcfg(i).A=NAPOT]
-TST13-42
+TST13-42 (LOWEST-PRIO)
   [same as TST11-42 (group), but with pmpcfg(i).A=NAPOT]
-TST13-43
+TST13-43 (LOWEST-PRIO)
   [same as TST11-43 (group), but with pmpcfg(i).A=NAPOT]
-TST13-44
+TST13-44 (LOWEST-PRIO)
   [same as TST11-44 (group), but with pmpcfg(i).A=NAPOT]
-TST13-45
+TST13-45 (LOWEST-PRIO)
   [same as TST11-45 (group), but with pmpcfg(i).A=NAPOT]
-TST13-46
+TST13-46 (LOWEST-PRIO)
   [same as TST11-46 (group), but with pmpcfg(i).A=NAPOT]
 
 ---------------------------
 
 TST13 (group)
   [same as TST11 (group), but with pmpcfg(i).A=NAPOT]
-TST13-51
+TST13-51 (LOWEST-PRIO)
   [same as TST11-51 (group), but with pmpcfg(i).A=NAPOT]
-TST13-52
+TST13-52 (LOWEST-PRIO)
   [same as TST11-52 (group), but with pmpcfg(i).A=NAPOT]
-TST13-53
+TST13-53 (LOWEST-PRIO)
   [same as TST11-53 (group), but with pmpcfg(i).A=NAPOT]
-TST13-54
+TST13-54 (LOWEST-PRIO)
   [same as TST11-54 (group), but with pmpcfg(i).A=NAPOT]
-TST13-55
+TST13-55 (LOWEST-PRIO)
   [same as TST11-55 (group), but with pmpcfg(i).A=NAPOT]
-TST13-56
+TST13-56 (LOWEST-PRIO)
   [same as TST11-56 (group), but with pmpcfg(i).A=NAPOT]
 
 ////////////////////////////
 
 TST14 (group)
   [same as TST12 (group), but with pmpcfg(i).A=NAPOT]
-TST14-11
+TST14-11 (LOW-PRIO)
   [same as TST12-11 (group), but with pmpcfg(i).A=NAPOT]
-TST14-12
+TST14-12 (LOW-PRIO)
   [same as TST12-12 (group), but with pmpcfg(i).A=NAPOT]
-TST14-13
+TST14-13 (LOW-PRIO)
   [same as TST12-13 (group), but with pmpcfg(i).A=NAPOT]
-TST14-14
+TST14-14 (HIGH-PRIO)
   [same as TST12-14 (group), but with pmpcfg(i).A=NAPOT]
-TST14-15
+TST14-15 (MEDIUM-PRIO)
   [same as TST12-15 (group), but with pmpcfg(i).A=NAPOT]
-TST14-16
+TST14-16 (HIGH-PRIO)
   [same as TST12-16 (group), but with pmpcfg(i).A=NAPOT]
 
 ---------------------------
 
 TST14 (group)
   [same as TST12 (group), but with pmpcfg(i).A=NAPOT]
-TST14-21
+TST14-21 (LOW-PRIO)
   [same as TST12-21 (group), but with pmpcfg(i).A=NAPOT]
-TST14-22
+TST14-22 (LOW-PRIO)
   [same as TST12-22 (group), but with pmpcfg(i).A=NAPOT]
-TST14-23
+TST14-23 (LOW-PRIO)
   [same as TST12-23 (group), but with pmpcfg(i).A=NAPOT]
-TST14-24
+TST14-24 (HIGH-PRIO)
   [same as TST12-24 (group), but with pmpcfg(i).A=NAPOT]
-TST14-25
+TST14-25 (MEDIUM-PRIO)
   [same as TST12-25 (group), but with pmpcfg(i).A=NAPOT]
-TST14-26
+TST14-26 (HIGH-PRIO)
   [same as TST12-26 (group), but with pmpcfg(i).A=NAPOT]
 
 ---------------------------
 
 TST14 (group)
   [same as TST12 (group), but with pmpcfg(i).A=NAPOT]
-TST14-31
+TST14-31 (LOW-PRIO)
   [same as TST12-31 (group), but with pmpcfg(i).A=NAPOT]
-TST14-32
+TST14-32 (LOW-PRIO)
   [same as TST12-32 (group), but with pmpcfg(i).A=NAPOT]
-TST14-33
+TST14-33 (LOW-PRIO)
   [same as TST12-33 (group), but with pmpcfg(i).A=NAPOT]
-TST14-34
+TST14-34 (HIGH-PRIO)
   [same as TST12-34 (group), but with pmpcfg(i).A=NAPOT]
-TST14-35
+TST14-35 (MEDIUM-PRIO)
   [same as TST12-35 (group), but with pmpcfg(i).A=NAPOT]
-TST14-36
+TST14-36 (HIGH-PRIO)
   [same as TST12-36 (group), but with pmpcfg(i).A=NAPOT]
 
 ---------------------------
 
 TST14 (group)
   [same as TST12 (group), but with pmpcfg(i).A=NAPOT]
-TST14-41
+TST14-41 (LOWEST-PRIO)
   [same as TST12-41 (group), but with pmpcfg(i).A=NAPOT]
-TST14-42
+TST14-42 (LOWEST-PRIO)
   [same as TST12-42 (group), but with pmpcfg(i).A=NAPOT]
-TST14-43
+TST14-43 (LOWEST-PRIO)
   [same as TST12-43 (group), but with pmpcfg(i).A=NAPOT]
-TST14-44
+TST14-44 (LOWEST-PRIO)
   [same as TST12-44 (group), but with pmpcfg(i).A=NAPOT]
-TST14-45
+TST14-45 (LOWEST-PRIO)
   [same as TST12-45 (group), but with pmpcfg(i).A=NAPOT]
-TST14-46
+TST14-46 (LOWEST-PRIO)
   [same as TST12-46 (group), but with pmpcfg(i).A=NAPOT]
 
 ---------------------------
 
 TST14 (group)
   [same as TST12 (group), but with pmpcfg(i).A=NAPOT]
-TST14-51
+TST14-51 (LOWEST-PRIO)
   [same as TST12-51 (group), but with pmpcfg(i).A=NAPOT]
-TST14-52
+TST14-52 (LOWEST-PRIO)
   [same as TST12-52 (group), but with pmpcfg(i).A=NAPOT]
-TST14-53
+TST14-53 (LOWEST-PRIO)
   [same as TST12-53 (group), but with pmpcfg(i).A=NAPOT]
-TST14-54
+TST14-54 (LOWEST-PRIO)
   [same as TST12-54 (group), but with pmpcfg(i).A=NAPOT]
-TST14-55
+TST14-55 (LOWEST-PRIO)
   [same as TST12-55 (group), but with pmpcfg(i).A=NAPOT]
-TST14-56
+TST14-56 (LOWEST-PRIO)
   [same as TST12-56 (group), but with pmpcfg(i).A=NAPOT]
 
 ////////////////////////////
@@ -766,170 +799,170 @@ TST14-56
 
 TST15 (group) => FTR06-a
   [same as TST11 (group), but with pmpcfg(i).A=TOR]
-TST15-11
+TST15-11 (HIGH-PRIO)
   [same as TST11-11 (group), but with pmpcfg(i).A=TOR]
-TST15-12
+TST15-12 (MEDIUM-PRIO)
   [same as TST11-12 (group), but with pmpcfg(i).A=TOR]
-TST15-13
+TST15-13 (MEDIUM-PRIO)
   [same as TST11-13 (group), but with pmpcfg(i).A=TOR]
-TST15-14
+TST15-14 (LOW-PRIO)
   [same as TST11-14 (group), but with pmpcfg(i).A=TOR]
-TST15-15
+TST15-15 (LOW-PRIO)
   [same as TST11-15 (group), but with pmpcfg(i).A=TOR]
-TST15-16
+TST15-16 (LOW-PRIO)
   [same as TST11-16 (group), but with pmpcfg(i).A=TOR]
 
 ---------------------------
 
 TST15 (group) => FTR06-a
   [same as TST11 (group), but with pmpcfg(i).A=TOR]
-TST15-21
+TST15-21 (HIGH-PRIO)
   [same as TST11-21 (group), but with pmpcfg(i).A=TOR]
-TST15-22
+TST15-22 (MEDIUM-PRIO)
   [same as TST11-22 (group), but with pmpcfg(i).A=TOR]
-TST15-23
+TST15-23 (MEDIUM-PRIO)
   [same as TST11-23 (group), but with pmpcfg(i).A=TOR]
-TST15-24
+TST15-24 (LOW-PRIO)
   [same as TST11-24 (group), but with pmpcfg(i).A=TOR]
-TST15-25
+TST15-25 (LOW-PRIO)
   [same as TST11-25 (group), but with pmpcfg(i).A=TOR]
-TST15-26
+TST15-26 (LOW-PRIO)
   [same as TST11-26 (group), but with pmpcfg(i).A=TOR]
 
 ---------------------------
 
 TST15 (group) => FTR06-a
   [same as TST11 (group), but with pmpcfg(i).A=TOR]
-TST15-31
+TST15-31 (HIGH-PRIO)
   [same as TST11-31 (group), but with pmpcfg(i).A=TOR]
-TST15-32
+TST15-32 (MEDIUM-PRIO)
   [same as TST11-32 (group), but with pmpcfg(i).A=TOR]
-TST15-33
+TST15-33 (MEDIUM-PRIO)
   [same as TST11-33 (group), but with pmpcfg(i).A=TOR]
-TST15-34
+TST15-34 (LOW-PRIO)
   [same as TST11-34 (group), but with pmpcfg(i).A=TOR]
-TST15-35
+TST15-35 (LOW-PRIO)
   [same as TST11-35 (group), but with pmpcfg(i).A=TOR]
-TST15-36
+TST15-36 (LOW-PRIO)
   [same as TST11-36 (group), but with pmpcfg(i).A=TOR]
 
 ---------------------------
 
 TST15 (group) => FTR06-a
   [same as TST11 (group), but with pmpcfg(i).A=TOR]
-TST15-41
+TST15-41 (LOWEST-PRIO)
   [same as TST11-41 (group), but with pmpcfg(i).A=TOR]
-TST15-42
+TST15-42 (LOWEST-PRIO)
   [same as TST11-42 (group), but with pmpcfg(i).A=TOR]
-TST15-43
+TST15-43 (LOWEST-PRIO)
   [same as TST11-43 (group), but with pmpcfg(i).A=TOR]
-TST15-44
+TST15-44 (LOWEST-PRIO)
   [same as TST11-44 (group), but with pmpcfg(i).A=TOR]
-TST15-45
+TST15-45 (LOWEST-PRIO)
   [same as TST11-45 (group), but with pmpcfg(i).A=TOR]
-TST15-46
+TST15-46 (LOWEST-PRIO)
   [same as TST11-46 (group), but with pmpcfg(i).A=TOR]
 
 ---------------------------
 
 TST15 (group) => FTR06-a
   [same as TST11 (group), but with pmpcfg(i).A=TOR]
-TST15-51
+TST15-51 (LOWEST-PRIO)
   [same as TST11-51 (group), but with pmpcfg(i).A=TOR]
-TST15-52
+TST15-52 (LOWEST-PRIO)
   [same as TST11-52 (group), but with pmpcfg(i).A=TOR]
-TST15-53
+TST15-53 (LOWEST-PRIO)
   [same as TST11-53 (group), but with pmpcfg(i).A=TOR]
-TST15-54
+TST15-54 (LOWEST-PRIO)
   [same as TST11-54 (group), but with pmpcfg(i).A=TOR]
-TST15-55
+TST15-55 (LOWEST-PRIO)
   [same as TST11-55 (group), but with pmpcfg(i).A=TOR]
-TST15-56
+TST15-56 (LOWEST-PRIO)
   [same as TST11-56 (group), but with pmpcfg(i).A=TOR]
 
 ////////////////////////////
 
 TST16 (group) => FTR06-a
   [same as TST12 (group), but with pmpcfg(i).A=TOR]
-TST16-11
+TST16-11 (LOW-PRIO)
   [same as TST12-11 (group), but with pmpcfg(i).A=TOR]
-TST16-12
+TST16-12 (LOW-PRIO)
   [same as TST12-12 (group), but with pmpcfg(i).A=TOR]
-TST16-13
+TST16-13 (LOW-PRIO)
   [same as TST12-13 (group), but with pmpcfg(i).A=TOR]
-TST16-14
+TST16-14 (HIGH-PRIO)
   [same as TST12-14 (group), but with pmpcfg(i).A=TOR]
-TST16-15
+TST16-15 (MEDIUM-PRIO)
   [same as TST12-15 (group), but with pmpcfg(i).A=TOR]
-TST16-16
+TST16-16 (HIGH-PRIO)
   [same as TST12-16 (group), but with pmpcfg(i).A=TOR]
 
 ---------------------------
 
 TST16 (group) => FTR06-a
   [same as TST12 (group), but with pmpcfg(i).A=TOR]
-TST16-21
+TST16-21 (LOW-PRIO)
   [same as TST12-21 (group), but with pmpcfg(i).A=TOR]
-TST16-22
+TST16-22 (LOW-PRIO)
   [same as TST12-22 (group), but with pmpcfg(i).A=TOR]
-TST16-23
+TST16-23 (LOW-PRIO)
   [same as TST12-23 (group), but with pmpcfg(i).A=TOR]
-TST16-24
+TST16-24 (HIGH-PRIO)
   [same as TST12-24 (group), but with pmpcfg(i).A=TOR]
-TST16-25
+TST16-25 (MEDIUM-PRIO)
   [same as TST12-25 (group), but with pmpcfg(i).A=TOR]
-TST16-26
+TST16-26 (HIGH-PRIO)
   [same as TST12-26 (group), but with pmpcfg(i).A=TOR]
 
 ---------------------------
 
 TST16 (group) => FTR06-a
   [same as TST12 (group), but with pmpcfg(i).A=TOR]
-TST16-31
+TST16-31 (LOW-PRIO)
   [same as TST12-31 (group), but with pmpcfg(i).A=TOR]
-TST16-32
+TST16-32 (LOW-PRIO)
   [same as TST12-32 (group), but with pmpcfg(i).A=TOR]
-TST16-33
+TST16-33 (LOW-PRIO)
   [same as TST12-33 (group), but with pmpcfg(i).A=TOR]
-TST16-34
+TST16-34 (HIGH-PRIO)
   [same as TST12-34 (group), but with pmpcfg(i).A=TOR]
-TST16-35
+TST16-35 (MEDIUM-PRIO)
   [same as TST12-35 (group), but with pmpcfg(i).A=TOR]
-TST16-36
+TST16-36 (HIGH-PRIO)
   [same as TST12-36 (group), but with pmpcfg(i).A=TOR]
 
 ---------------------------
 
 TST16 (group) => FTR06-a
   [same as TST12 (group), but with pmpcfg(i).A=TOR]
-TST16-41
+TST16-41 (LOWEST-PRIO)
   [same as TST12-41 (group), but with pmpcfg(i).A=TOR]
-TST16-42
+TST16-42 (LOWEST-PRIO)
   [same as TST12-42 (group), but with pmpcfg(i).A=TOR]
-TST16-43
+TST16-43 (LOWEST-PRIO)
   [same as TST12-43 (group), but with pmpcfg(i).A=TOR]
-TST16-44
+TST16-44 (LOWEST-PRIO)
   [same as TST12-44 (group), but with pmpcfg(i).A=TOR]
-TST16-45
+TST16-45 (LOWEST-PRIO)
   [same as TST12-45 (group), but with pmpcfg(i).A=TOR]
-TST16-46
+TST16-46 (LOWEST-PRIO)
   [same as TST12-46 (group), but with pmpcfg(i).A=TOR]
 
 ---------------------------
 
 TST16 (group) => FTR06-a
   [same as TST12 (group), but with pmpcfg(i).A=TOR]
-TST16-51
+TST16-51 (LOWEST-PRIO)
   [same as TST12-51 (group), but with pmpcfg(i).A=TOR]
-TST16-52
+TST16-52 (LOWEST-PRIO)
   [same as TST12-52 (group), but with pmpcfg(i).A=TOR]
-TST16-53
+TST16-53 (LOWEST-PRIO)
   [same as TST12-53 (group), but with pmpcfg(i).A=TOR]
-TST16-54
+TST16-54 (LOWEST-PRIO)
   [same as TST12-54 (group), but with pmpcfg(i).A=TOR]
-TST16-55
+TST16-55 (LOWEST-PRIO)
   [same as TST12-55 (group), but with pmpcfg(i).A=TOR]
-TST16-56
+TST16-56 (LOWEST-PRIO)
   [same as TST12-56 (group), but with pmpcfg(i).A=TOR]
 
 ////////////////////////////
@@ -937,190 +970,190 @@ TST16-56
 
 TST17 (group)
   [same as TST11 (group), but with pmpcfg(i).A=OFF]
-TST17-11
+TST17-11 (HIGH-PRIO)
   [same as TST11-11 (group), but with pmpcfg(i).A=OFF
   - check instruction fetch access-fault exception raised]
-TST17-12
+TST17-12 (MEDIUM-PRIO)
   [same as TST11-12 (group), but with pmpcfg(i).A=OFF]
-TST17-13
+TST17-13 (MEDIUM-PRIO)
   [same as TST11-13 (group), but with pmpcfg(i).A=OFF]
-TST17-14
+TST17-14 (LOW-PRIO)
   [same as TST11-14 (group), but with pmpcfg(i).A=OFF
   - check instruction fetch access-fault exception raised]
-TST17-15
+TST17-15 (LOW-PRIO)
   [same as TST11-15 (group), but with pmpcfg(i).A=OFF]
-TST17-16
+TST17-16 (LOW-PRIO)
   [same as TST11-16 (group), but with pmpcfg(i).A=OFF]
 
 ---------------------------
 
 TST17 (group)
   [same as TST11 (group), but with pmpcfg(i).A=OFF]
-TST17-21
+TST17-21 (HIGH-PRIO)
   [same as TST11-21 (group), but with pmpcfg(i).A=OFF
   - check instruction fetch access-fault exception raised]
-TST17-22
+TST17-22 (MEDIUM-PRIO)
   [same as TST11-22 (group), but with pmpcfg(i).A=OFF]
-TST17-23
+TST17-23 (MEDIUM-PRIO)
   [same as TST11-23 (group), but with pmpcfg(i).A=OFF]
-TST17-24
+TST17-24 (LOW-PRIO)
   [same as TST11-24 (group), but with pmpcfg(i).A=OFF
   - check instruction fetch access-fault exception raised]
-TST17-25
+TST17-25 (LOW-PRIO)
   [same as TST11-25 (group), but with pmpcfg(i).A=OFF]
-TST17-26
+TST17-26 (LOW-PRIO)
   [same as TST11-26 (group), but with pmpcfg(i).A=OFF]
 
 ---------------------------
 
 TST17 (group)
   [same as TST11 (group), but with pmpcfg(i).A=OFF]
-TST17-31
+TST17-31 (HIGH-PRIO)
   [same as TST11-31 (group), but with pmpcfg(i).A=OFF
   - check instruction fetch access-fault exception raised]
-TST17-32
+TST17-32 (MEDIUM-PRIO)
   [same as TST11-32 (group), but with pmpcfg(i).A=OFF]
-TST17-33
+TST17-33 (MEDIUM-PRIO)
   [same as TST11-33 (group), but with pmpcfg(i).A=OFF]
-TST17-34
+TST17-34 (LOW-PRIO)
   [same as TST11-34 (group), but with pmpcfg(i).A=OFF
   - check instruction fetch access-fault exception raised]
-TST17-35
+TST17-35 (LOW-PRIO)
   [same as TST11-35 (group), but with pmpcfg(i).A=OFF]
-TST17-36
+TST17-36 (LOW-PRIO)
   [same as TST11-36 (group), but with pmpcfg(i).A=OFF]
 
 ---------------------------
 
 TST17 (group)
   [same as TST11 (group), but with pmpcfg(i).A=OFF]
-TST17-41
+TST17-41 (LOWEST-PRIO)
   [same as TST11-41 (group), but with pmpcfg(i).A=OFF
   - check instruction fetch access-fault exception raised]
-TST17-42
+TST17-42 (LOWEST-PRIO)
   [same as TST11-42 (group), but with pmpcfg(i).A=OFF]
-TST17-43
+TST17-43 (LOWEST-PRIO)
   [same as TST11-43 (group), but with pmpcfg(i).A=OFF]
-TST17-44
+TST17-44 (LOWEST-PRIO)
   [same as TST11-44 (group), but with pmpcfg(i).A=OFF
   - check instruction fetch access-fault exception raised]
-TST17-45
+TST17-45 (LOWEST-PRIO)
   [same as TST11-45 (group), but with pmpcfg(i).A=OFF]
-TST17-46
+TST17-46 (LOWEST-PRIO)
   [same as TST11-46 (group), but with pmpcfg(i).A=OFF]
 
 ---------------------------
 
 TST17 (group)
   [same as TST11 (group), but with pmpcfg(i).A=OFF]
-TST17-51
+TST17-51 (LOWEST-PRIO)
   [same as TST11-51 (group), but with pmpcfg(i).A=OFF
   - check instruction fetch access-fault exception raised]
-TST17-52
+TST17-52 (LOWEST-PRIO)
   [same as TST11-52 (group), but with pmpcfg(i).A=OFF]
-TST17-53
+TST17-53 (LOWEST-PRIO)
   [same as TST11-53 (group), but with pmpcfg(i).A=OFF]
-TST17-54
+TST17-54 (LOWEST-PRIO)
   [same as TST11-54 (group), but with pmpcfg(i).A=OFF
   - check instruction fetch access-fault exception raised]
-TST17-55
+TST17-55 (LOWEST-PRIO)
   [same as TST11-55 (group), but with pmpcfg(i).A=OFF]
-TST17-56
+TST17-56 (LOWEST-PRIO)
   [same as TST11-56 (group), but with pmpcfg(i).A=OFF]
 
 ////////////////////////////
 
 TST18 (group)
   [same as TST12 (group), but with pmpcfg(i).A=OFF]
-TST18-11
+TST18-11 (LOW-PRIO)
   [same as TST12-11 (group), but with pmpcfg(i).A=OFF
   - check instruction fetch access-fault exception raised]
-TST18-12
+TST18-12 (LOW-PRIO)
   [same as TST12-12 (group), but with pmpcfg(i).A=OFF]
-TST18-13
+TST18-13 (LOW-PRIO)
   [same as TST12-13 (group), but with pmpcfg(i).A=OFF]
-TST18-14
+TST18-14 (HIGH-PRIO)
   [same as TST12-14 (group), but with pmpcfg(i).A=OFF
   - check instruction fetch access-fault exception raised]
-TST18-15
+TST18-15 (MEDIUM-PRIO)
   [same as TST12-15 (group), but with pmpcfg(i).A=OFF]
-TST18-16
+TST18-16 (HIGH-PRIO)
   [same as TST12-16 (group), but with pmpcfg(i).A=OFF]
 
 ---------------------------
 
 TST18 (group)
   [same as TST12 (group), but with pmpcfg(i).A=OFF]
-TST18-21
+TST18-21 (LOW-PRIO)
   [same as TST12-21 (group), but with pmpcfg(i).A=OFF
   - check instruction fetch access-fault exception raised]
-TST18-22
+TST18-22 (LOW-PRIO)
   [same as TST12-22 (group), but with pmpcfg(i).A=OFF]
-TST18-23
+TST18-23 (LOW-PRIO)
   [same as TST12-23 (group), but with pmpcfg(i).A=OFF]
-TST18-24
+TST18-24 (HIGH-PRIO)
   [same as TST12-24 (group), but with pmpcfg(i).A=OFF
   - check instruction fetch access-fault exception raised]
-TST18-25
+TST18-25 (MEDIUM-PRIO)
   [same as TST12-25 (group), but with pmpcfg(i).A=OFF]
-TST18-26
+TST18-26 (HIGH-PRIO)
   [same as TST12-26 (group), but with pmpcfg(i).A=OFF]
 
 ---------------------------
 
 TST18 (group)
   [same as TST12 (group), but with pmpcfg(i).A=OFF]
-TST18-31
+TST18-31 (LOW-PRIO)
   [same as TST12-31 (group), but with pmpcfg(i).A=OFF
   - check instruction fetch access-fault exception raised]
-TST18-32
+TST18-32 (LOW-PRIO)
   [same as TST12-32 (group), but with pmpcfg(i).A=OFF]
-TST18-33
+TST18-33 (LOW-PRIO)
   [same as TST12-33 (group), but with pmpcfg(i).A=OFF]
-TST18-34
+TST18-34 (HIGH-PRIO)
   [same as TST12-34 (group), but with pmpcfg(i).A=OFF
   - check instruction fetch access-fault exception raised]
-TST18-35
+TST18-35 (MEDIUM-PRIO)
   [same as TST12-35 (group), but with pmpcfg(i).A=OFF]
-TST18-36
+TST18-36 (HIGH-PRIO)
   [same as TST12-36 (group), but with pmpcfg(i).A=OFF]
 
 ---------------------------
 
 TST18 (group)
   [same as TST12 (group), but with pmpcfg(i).A=OFF]
-TST18-41
+TST18-41 (LOWEST-PRIO)
   [same as TST12-41 (group), but with pmpcfg(i).A=OFF
   - check instruction fetch access-fault exception raised]
-TST18-42
+TST18-42 (LOWEST-PRIO)
   [same as TST12-42 (group), but with pmpcfg(i).A=OFF]
-TST18-43
+TST18-43 (LOWEST-PRIO)
   [same as TST12-43 (group), but with pmpcfg(i).A=OFF]
-TST18-44
+TST18-44 (LOWEST-PRIO)
   [same as TST12-44 (group), but with pmpcfg(i).A=OFF
   - check instruction fetch access-fault exception raised]
-TST18-45
+TST18-45 (LOWEST-PRIO)
   [same as TST12-45 (group), but with pmpcfg(i).A=OFF]
-TST18-46
+TST18-46 (LOWEST-PRIO)
   [same as TST12-46 (group), but with pmpcfg(i).A=OFF]
 
 ---------------------------
 
 TST18 (group)
   [same as TST12 (group), but with pmpcfg(i).A=OFF]
-TST18-51
+TST18-51 (LOWEST-PRIO)
   [same as TST12-51 (group), but with pmpcfg(i).A=OFF
   - check instruction fetch access-fault exception raised]
-TST18-52
+TST18-52 (LOWEST-PRIO)
   [same as TST12-52 (group), but with pmpcfg(i).A=OFF]
-TST18-53
+TST18-53 (LOWEST-PRIO)
   [same as TST12-53 (group), but with pmpcfg(i).A=OFF]
-TST18-54
+TST18-54 (LOWEST-PRIO)
   [same as TST12-54 (group), but with pmpcfg(i).A=OFF
   - check instruction fetch access-fault exception raised]
-TST18-55
+TST18-55 (LOWEST-PRIO)
   [same as TST12-55 (group), but with pmpcfg(i).A=OFF]
-TST18-56
+TST18-56 (LOWEST-PRIO)
   [same as TST12-56 (group), but with pmpcfg(i).A=OFF]
 
 ////////////////////////////
@@ -1407,61 +1440,50 @@ TST31 (group) => FTR08-a and FTR08-b
   [create scenario where L=1 for PMP entry (i)
     - check pmp(i)cfg and pmpaddr(i) are effectively locked whatever the mode]
   [create scenario where PMP entries are locked L=1
-    - check only the hart reset unlocks all PMP entries]
+    - check only the hart reset unlocks all PMP entries
+    - execute following tests specific checks
+    - check only hart reset unlocks all => FTR08-b
+    - check reset values: all pmp(i)cfg and pmpaddr(i) are M-mode read zero]
 TST31-1 = extension of (TST11-14, TST11-24, TST11-34, TST11-44, TST11-54,
                         TST12-14, TST12-24, TST12-34, TST12-44, TST12-54)
 [configure only one ([FTR02-b1]: maybe mandatorily the 1st) PMP entry: with L=1
-  - check for PMP entry (i) where L=1, pmp(i)cfg and pmpaddr(i) are effectively locked whatever the SW mode => FTR08-a
-  - check only hart reset unlocks all => FTR08-b
-  - check reset values: all pmp(i)cfg and pmpaddr(i) are M-mode read zero]
+  - check for PMP entry (i) where L=1 that pmp(i)cfg and pmpaddr(i) are effectively locked whatever the SW mode => FTR08-a]
 TST31-2 = extension of compatible pair of (TST11-14, TST11-24, TST11-34, TST11-44, TST11-54,
                                            TST12-14, TST12-24, TST12-34, TST12-44, TST12-54)
 [configure 2 PMP entries ([FTR02-b1]: maybe mandatorily the 2 first ones): both with L=1
-  - check for PMP entry (i) where L=1, pmp(i)cfg and pmpaddr(i) are effectively locked whatever the SW mode => FTR08-a
-  - check only hart reset unlocks all => FTR08-b
-  - check reset values: all pmp(i)cfg and pmpaddr(i) are M-mode read zero]
+  - check for PMP entry (i) where L=1 that pmp(i)cfg and pmpaddr(i) are effectively locked whatever the SW mode => FTR08-a]
 TST31-3 = extension of compatible pair of (TST11-11, TST11-21, TST11-31, TST11-41, TST11-51,
                                            TST11-14, TST11-24, TST11-34, TST11-44, TST11-54,
                                            TST12-11, TST12-21, TST12-31, TST12-41, TST12-51,
                                            TST12-14, TST12-24, TST12-34, TST12-44, TST12-54)
 [configure 2 PMP entries ([FTR02-b1]: maybe mandatorily the 2 first ones): one with L=1 and the other with L=0,
-  - check for PMP entry (i) where L=1, pmp(i)cfg and pmpaddr(i) are effectively locked whatever the SW mode => FTR08-a
+  - check for PMP entry (i) where L=1 that pmp(i)cfg and pmpaddr(i) are effectively locked whatever the SW mode => FTR08-a
   - check locked PMP entry (i) has no effect on unlocked PMP entry (j)
-  - check for PMP entry (i) where L=0, pmp(i)cfg and pmpaddr(i) are writable/readable in M-mode only
-  - check only hart reset unlocks all => FTR08-b
-  - check reset values: all pmp(i)cfg and pmpaddr(i) are M-mode read zero]
+  - check for PMP entry (i) where L=0 that pmp(i)cfg and pmpaddr(i) are writable/readable in M-mode only]
 TST31-4 = extension of compatible group(N) of (TST11-14, TST11-24, TST11-34, TST11-44, TST11-54,
                                                TST12-14, TST12-24, TST12-34, TST12-44, TST12-54)
 [configure N PMP entries ([FTR02-b1]: maybe mandatorily the N first ones): all with L=1
-  - check for PMP entry (i) where L=1, pmp(i)cfg and pmpaddr(i) are effectively locked whatever the SW mode => FTR08-a
-  - check only hart reset unlocks all => FTR08-b
-  - check reset values: all pmp(i)cfg and pmpaddr(i) are M-mode read zero]
+  - check for PMP entry (i) where L=1 that pmp(i)cfg and pmpaddr(i) are effectively locked whatever the SW mode => FTR08-a]
 TST31-5 = extension of compatible group(N) of (TST11-11, TST11-21, TST11-31, TST11-41, TST11-51,
                                                TST11-14, TST11-24, TST11-34, TST11-44, TST11-54,
                                                TST12-11, TST12-21, TST12-31, TST12-41, TST12-51,
                                                TST12-14, TST12-24, TST12-34, TST12-44, TST12-54)
 [configure N PMP entries ([FTR02-b1]: maybe mandatorily the N first ones): at least one with L=1 and one with L=0,
-  - check for PMP entry (i) where L=1, pmp(i)cfg and pmpaddr(i) are effectively locked whatever the SW mode => FTR08-a
+  - check for PMP entry (i) where L=1 that pmp(i)cfg and pmpaddr(i) are effectively locked whatever the SW mode => FTR08-a
   - check locked PMP entry (i) has no effect on unlocked PMP entry (j)
-  - check for PMP entry (i) where L=0, pmp(i)cfg and pmpaddr(i) are writable/readable in M-mode only
-  - check only hart reset unlocks all => FTR08-b
-  - check reset values: all pmp(i)cfg and pmpaddr(i) are M-mode read zero]
+  - check for PMP entry (i) where L=0 that pmp(i)cfg and pmpaddr(i) are writable/readable in M-mode only]
 TST31-6 = extension of compatible group(8) of (TST11-14, TST11-24, TST11-34, TST11-44, TST11-54,
                                                TST12-14, TST12-24, TST12-34, TST12-44, TST12-54)
 [configure 8 PMP entries: all with L=1
-  - check for PMP entry (i) where L=1, pmp(i)cfg and pmpaddr(i) are effectively locked whatever the SW mode => FTR08-a
-  - check only hart reset unlocks all => FTR08-b
-  - check reset values: all pmp(i)cfg and pmpaddr(i) are M-mode read zero]
+  - check for PMP entry (i) where L=1 that pmp(i)cfg and pmpaddr(i) are effectively locked whatever the SW mode => FTR08-a]
 TST31-7 = extension of compatible group(8) of (TST11-11, TST11-21, TST11-31, TST11-41, TST11-51,
                                            		 TST11-14, TST11-24, TST11-34, TST11-44, TST11-54,
                                            		 TST12-11, TST12-21, TST12-31, TST12-41, TST12-51,
                                            		 TST12-14, TST12-24, TST12-34, TST12-44, TST12-54)
 [configure 8 PMP entries: at least one with L=1 and one with L=0,
-  - check for PMP entry (i) where L=1, pmp(i)cfg and pmpaddr(i) are effectively locked whatever the SW mode => FTR08-a
+  - check for PMP entry (i) where L=1 that pmp(i)cfg and pmpaddr(i) are effectively locked whatever the SW mode => FTR08-a
   - check locked PMP entry (i) has no effect on unlocked PMP entry (j)
-  - check for PMP entry (i) where L=0, pmp(i)cfg and pmpaddr(i) are writable/readable in M-mode only
-  - check only hart reset unlocks all => FTR08-b
-  - check reset values: all pmp(i)cfg and pmpaddr(i) are M-mode read zero]
+  - check for PMP entry (i) where L=0 that pmp(i)cfg and pmpaddr(i) are writable/readable in M-mode only]
 
 ---------------------------
 
