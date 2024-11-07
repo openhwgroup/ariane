@@ -1,0 +1,1502 @@
+!Feature
+next_elt_id: 36
+name: cfg TOR access S/U
+id: 15
+display_order: 15
+subfeatures: !!omap
+- 000_fetch_L0_X1_addr_hit: !Subfeature
+    name: 000_fetch_L0_X1_addr_hit
+    tag: VP_PMP_F015_S011
+    next_elt_id: 1
+    display_order: 0
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F015_S011_I000
+        description: 'reuse of VP_PMP_F011_S011_I000 feature description (Cf. Feature:
+          "cfg NA4 access S/U")'
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "reuse of VP_PMP_F011_S011_I000 verification goals (Cf. Feature:
+          \"cfg NA4 access S/U\")\n\nCONFIGURATION\n    - pmpcfg(i): A=TOR\n    -
+          [for i>0] pmpaddr(i) > pmpaddr(i-1): any TOR address range\n    - [for i=0]
+          pmpaddr(0) > 0: any TOR address range\n    - [for j=unused] pmpaddr(j)=random:
+          only in single entry configuration case (not in reuse case)"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<< link to the old pmp_verif_plan.txt and pmp_verif_plan_features.txt
+          files (not up-to-date) : reading below not mandatory but may help for better
+          understanding >>\n\nFTR01-d\n[PMP checks are applied to all accesses whose
+          effective privilege mode is S or U]\n\nFTR02-b1\n[the lowest-numbered PMP
+          CSRs must be implemented first (QUESTION: does it mean programmed first)]\n
+          \nFTR08-e2-2 (refers to FTR09-d2-2)\n[When the L bit is clear, the R/W/X
+          permissions apply only to S and U modes]\nFTR09-d2-2 (L=0 refers to FTR08-e2-2)\n
+          [if the privilege mode of the access is S or U (whatever L), then the access
+          succeeds only if the R, W, or X bit corresponding to the access type is
+          set]\n\n\nTST15-1x(group)\n  [same as TST11-1x(group), but with pmpcfg(i).A=TOR]\n
+          TST15-11 (HIGH-PRIO)\n  [same as TST11-11(group), but with pmpcfg(i).A=TOR]"
+- 001_fetch_L0_X0_addr_hit: !Subfeature
+    name: 001_fetch_L0_X0_addr_hit
+    tag: VP_PMP_F015_S012
+    next_elt_id: 1
+    display_order: 1
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F015_S012_I000
+        description: 'reuse of VP_PMP_F011_S012_I000 feature description (Cf. Feature:
+          "cfg NA4 access S/U")'
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "reuse of VP_PMP_F011_S012_I000 verification goals (Cf. Feature:
+          \"cfg NA4 access S/U\")\n\nCONFIGURATION\n    - pmpcfg(i): A=TOR\n    -
+          [for i>0] pmpaddr(i) > pmpaddr(i-1): any TOR address range\n    - [for i=0]
+          pmpaddr(0) > 0: any TOR address range\n    - [for j=unused] pmpaddr(j)=random:
+          only in single entry configuration case (not in reuse case)"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<< link to the old pmp_verif_plan.txt and pmp_verif_plan_features.txt
+          files (not up-to-date) : reading below not mandatory but may help for better
+          understanding >>\n\nFTR01-d\n[PMP checks are applied to all accesses whose
+          effective privilege mode is S or U]\n\nFTR02-b1\n[the lowest-numbered PMP
+          CSRs must be implemented first (QUESTION: does it mean programmed first)]\n
+          \nFTR08-e2-2 (refers to FTR09-d2-2)\n[When the L bit is clear, the R/W/X
+          permissions apply only to S and U modes]\nFTR09-d2-2 (L=0 refers to FTR08-e2-2)\n
+          [if the privilege mode of the access is S or U (whatever L), then the access
+          succeeds only if the R, W, or X bit corresponding to the access type is
+          set]\n\nFTR04-b\n [Attempting to fetch an instruction from a PMP region
+          that does not have execute permissions raises an instruction access-fault
+          exception]\n \n\nTST15-1x(group)\n  [same as TST11-1x(group), but with pmpcfg(i).A=TOR]\n
+          TST15-12 (MEDIUM-PRIO)\n  [same as TST11-12(group), but with pmpcfg(i).A=TOR]"
+- 002_fetch_L0_X1_addr_miss: !Subfeature
+    name: 002_fetch_L0_X1_addr_miss
+    tag: VP_PMP_F015_S013
+    next_elt_id: 1
+    display_order: 2
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F015_S013_I000
+        description: 'reuse of VP_PMP_F011_S013_I000 feature description (Cf. Feature:
+          "cfg NA4 access S/U")'
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "reuse of VP_PMP_F011_S013_I000 verification goals (Cf. Feature:
+          \"cfg NA4 access S/U\")\n\nCONFIGURATION\n    - pmpcfg(i): A=TOR\n    -
+          [for i>0] pmpaddr(i) > pmpaddr(i-1): any TOR address range\n    - [for i=0]
+          pmpaddr(0) > 0: any TOR address range\n    - [for j=unused] pmpaddr(j)=random:
+          only in single entry configuration case (not in reuse case)"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<< link to the old pmp_verif_plan.txt and pmp_verif_plan_features.txt
+          files (not up-to-date) : reading below not mandatory but may help for better
+          understanding >>\n\nFTR01-d\n[PMP checks are applied to all accesses whose
+          effective privilege mode is S or U]\n\nFTR02-b1\n[the lowest-numbered PMP
+          CSRs must be implemented first (QUESTION: does it mean programmed first)]\n
+          \nFTR08-e2-2 (refers to FTR09-d2-2)\n[When the L bit is clear, the R/W/X
+          permissions apply only to S and U modes]\nFTR09-d2-2 (L=0 refers to FTR08-e2-2)\n
+          [if the privilege mode of the access is S or U (whatever L), then the access
+          succeeds only if the R, W, or X bit corresponding to the access type is
+          set]\n\n\nTST15-1x(group)\n  [same as TST11-1x(group), but with pmpcfg(i).A=TOR]\n
+          TST15-13 (MEDIUM-PRIO)\n  [same as TST11-13(group), but with pmpcfg(i).A=TOR]"
+- 003_fetch_L1_X1_addr_hit: !Subfeature
+    name: 003_fetch_L1_X1_addr_hit
+    tag: VP_PMP_F015_S014
+    next_elt_id: 1
+    display_order: 3
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F015_S014_I000
+        description: 'reuse of VP_PMP_F011_S014_I000 feature description (Cf. Feature:
+          "cfg NA4 access S/U")'
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "reuse of VP_PMP_F011_S014_I000 verification goals (Cf. Feature:
+          \"cfg NA4 access S/U\")\n\nCONFIGURATION\n    - pmpcfg(i): A=TOR\n    -
+          [for i>0] pmpaddr(i) > pmpaddr(i-1): any TOR address range\n    - [for i=0]
+          pmpaddr(0) > 0: any TOR address range\n    - [for j=unused] pmpaddr(j)=random:
+          only in single entry configuration case (not in reuse case)"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<< link to the old pmp_verif_plan.txt and pmp_verif_plan_features.txt
+          files (not up-to-date) : reading below not mandatory but may help for better
+          understanding >>\n\nFTR01-d\n[PMP checks are applied to all accesses whose
+          effective privilege mode is S or U]\n\nFTR02-b1\n[the lowest-numbered PMP
+          CSRs must be implemented first (QUESTION: does it mean programmed first)]\n
+          \nFTR08-e1 (refers to FTR01-f) (refers to FTR09-d2-1)\n [When the L bit
+          is set, these permissions are enforced for all privilege modes]\nFTR01-f
+          (refers to FTR08-e1)\n [PMP checks may additionally apply to M-mode accesses,
+          in which case the PMP registers themselves are locked, so that even M-mode
+          software cannot change them until the hart is reset]\n FTR09-d2-1 (refers
+          to FTR08-e1) (refers to FTR01-f)\n[if the L bit is set, then the access
+          succeeds only if the R, W, or X bit corresponding to the access type is
+          set]\n\n\nTST15-1x(group)\n  [same as TST11-1x(group), but with pmpcfg(i).A=TOR]\n
+          TST15-14 (LOW-PRIO)\n  [same as TST11-14(group), but with pmpcfg(i).A=TOR]"
+- 004_fetch_L1_X0_addr_hit: !Subfeature
+    name: 004_fetch_L1_X0_addr_hit
+    tag: VP_PMP_F015_S015
+    next_elt_id: 1
+    display_order: 4
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F015_S015_I000
+        description: 'reuse of VP_PMP_F011_S015_I000 feature description (Cf. Feature:
+          "cfg NA4 access S/U")'
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "reuse of VP_PMP_F011_S015_I000 verification goals (Cf. Feature:
+          \"cfg NA4 access S/U\")\n\nCONFIGURATION\n    - pmpcfg(i): A=TOR\n    -
+          [for i>0] pmpaddr(i) > pmpaddr(i-1): any TOR address range\n    - [for i=0]
+          pmpaddr(0) > 0: any TOR address range\n    - [for j=unused] pmpaddr(j)=random:
+          only in single entry configuration case (not in reuse case)"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<< link to the old pmp_verif_plan.txt and pmp_verif_plan_features.txt
+          files (not up-to-date) : reading below not mandatory but may help for better
+          understanding >>\n\nFTR01-d\n[PMP checks are applied to all accesses whose
+          effective privilege mode is S or U]\n\nFTR02-b1\n[the lowest-numbered PMP
+          CSRs must be implemented first (QUESTION: does it mean programmed first)]\n
+          \nFTR08-e1 (refers to FTR01-f) (refers to FTR09-d2-1)\n [When the L bit
+          is set, these permissions are enforced for all privilege modes]\nFTR01-f
+          (refers to FTR08-e1)\n [PMP checks may additionally apply to M-mode accesses,
+          in which case the PMP registers themselves are locked, so that even M-mode
+          software cannot change them until the hart is reset]\n FTR09-d2-1 (refers
+          to FTR08-e1) (refers to FTR01-f)\n[if the L bit is set, then the access
+          succeeds only if the R, W, or X bit corresponding to the access type is
+          set]\n\nFTR04-b\n[Attempting to fetch an instruction from a PMP region that
+          does not have execute permissions raises an instruction access-fault exception]\n\
+          \n\nTST15-1x(group)\n  [same as TST11-1x(group), but with pmpcfg(i).A=TOR]\n
+          TST15-15 (LOW-PRIO)\n  [same as TST11-15(group), but with pmpcfg(i).A=TOR]"
+- 005_fetch_L1_X1_addr_miss: !Subfeature
+    name: 005_fetch_L1_X1_addr_miss
+    tag: VP_PMP_F015_S016
+    next_elt_id: 1
+    display_order: 5
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F015_S016_I000
+        description: 'reuse of VP_PMP_F011_S016_I000 feature description (Cf. Feature:
+          "cfg NA4 access S/U")'
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "reuse of VP_PMP_F011_S016_I000 verification goals (Cf. Feature:
+          \"cfg NA4 access S/U\")\n\nCONFIGURATION\n    - pmpcfg(i): A=TOR\n    -
+          [for i>0] pmpaddr(i) > pmpaddr(i-1): any TOR address range\n    - [for i=0]
+          pmpaddr(0) > 0: any TOR address range\n    - [for j=unused] pmpaddr(j)=random:
+          only in single entry configuration case (not in reuse case)"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<< link to the old pmp_verif_plan.txt and pmp_verif_plan_features.txt
+          files (not up-to-date) : reading below not mandatory but may help for better
+          understanding >>\n\nFTR01-d\n[PMP checks are applied to all accesses whose
+          effective privilege mode is S or U]\n\nFTR02-b1\n[the lowest-numbered PMP
+          CSRs must be implemented first (QUESTION: does it mean programmed first)]\n
+          \nFTR08-e1 (refers to FTR01-f) (refers to FTR09-d2-1)\n [When the L bit
+          is set, these permissions are enforced for all privilege modes]\nFTR01-f
+          (refers to FTR08-e1)\n [PMP checks may additionally apply to M-mode accesses,
+          in which case the PMP registers themselves are locked, so that even M-mode
+          software cannot change them until the hart is reset]\n FTR09-d2-1 (refers
+          to FTR08-e1) (refers to FTR01-f)\n[if the L bit is set, then the access
+          succeeds only if the R, W, or X bit corresponding to the access type is
+          set]\n\n\nTST15-1x(group)\n  [same as TST11-1x(group), but with pmpcfg(i).A=TOR]\n
+          TST15-16 (LOW-PRIO)\n  [same as TST11-16(group), but with pmpcfg(i).A=TOR]"
+- 006_load_L0_R1_addr_hit: !Subfeature
+    name: 006_load_L0_R1_addr_hit
+    tag: VP_PMP_F015_S021
+    next_elt_id: 1
+    display_order: 6
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F015_S021_I000
+        description: 'reuse of VP_PMP_F011_S021_I000 feature description (Cf. Feature:
+          "cfg NA4 access S/U")'
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "reuse of VP_PMP_F011_S021_I000 verification goals (Cf. Feature:
+          \"cfg NA4 access S/U\")\n\nCONFIGURATION\n    - pmpcfg(i): A=TOR\n    -
+          [for i>0] pmpaddr(i) > pmpaddr(i-1): any TOR address range\n    - [for i=0]
+          pmpaddr(0) > 0: any TOR address range\n    - [for j=unused] pmpaddr(j)=random:
+          only in single entry configuration case (not in reuse case)"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<< link to the old pmp_verif_plan.txt and pmp_verif_plan_features.txt
+          files (not up-to-date) : reading below not mandatory but may help for better
+          understanding >>\n\nFTR01-d\n[PMP checks are applied to all accesses whose
+          effective privilege mode is S or U]\n\nFTR02-b1\n[the lowest-numbered PMP
+          CSRs must be implemented first (QUESTION: does it mean programmed first)]\n
+          \nFTR08-e2-2 (refers to FTR09-d2-2)\n[When the L bit is clear, the R/W/X
+          permissions apply only to S and U modes]\nFTR09-d2-2 (L=0 refers to FTR08-e2-2)\n
+          [if the privilege mode of the access is S or U (whatever L), then the access
+          succeeds only if the R, W, or X bit corresponding to the access type is
+          set]\n\n\nTST15-2x(group)\n  [same as TST11-2x(group), but with pmpcfg(i).A=TOR]\n
+          TST15-21 (HIGH-PRIO)\n  [same as TST11-21(group), but with pmpcfg(i).A=TOR]"
+- 007_load_L0_R0_addr_hit: !Subfeature
+    name: 007_load_L0_R0_addr_hit
+    tag: VP_PMP_F015_S022
+    next_elt_id: 1
+    display_order: 7
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F015_S022_I000
+        description: 'reuse of VP_PMP_F011_S022_I000 feature description (Cf. Feature:
+          "cfg NA4 access S/U")'
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "reuse of VP_PMP_F011_S022_I000 verification goals (Cf. Feature:
+          \"cfg NA4 access S/U\")\n\nCONFIGURATION\n    - pmpcfg(i): A=TOR\n    -
+          [for i>0] pmpaddr(i) > pmpaddr(i-1): any TOR address range\n    - [for i=0]
+          pmpaddr(0) > 0: any TOR address range\n    - [for j=unused] pmpaddr(j)=random:
+          only in single entry configuration case (not in reuse case)"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<< link to the old pmp_verif_plan.txt and pmp_verif_plan_features.txt
+          files (not up-to-date) : reading below not mandatory but may help for better
+          understanding >>\n\nFTR01-d\n[PMP checks are applied to all accesses whose
+          effective privilege mode is S or U]\n\nFTR02-b1\n[the lowest-numbered PMP
+          CSRs must be implemented first (QUESTION: does it mean programmed first)]\n
+          \nFTR08-e2-2 (refers to FTR09-d2-2)\n[When the L bit is clear, the R/W/X
+          permissions apply only to S and U modes]\nFTR09-d2-2 (L=0 refers to FTR08-e2-2)\n
+          [if the privilege mode of the access is S or U (whatever L), then the access
+          succeeds only if the R, W, or X bit corresponding to the access type is
+          set]\n\nFTR04-c\n [Attempting to execute a load or load-reserved instruction
+          which accesses a physical address within a PMP region without read permissions
+          raises a load access-fault exception]\n\n\nTST15-2x(group)\n  [same as TST11-2x(group),
+          but with pmpcfg(i).A=TOR]\nTST15-22 (MEDIUM-PRIO)\n  [same as TST11-22(group),
+          but with pmpcfg(i).A=TOR]"
+- 008_load_L0_R1_addr_miss: !Subfeature
+    name: 008_load_L0_R1_addr_miss
+    tag: VP_PMP_F015_S023
+    next_elt_id: 1
+    display_order: 8
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F015_S023_I000
+        description: 'reuse of VP_PMP_F011_S023_I000 feature description (Cf. Feature:
+          "cfg NA4 access S/U")'
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "reuse of VP_PMP_F011_S023_I000 verification goals (Cf. Feature:
+          \"cfg NA4 access S/U\")\n\nCONFIGURATION\n    - pmpcfg(i): A=TOR\n    -
+          [for i>0] pmpaddr(i) > pmpaddr(i-1): any TOR address range\n    - [for i=0]
+          pmpaddr(0) > 0: any TOR address range\n    - [for j=unused] pmpaddr(j)=random:
+          only in single entry configuration case (not in reuse case)"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<< link to the old pmp_verif_plan.txt and pmp_verif_plan_features.txt
+          files (not up-to-date) : reading below not mandatory but may help for better
+          understanding >>\n\nFTR01-d\n[PMP checks are applied to all accesses whose
+          effective privilege mode is S or U]\n\nFTR02-b1\n[the lowest-numbered PMP
+          CSRs must be implemented first (QUESTION: does it mean programmed first)]\n
+          \nFTR08-e2-2 (refers to FTR09-d2-2)\n[When the L bit is clear, the R/W/X
+          permissions apply only to S and U modes]\nFTR09-d2-2 (L=0 refers to FTR08-e2-2)\n
+          [if the privilege mode of the access is S or U (whatever L), then the access
+          succeeds only if the R, W, or X bit corresponding to the access type is
+          set]\n\n\nTST15-2x(group)\n  [same as TST11-2x(group), but with pmpcfg(i).A=TOR]\n
+          TST15-23 (MEDIUM-PRIO)\n  [same as TST11-23(group), but with pmpcfg(i).A=TOR]"
+- 009_load_L1_R1_addr_hit: !Subfeature
+    name: 009_load_L1_R1_addr_hit
+    tag: VP_PMP_F015_S024
+    next_elt_id: 1
+    display_order: 9
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F015_S024_I000
+        description: 'reuse of VP_PMP_F011_S024_I000 feature description (Cf. Feature:
+          "cfg NA4 access S/U")'
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "reuse of VP_PMP_F011_S024_I000 verification goals (Cf. Feature:
+          \"cfg NA4 access S/U\")\n\nCONFIGURATION\n    - pmpcfg(i): A=TOR\n    -
+          [for i>0] pmpaddr(i) > pmpaddr(i-1): any TOR address range\n    - [for i=0]
+          pmpaddr(0) > 0: any TOR address range\n    - [for j=unused] pmpaddr(j)=random:
+          only in single entry configuration case (not in reuse case)"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<< link to the old pmp_verif_plan.txt and pmp_verif_plan_features.txt
+          files (not up-to-date) : reading below not mandatory but may help for better
+          understanding >>\n\nFTR01-d\n[PMP checks are applied to all accesses whose
+          effective privilege mode is S or U]\n\nFTR02-b1\n[the lowest-numbered PMP
+          CSRs must be implemented first (QUESTION: does it mean programmed first)]\n
+          \nFTR08-e1 (refers to FTR01-f) (refers to FTR09-d2-1)\n [When the L bit
+          is set, these permissions are enforced for all privilege modes]\nFTR01-f
+          (refers to FTR08-e1)\n [PMP checks may additionally apply to M-mode accesses,
+          in which case the PMP registers themselves are locked, so that even M-mode
+          software cannot change them until the hart is reset]\n FTR09-d2-1 (refers
+          to FTR08-e1) (refers to FTR01-f)\n[if the L bit is set, then the access
+          succeeds only if the R, W, or X bit corresponding to the access type is
+          set]\n\n\nTST15-2x(group)\n  [same as TST11-2x(group), but with pmpcfg(i).A=TOR]\n
+          TST15-24 (LOW-PRIO)\n  [same as TST11-24(group), but with pmpcfg(i).A=TOR]"
+- 010_load_L1_R0_addr_hit: !Subfeature
+    name: 010_load_L1_R0_addr_hit
+    tag: VP_PMP_F015_S025
+    next_elt_id: 1
+    display_order: 10
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F015_S025_I000
+        description: 'reuse of VP_PMP_F011_S025_I000 feature description (Cf. Feature:
+          "cfg NA4 access S/U")'
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "reuse of VP_PMP_F011_S025_I000 verification goals (Cf. Feature:
+          \"cfg NA4 access S/U\")\n\nCONFIGURATION\n    - pmpcfg(i): A=TOR\n    -
+          [for i>0] pmpaddr(i) > pmpaddr(i-1): any TOR address range\n    - [for i=0]
+          pmpaddr(0) > 0: any TOR address range\n    - [for j=unused] pmpaddr(j)=random:
+          only in single entry configuration case (not in reuse case)"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<< link to the old pmp_verif_plan.txt and pmp_verif_plan_features.txt
+          files (not up-to-date) : reading below not mandatory but may help for better
+          understanding >>\n\nFTR01-d\n[PMP checks are applied to all accesses whose
+          effective privilege mode is S or U]\n\nFTR02-b1\n[the lowest-numbered PMP
+          CSRs must be implemented first (QUESTION: does it mean programmed first)]\n
+          \nFTR08-e1 (refers to FTR01-f) (refers to FTR09-d2-1)\n [When the L bit
+          is set, these permissions are enforced for all privilege modes]\nFTR01-f
+          (refers to FTR08-e1)\n [PMP checks may additionally apply to M-mode accesses,
+          in which case the PMP registers themselves are locked, so that even M-mode
+          software cannot change them until the hart is reset]\n FTR09-d2-1 (refers
+          to FTR08-e1) (refers to FTR01-f)\n[if the L bit is set, then the access
+          succeeds only if the R, W, or X bit corresponding to the access type is
+          set]\n\nFTR04-c\n[Attempting to execute a load or load-reserved instruction
+          which accesses a physical address within a PMP region without read permissions
+          raises a load access-fault exception]\n\n\nTST15-2x(group)\n  [same as TST11-2x(group),
+          but with pmpcfg(i).A=TOR]\n TST15-25 (LOW-PRIO)\n  [same as TST11-25(group),
+          but with pmpcfg(i).A=TOR]"
+- 011_load_L1_R1_addr_miss: !Subfeature
+    name: 011_load_L1_R1_addr_miss
+    tag: VP_PMP_F015_S026
+    next_elt_id: 1
+    display_order: 11
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F015_S026_I000
+        description: 'reuse of VP_PMP_F011_S026_I000 feature description (Cf. Feature:
+          "cfg NA4 access S/U")'
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "reuse of VP_PMP_F011_S026_I000 verification goals (Cf. Feature:
+          \"cfg NA4 access S/U\")\n\nCONFIGURATION\n    - pmpcfg(i): A=TOR\n    -
+          [for i>0] pmpaddr(i) > pmpaddr(i-1): any TOR address range\n    - [for i=0]
+          pmpaddr(0) > 0: any TOR address range\n    - [for j=unused] pmpaddr(j)=random:
+          only in single entry configuration case (not in reuse case)"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<< link to the old pmp_verif_plan.txt and pmp_verif_plan_features.txt
+          files (not up-to-date) : reading below not mandatory but may help for better
+          understanding >>\n\nFTR01-d\n[PMP checks are applied to all accesses whose
+          effective privilege mode is S or U]\n\nFTR02-b1\n[the lowest-numbered PMP
+          CSRs must be implemented first (QUESTION: does it mean programmed first)]\n
+          \nFTR08-e1 (refers to FTR01-f) (refers to FTR09-d2-1)\n [When the L bit
+          is set, these permissions are enforced for all privilege modes]\nFTR01-f
+          (refers to FTR08-e1)\n [PMP checks may additionally apply to M-mode accesses,
+          in which case the PMP registers themselves are locked, so that even M-mode
+          software cannot change them until the hart is reset]\n FTR09-d2-1 (refers
+          to FTR08-e1) (refers to FTR01-f)\n[if the L bit is set, then the access
+          succeeds only if the R, W, or X bit corresponding to the access type is
+          set]\n\n\nTST15-2x(group)\n  [same as TST11-2x(group), but with pmpcfg(i).A=TOR]\n
+          TST15-26 (LOW-PRIO)\n  [same as TST11-26(group), but with pmpcfg(i).A=TOR]"
+- 012_store_L0_W1_addr_hit: !Subfeature
+    name: 012_store_L0_W1_addr_hit
+    tag: VP_PMP_F015_S031
+    next_elt_id: 1
+    display_order: 12
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F015_S031_I000
+        description: 'reuse of VP_PMP_F011_S031_I000 feature description (Cf. Feature:
+          "cfg NA4 access S/U")'
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "reuse of VP_PMP_F011_S031_I000 verification goals (Cf. Feature:
+          \"cfg NA4 access S/U\")\n\nCONFIGURATION\n    - pmpcfg(i): A=TOR\n    -
+          [for i>0] pmpaddr(i) > pmpaddr(i-1): any TOR address range\n    - [for i=0]
+          pmpaddr(0) > 0: any TOR address range\n    - [for j=unused] pmpaddr(j)=random:
+          only in single entry configuration case (not in reuse case)"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<< link to the old pmp_verif_plan.txt and pmp_verif_plan_features.txt
+          files (not up-to-date) : reading below not mandatory but may help for better
+          understanding >>\n\nFTR01-d\n[PMP checks are applied to all accesses whose
+          effective privilege mode is S or U]\n\nFTR02-b1\n[the lowest-numbered PMP
+          CSRs must be implemented first (QUESTION: does it mean programmed first)]\n
+          \nFTR08-e2-2 (refers to FTR09-d2-2)\n[When the L bit is clear, the R/W/X
+          permissions apply only to S and U modes]\nFTR09-d2-2 (L=0 refers to FTR08-e2-2)\n
+          [if the privilege mode of the access is S or U (whatever L), then the access
+          succeeds only if the R, W, or X bit corresponding to the access type is
+          set]\n\n\nTST15-3x(group)\n  [same as TST11-3x(group), but with pmpcfg(i).A=TOR]\n
+          TST15-31 (HIGH-PRIO)\n  [same as TST11-31(group), but with pmpcfg(i).A=TOR]"
+- 013_store_L0_W0_addr_hit: !Subfeature
+    name: 013_store_L0_W0_addr_hit
+    tag: VP_PMP_F015_S032
+    next_elt_id: 1
+    display_order: 13
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F015_S032_I000
+        description: 'reuse of VP_PMP_F011_S032_I000 feature description (Cf. Feature:
+          "cfg NA4 access S/U")'
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "reuse of VP_PMP_F011_S032_I000 verification goals (Cf. Feature:
+          \"cfg NA4 access S/U\")\n\nCONFIGURATION\n    - pmpcfg(i): A=TOR\n    -
+          [for i>0] pmpaddr(i) > pmpaddr(i-1): any TOR address range\n    - [for i=0]
+          pmpaddr(0) > 0: any TOR address range\n    - [for j=unused] pmpaddr(j)=random:
+          only in single entry configuration case (not in reuse case)"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<< link to the old pmp_verif_plan.txt and pmp_verif_plan_features.txt
+          files (not up-to-date) : reading below not mandatory but may help for better
+          understanding >>\n\nFTR01-d\n[PMP checks are applied to all accesses whose
+          effective privilege mode is S or U]\n\nFTR02-b1\n[the lowest-numbered PMP
+          CSRs must be implemented first (QUESTION: does it mean programmed first)]\n
+          \nFTR08-e2-2 (refers to FTR09-d2-2)\n[When the L bit is clear, the R/W/X
+          permissions apply only to S and U modes]\nFTR09-d2-2 (L=0 refers to FTR08-e2-2)\n
+          [if the privilege mode of the access is S or U (whatever L), then the access
+          succeeds only if the R, W, or X bit corresponding to the access type is
+          set]\n\nFTR04-d\n [Attempting to execute a store, store-conditional, or
+          AMO instruction which accesses a physical address within a PMP region without
+          write permissions raises a store access-fault exception]\n\n\nTST15-3x(group)\n\
+          \  [same as TST11-3x(group), but with pmpcfg(i).A=TOR]\nTST15-32 (MEDIUM-PRIO)\n\
+          \  [same as TST11-32(group), but with pmpcfg(i).A=TOR]"
+- 014_store_L0_W1_addr_miss: !Subfeature
+    name: 014_store_L0_W1_addr_miss
+    tag: VP_PMP_F015_S033
+    next_elt_id: 1
+    display_order: 14
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F015_S033_I000
+        description: 'reuse of VP_PMP_F011_S033_I000 feature description (Cf. Feature:
+          "cfg NA4 access S/U")'
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "reuse of VP_PMP_F011_S033_I000 verification goals (Cf. Feature:
+          \"cfg NA4 access S/U\")\n\nCONFIGURATION\n    - pmpcfg(i): A=TOR\n    -
+          [for i>0] pmpaddr(i) > pmpaddr(i-1): any TOR address range\n    - [for i=0]
+          pmpaddr(0) > 0: any TOR address range\n    - [for j=unused] pmpaddr(j)=random:
+          only in single entry configuration case (not in reuse case)"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<< link to the old pmp_verif_plan.txt and pmp_verif_plan_features.txt
+          files (not up-to-date) : reading below not mandatory but may help for better
+          understanding >>\n\nFTR01-d\n[PMP checks are applied to all accesses whose
+          effective privilege mode is S or U]\n\nFTR02-b1\n[the lowest-numbered PMP
+          CSRs must be implemented first (QUESTION: does it mean programmed first)]\n
+          \nFTR08-e2-2 (refers to FTR09-d2-2)\n[When the L bit is clear, the R/W/X
+          permissions apply only to S and U modes]\nFTR09-d2-2 (L=0 refers to FTR08-e2-2)\n
+          [if the privilege mode of the access is S or U (whatever L), then the access
+          succeeds only if the R, W, or X bit corresponding to the access type is
+          set]\n\n\nTST15-3x(group)\n  [same as TST11-3x(group), but with pmpcfg(i).A=TOR]\n
+          TST15-33 (MEDIUM-PRIO)\n  [same as TST11-33(group), but with pmpcfg(i).A=TOR]"
+- 015_store_L1_W1_addr_hit: !Subfeature
+    name: 015_store_L1_W1_addr_hit
+    tag: VP_PMP_F015_S034
+    next_elt_id: 1
+    display_order: 15
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F015_S034_I000
+        description: 'reuse of VP_PMP_F011_S034_I000 feature description (Cf. Feature:
+          "cfg NA4 access S/U")'
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "reuse of VP_PMP_F011_S034_I000 verification goals (Cf. Feature:
+          \"cfg NA4 access S/U\")\n\nCONFIGURATION\n    - pmpcfg(i): A=TOR\n    -
+          [for i>0] pmpaddr(i) > pmpaddr(i-1): any TOR address range\n    - [for i=0]
+          pmpaddr(0) > 0: any TOR address range\n    - [for j=unused] pmpaddr(j)=random:
+          only in single entry configuration case (not in reuse case)"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<< link to the old pmp_verif_plan.txt and pmp_verif_plan_features.txt
+          files (not up-to-date) : reading below not mandatory but may help for better
+          understanding >>\n\nFTR01-d\n[PMP checks are applied to all accesses whose
+          effective privilege mode is S or U]\n\nFTR02-b1\n[the lowest-numbered PMP
+          CSRs must be implemented first (QUESTION: does it mean programmed first)]\n
+          \nFTR08-e1 (refers to FTR01-f) (refers to FTR09-d2-1)\n [When the L bit
+          is set, these permissions are enforced for all privilege modes]\nFTR01-f
+          (refers to FTR08-e1)\n [PMP checks may additionally apply to M-mode accesses,
+          in which case the PMP registers themselves are locked, so that even M-mode
+          software cannot change them until the hart is reset]\n FTR09-d2-1 (refers
+          to FTR08-e1) (refers to FTR01-f)\n[if the L bit is set, then the access
+          succeeds only if the R, W, or X bit corresponding to the access type is
+          set]\n\n\nTST15-3x(group)\n  [same as TST11-3x(group), but with pmpcfg(i).A=TOR]\n
+          TST15-34 (LOW-PRIO)\n  [same as TST11-34(group), but with pmpcfg(i).A=TOR]"
+- 016_store_L1_W0_addr_hit: !Subfeature
+    name: 016_store_L1_W0_addr_hit
+    tag: VP_PMP_F015_S035
+    next_elt_id: 1
+    display_order: 16
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F015_S035_I000
+        description: 'reuse of VP_PMP_F011_S035_I000 feature description (Cf. Feature:
+          "cfg NA4 access S/U")'
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "reuse of VP_PMP_F011_S035_I000 verification goals (Cf. Feature:
+          \"cfg NA4 access S/U\")\n\nCONFIGURATION\n    - pmpcfg(i): A=TOR\n    -
+          [for i>0] pmpaddr(i) > pmpaddr(i-1): any TOR address range\n    - [for i=0]
+          pmpaddr(0) > 0: any TOR address range\n    - [for j=unused] pmpaddr(j)=random:
+          only in single entry configuration case (not in reuse case)"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<< link to the old pmp_verif_plan.txt and pmp_verif_plan_features.txt
+          files (not up-to-date) : reading below not mandatory but may help for better
+          understanding >>\n\nFTR01-d\n[PMP checks are applied to all accesses whose
+          effective privilege mode is S or U]\n\nFTR02-b1\n[the lowest-numbered PMP
+          CSRs must be implemented first (QUESTION: does it mean programmed first)]\n
+          \nFTR08-e1 (refers to FTR01-f) (refers to FTR09-d2-1)\n [When the L bit
+          is set, these permissions are enforced for all privilege modes]\nFTR01-f
+          (refers to FTR08-e1)\n [PMP checks may additionally apply to M-mode accesses,
+          in which case the PMP registers themselves are locked, so that even M-mode
+          software cannot change them until the hart is reset]\n FTR09-d2-1 (refers
+          to FTR08-e1) (refers to FTR01-f)\n[if the L bit is set, then the access
+          succeeds only if the R, W, or X bit corresponding to the access type is
+          set]\n\nFTR04-d\n[Attempting to execute a store, store-conditional, or AMO
+          instruction which accesses a physical address within a PMP region without
+          write permissions raises a store access-fault exception]\n\n\nTST15-3x(group)\n\
+          \  [same as TST11-3x(group), but with pmpcfg(i).A=TOR]\nTST15-35 (LOW-PRIO)\n\
+          \  [same as TST11-35(group), but with pmpcfg(i).A=TOR]"
+- 017_store_L1_W1_addr_miss: !Subfeature
+    name: 017_store_L1_W1_addr_miss
+    tag: VP_PMP_F015_S036
+    next_elt_id: 1
+    display_order: 17
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F015_S036_I000
+        description: 'reuse of VP_PMP_F011_S036_I000 feature description (Cf. Feature:
+          "cfg NA4 access S/U")'
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "reuse of VP_PMP_F011_S036_I000 verification goals (Cf. Feature:
+          \"cfg NA4 access S/U\")\n\nCONFIGURATION\n    - pmpcfg(i): A=TOR\n    -
+          [for i>0] pmpaddr(i) > pmpaddr(i-1): any TOR address range\n    - [for i=0]
+          pmpaddr(0) > 0: any TOR address range\n    - [for j=unused] pmpaddr(j)=random:
+          only in single entry configuration case (not in reuse case)"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<< link to the old pmp_verif_plan.txt and pmp_verif_plan_features.txt
+          files (not up-to-date) : reading below not mandatory but may help for better
+          understanding >>\n\nFTR01-d\n[PMP checks are applied to all accesses whose
+          effective privilege mode is S or U]\n\nFTR02-b1\n[the lowest-numbered PMP
+          CSRs must be implemented first (QUESTION: does it mean programmed first)]\n
+          \nFTR08-e1 (refers to FTR01-f) (refers to FTR09-d2-1)\n [When the L bit
+          is set, these permissions are enforced for all privilege modes]\nFTR01-f
+          (refers to FTR08-e1)\n [PMP checks may additionally apply to M-mode accesses,
+          in which case the PMP registers themselves are locked, so that even M-mode
+          software cannot change them until the hart is reset]\n FTR09-d2-1 (refers
+          to FTR08-e1) (refers to FTR01-f)\n[if the L bit is set, then the access
+          succeeds only if the R, W, or X bit corresponding to the access type is
+          set]\n\n\nTST15-3x(group)\n  [same as TST11-3x(group), but with pmpcfg(i).A=TOR]\n
+          TST15-36 (LOW-PRIO)\n  [same as TST11-36(group), but with pmpcfg(i).A=TOR]"
+- 018_load_MPP_L0_R1_addr_hit: !Subfeature
+    name: 018_load_MPP_L0_R1_addr_hit
+    tag: VP_PMP_F015_S041
+    next_elt_id: 1
+    display_order: 18
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F015_S041_I000
+        description: 'reuse of VP_PMP_F011_S041_I000 feature description (Cf. Feature:
+          "cfg NA4 access S/U")'
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "reuse of VP_PMP_F011_S041_I000 verification goals (Cf. Feature:
+          \"cfg NA4 access S/U\")\n\nCONFIGURATION\n    - pmpcfg(i): A=TOR\n    -
+          [for i>0] pmpaddr(i) > pmpaddr(i-1): any TOR address range\n    - [for i=0]
+          pmpaddr(0) > 0: any TOR address range\n    - [for j=unused] pmpaddr(j)=random:
+          only in single entry configuration case (not in reuse case)"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<< link to the old pmp_verif_plan.txt and pmp_verif_plan_features.txt
+          files (not up-to-date) : reading below not mandatory but may help for better
+          understanding >>\n\nFTR01-d\n[PMP checks are applied to all accesses whose
+          effective privilege mode is S or U]\n\nFTR02-b1\n[the lowest-numbered PMP
+          CSRs must be implemented first (QUESTION: does it mean programmed first)]\n
+          \nFTR08-e2-2 (refers to FTR09-d2-2)\n[When the L bit is clear, the R/W/X
+          permissions apply only to S and U modes]\nFTR09-d2-2 (L=0 refers to FTR08-e2-2)\n
+          [if the privilege mode of the access is S or U (whatever L), then the access
+          succeeds only if the R, W, or X bit corresponding to the access type is
+          set]\n\n\nTST15-4x(group)\n  [same as TST11-4x(group), but with pmpcfg(i).A=TOR]\n
+          TST15-41 (LOWEST-PRIO)\n  [same as TST11-41(group), but with pmpcfg(i).A=TOR]"
+- 019_load_MPP_L0_R0_addr_hit: !Subfeature
+    name: 019_load_MPP_L0_R0_addr_hit
+    tag: VP_PMP_F015_S042
+    next_elt_id: 1
+    display_order: 19
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F015_S042_I000
+        description: 'reuse of VP_PMP_F011_S042_I000 feature description (Cf. Feature:
+          "cfg NA4 access S/U")'
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "reuse of VP_PMP_F011_S042_I000 verification goals (Cf. Feature:
+          \"cfg NA4 access S/U\")\n\nCONFIGURATION\n    - pmpcfg(i): A=TOR\n    -
+          [for i>0] pmpaddr(i) > pmpaddr(i-1): any TOR address range\n    - [for i=0]
+          pmpaddr(0) > 0: any TOR address range\n    - [for j=unused] pmpaddr(j)=random:
+          only in single entry configuration case (not in reuse case)"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<< link to the old pmp_verif_plan.txt and pmp_verif_plan_features.txt
+          files (not up-to-date) : reading below not mandatory but may help for better
+          understanding >>\n\nFTR01-d\n[PMP checks are applied to all accesses whose
+          effective privilege mode is S or U]\n\nFTR02-b1\n[the lowest-numbered PMP
+          CSRs must be implemented first (QUESTION: does it mean programmed first)]\n
+          \nFTR08-e2-2 (refers to FTR09-d2-2)\n[When the L bit is clear, the R/W/X
+          permissions apply only to S and U modes]\nFTR09-d2-2 (L=0 refers to FTR08-e2-2)\n
+          [if the privilege mode of the access is S or U (whatever L), then the access
+          succeeds only if the R, W, or X bit corresponding to the access type is
+          set]\n\nFTR04-c\n [Attempting to execute a load or load-reserved instruction
+          which accesses a physical address within a PMP region without read permissions
+          raises a load access-fault exception]\n\n\nTST15-4x(group)\n  [same as TST11-4x(group),
+          but with pmpcfg(i).A=TOR]\nTST15-42 (LOWEST-PRIO)\n  [same as TST11-42(group),
+          but with pmpcfg(i).A=TOR]"
+- 020_load_MPP_L0_R1_addr_miss: !Subfeature
+    name: 020_load_MPP_L0_R1_addr_miss
+    tag: VP_PMP_F015_S043
+    next_elt_id: 1
+    display_order: 20
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F015_S043_I000
+        description: 'reuse of VP_PMP_F011_S043_I000 feature description (Cf. Feature:
+          "cfg NA4 access S/U")'
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "reuse of VP_PMP_F011_S043_I000 verification goals (Cf. Feature:
+          \"cfg NA4 access S/U\")\n\nCONFIGURATION\n    - pmpcfg(i): A=TOR\n    -
+          [for i>0] pmpaddr(i) > pmpaddr(i-1): any TOR address range\n    - [for i=0]
+          pmpaddr(0) > 0: any TOR address range\n    - [for j=unused] pmpaddr(j)=random:
+          only in single entry configuration case (not in reuse case)"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<< link to the old pmp_verif_plan.txt and pmp_verif_plan_features.txt
+          files (not up-to-date) : reading below not mandatory but may help for better
+          understanding >>\n\nFTR01-d\n[PMP checks are applied to all accesses whose
+          effective privilege mode is S or U]\n\nFTR02-b1\n[the lowest-numbered PMP
+          CSRs must be implemented first (QUESTION: does it mean programmed first)]\n
+          \nFTR08-e2-2 (refers to FTR09-d2-2)\n[When the L bit is clear, the R/W/X
+          permissions apply only to S and U modes]\nFTR09-d2-2 (L=0 refers to FTR08-e2-2)\n
+          [if the privilege mode of the access is S or U (whatever L), then the access
+          succeeds only if the R, W, or X bit corresponding to the access type is
+          set]\n\n\nTST15-4x(group)\n  [same as TST11-4x(group), but with pmpcfg(i).A=TOR]\n
+          TST15-43 (LOWEST-PRIO)\n  [same as TST11-43(group), but with pmpcfg(i).A=TOR]"
+- 021_load_MPP_L1_R1_addr_hit: !Subfeature
+    name: 021_load_MPP_L1_R1_addr_hit
+    tag: VP_PMP_F015_S044
+    next_elt_id: 1
+    display_order: 21
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F015_S044_I000
+        description: 'reuse of VP_PMP_F011_S044_I000 feature description (Cf. Feature:
+          "cfg NA4 access S/U")'
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "reuse of VP_PMP_F011_S044_I000 verification goals (Cf. Feature:
+          \"cfg NA4 access S/U\")\n\nCONFIGURATION\n    - pmpcfg(i): A=TOR\n    -
+          [for i>0] pmpaddr(i) > pmpaddr(i-1): any TOR address range\n    - [for i=0]
+          pmpaddr(0) > 0: any TOR address range\n    - [for j=unused] pmpaddr(j)=random:
+          only in single entry configuration case (not in reuse case)"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<< link to the old pmp_verif_plan.txt and pmp_verif_plan_features.txt
+          files (not up-to-date) : reading below not mandatory but may help for better
+          understanding >>\n\nFTR01-d\n[PMP checks are applied to all accesses whose
+          effective privilege mode is S or U]\n\nFTR02-b1\n[the lowest-numbered PMP
+          CSRs must be implemented first (QUESTION: does it mean programmed first)]\n
+          \nFTR08-e1 (refers to FTR01-f) (refers to FTR09-d2-1)\n [When the L bit
+          is set, these permissions are enforced for all privilege modes]\nFTR01-f
+          (refers to FTR08-e1)\n [PMP checks may additionally apply to M-mode accesses,
+          in which case the PMP registers themselves are locked, so that even M-mode
+          software cannot change them until the hart is reset]\n FTR09-d2-1 (refers
+          to FTR08-e1) (refers to FTR01-f)\n[if the L bit is set, then the access
+          succeeds only if the R, W, or X bit corresponding to the access type is
+          set]\n\n\nTST15-4x(group)\n  [same as TST11-4x(group), but with pmpcfg(i).A=TOR]\n
+          TST15-44 (LOWEST-PRIO)\n  [same as TST11-44(group), but with pmpcfg(i).A=TOR]"
+- 022_load_MPP_L1_R0_addr_hit: !Subfeature
+    name: 022_load_MPP_L1_R0_addr_hit
+    tag: VP_PMP_F015_S045
+    next_elt_id: 1
+    display_order: 22
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F015_S045_I000
+        description: 'reuse of VP_PMP_F011_S045_I000 feature description (Cf. Feature:
+          "cfg NA4 access S/U")'
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "reuse of VP_PMP_F011_S045_I000 verification goals (Cf. Feature:
+          \"cfg NA4 access S/U\")\n\nCONFIGURATION\n    - pmpcfg(i): A=TOR\n    -
+          [for i>0] pmpaddr(i) > pmpaddr(i-1): any TOR address range\n    - [for i=0]
+          pmpaddr(0) > 0: any TOR address range\n    - [for j=unused] pmpaddr(j)=random:
+          only in single entry configuration case (not in reuse case)"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<< link to the old pmp_verif_plan.txt and pmp_verif_plan_features.txt
+          files (not up-to-date) : reading below not mandatory but may help for better
+          understanding >>\n\nFTR01-d\n[PMP checks are applied to all accesses whose
+          effective privilege mode is S or U]\n\nFTR02-b1\n[the lowest-numbered PMP
+          CSRs must be implemented first (QUESTION: does it mean programmed first)]\n
+          \nFTR08-e1 (refers to FTR01-f) (refers to FTR09-d2-1)\n [When the L bit
+          is set, these permissions are enforced for all privilege modes]\nFTR01-f
+          (refers to FTR08-e1)\n [PMP checks may additionally apply to M-mode accesses,
+          in which case the PMP registers themselves are locked, so that even M-mode
+          software cannot change them until the hart is reset]\n FTR09-d2-1 (refers
+          to FTR08-e1) (refers to FTR01-f)\n[if the L bit is set, then the access
+          succeeds only if the R, W, or X bit corresponding to the access type is
+          set]\n\nFTR04-c\n[Attempting to execute a load or load-reserved instruction
+          which accesses a physical address within a PMP region without read permissions
+          raises a load access-fault exception]\n\n\nTST15-4x(group)\n  [same as TST11-4x(group),
+          but with pmpcfg(i).A=TOR]\n TST15-45 (LOWEST-PRIO)\n  [same as TST11-45(group),
+          but with pmpcfg(i).A=TOR]"
+- 023_load_MPP_L1_R1_addr_miss: !Subfeature
+    name: 023_load_MPP_L1_R1_addr_miss
+    tag: VP_PMP_F015_S046
+    next_elt_id: 1
+    display_order: 23
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F015_S046_I000
+        description: 'reuse of VP_PMP_F011_S046_I000 feature description (Cf. Feature:
+          "cfg NA4 access S/U")'
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "reuse of VP_PMP_F011_S046_I000 verification goals (Cf. Feature:
+          \"cfg NA4 access S/U\")\n\nCONFIGURATION\n    - pmpcfg(i): A=TOR\n    -
+          [for i>0] pmpaddr(i) > pmpaddr(i-1): any TOR address range\n    - [for i=0]
+          pmpaddr(0) > 0: any TOR address range\n    - [for j=unused] pmpaddr(j)=random:
+          only in single entry configuration case (not in reuse case)"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<< link to the old pmp_verif_plan.txt and pmp_verif_plan_features.txt
+          files (not up-to-date) : reading below not mandatory but may help for better
+          understanding >>\n\nFTR01-d\n[PMP checks are applied to all accesses whose
+          effective privilege mode is S or U]\n\nFTR02-b1\n[the lowest-numbered PMP
+          CSRs must be implemented first (QUESTION: does it mean programmed first)]\n
+          \nFTR08-e1 (refers to FTR01-f) (refers to FTR09-d2-1)\n [When the L bit
+          is set, these permissions are enforced for all privilege modes]\nFTR01-f
+          (refers to FTR08-e1)\n [PMP checks may additionally apply to M-mode accesses,
+          in which case the PMP registers themselves are locked, so that even M-mode
+          software cannot change them until the hart is reset]\n FTR09-d2-1 (refers
+          to FTR08-e1) (refers to FTR01-f)\n[if the L bit is set, then the access
+          succeeds only if the R, W, or X bit corresponding to the access type is
+          set]\n\n\nTST15-4x(group)\n  [same as TST11-4x(group), but with pmpcfg(i).A=TOR]\n
+          TST15-46 (LOWEST-PRIO)\n  [same as TST11-46(group), but with pmpcfg(i).A=TOR]"
+- 024_store_MPP_L0_W1_addr_hit: !Subfeature
+    name: 024_store_MPP_L0_W1_addr_hit
+    tag: VP_PMP_F015_S051
+    next_elt_id: 1
+    display_order: 24
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F015_S051_I000
+        description: 'reuse of VP_PMP_F011_S051_I000 feature description (Cf. Feature:
+          "cfg NA4 access S/U")'
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "reuse of VP_PMP_F011_S051_I000 verification goals (Cf. Feature:
+          \"cfg NA4 access S/U\")\n\nCONFIGURATION\n    - pmpcfg(i): A=TOR\n    -
+          [for i>0] pmpaddr(i) > pmpaddr(i-1): any TOR address range\n    - [for i=0]
+          pmpaddr(0) > 0: any TOR address range\n    - [for j=unused] pmpaddr(j)=random:
+          only in single entry configuration case (not in reuse case)"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<< link to the old pmp_verif_plan.txt and pmp_verif_plan_features.txt
+          files (not up-to-date) : reading below not mandatory but may help for better
+          understanding >>\n\nFTR01-d\n[PMP checks are applied to all accesses whose
+          effective privilege mode is S or U]\n\nFTR02-b1\n[the lowest-numbered PMP
+          CSRs must be implemented first (QUESTION: does it mean programmed first)]\n
+          \nFTR08-e2-2 (refers to FTR09-d2-2)\n[When the L bit is clear, the R/W/X
+          permissions apply only to S and U modes]\nFTR09-d2-2 (L=0 refers to FTR08-e2-2)\n
+          [if the privilege mode of the access is S or U (whatever L), then the access
+          succeeds only if the R, W, or X bit corresponding to the access type is
+          set]\n\n\nTST15-5x(group)\n  [same as TST11-5x(group), but with pmpcfg(i).A=TOR]\n
+          TST15-51 (LOWEST-PRIO)\n  [same as TST11-51(group), but with pmpcfg(i).A=TOR]"
+- 025_store_MPP_L0_W0_addr_hit: !Subfeature
+    name: 025_store_MPP_L0_W0_addr_hit
+    tag: VP_PMP_F015_S052
+    next_elt_id: 1
+    display_order: 25
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F015_S052_I000
+        description: 'reuse of VP_PMP_F011_S052_I000 feature description (Cf. Feature:
+          "cfg NA4 access S/U")'
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "reuse of VP_PMP_F011_S052_I000 verification goals (Cf. Feature:
+          \"cfg NA4 access S/U\")\n\nCONFIGURATION\n    - pmpcfg(i): A=TOR\n    -
+          [for i>0] pmpaddr(i) > pmpaddr(i-1): any TOR address range\n    - [for i=0]
+          pmpaddr(0) > 0: any TOR address range\n    - [for j=unused] pmpaddr(j)=random:
+          only in single entry configuration case (not in reuse case)"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<< link to the old pmp_verif_plan.txt and pmp_verif_plan_features.txt
+          files (not up-to-date) : reading below not mandatory but may help for better
+          understanding >>\n\nFTR01-d\n[PMP checks are applied to all accesses whose
+          effective privilege mode is S or U]\n\nFTR02-b1\n[the lowest-numbered PMP
+          CSRs must be implemented first (QUESTION: does it mean programmed first)]\n
+          \nFTR08-e2-2 (refers to FTR09-d2-2)\n[When the L bit is clear, the R/W/X
+          permissions apply only to S and U modes]\nFTR09-d2-2 (L=0 refers to FTR08-e2-2)\n
+          [if the privilege mode of the access is S or U (whatever L), then the access
+          succeeds only if the R, W, or X bit corresponding to the access type is
+          set]\n\nFTR04-d\n [Attempting to execute a store, store-conditional, or
+          AMO instruction which accesses a physical address within a PMP region without
+          write permissions raises a store access-fault exception]\n\n\nTST15-5x(group)\n\
+          \  [same as TST11-5x(group), but with pmpcfg(i).A=TOR]\nTST15-52 (LOWEST-PRIO)\n\
+          \  [same as TST11-52(group), but with pmpcfg(i).A=TOR]"
+- 026_store_MPP_L0_W1_addr_miss: !Subfeature
+    name: 026_store_MPP_L0_W1_addr_miss
+    tag: VP_PMP_F015_S053
+    next_elt_id: 1
+    display_order: 26
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F015_S053_I000
+        description: 'reuse of VP_PMP_F011_S053_I000 feature description (Cf. Feature:
+          "cfg NA4 access S/U")'
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "reuse of VP_PMP_F011_S053_I000 verification goals (Cf. Feature:
+          \"cfg NA4 access S/U\")\n\nCONFIGURATION\n    - pmpcfg(i): A=TOR\n    -
+          [for i>0] pmpaddr(i) > pmpaddr(i-1): any TOR address range\n    - [for i=0]
+          pmpaddr(0) > 0: any TOR address range\n    - [for j=unused] pmpaddr(j)=random:
+          only in single entry configuration case (not in reuse case)"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<< link to the old pmp_verif_plan.txt and pmp_verif_plan_features.txt
+          files (not up-to-date) : reading below not mandatory but may help for better
+          understanding >>\n\nFTR01-d\n[PMP checks are applied to all accesses whose
+          effective privilege mode is S or U]\n\nFTR02-b1\n[the lowest-numbered PMP
+          CSRs must be implemented first (QUESTION: does it mean programmed first)]\n
+          \nFTR08-e2-2 (refers to FTR09-d2-2)\n[When the L bit is clear, the R/W/X
+          permissions apply only to S and U modes]\nFTR09-d2-2 (L=0 refers to FTR08-e2-2)\n
+          [if the privilege mode of the access is S or U (whatever L), then the access
+          succeeds only if the R, W, or X bit corresponding to the access type is
+          set]\n\n\nTST15-5x(group)\n  [same as TST11-5x(group), but with pmpcfg(i).A=TOR]\n
+          TST15-53 (LOWEST-PRIO)\n  [same as TST11-53(group), but with pmpcfg(i).A=TOR]"
+- 027_store_MPP_L1_W1_addr_hit: !Subfeature
+    name: 027_store_MPP_L1_W1_addr_hit
+    tag: VP_PMP_F015_S054
+    next_elt_id: 1
+    display_order: 27
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F015_S054_I000
+        description: 'reuse of VP_PMP_F011_S054_I000 feature description (Cf. Feature:
+          "cfg NA4 access S/U")'
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "reuse of VP_PMP_F011_S054_I000 verification goals (Cf. Feature:
+          \"cfg NA4 access S/U\")\n\nCONFIGURATION\n    - pmpcfg(i): A=TOR\n    -
+          [for i>0] pmpaddr(i) > pmpaddr(i-1): any TOR address range\n    - [for i=0]
+          pmpaddr(0) > 0: any TOR address range\n    - [for j=unused] pmpaddr(j)=random:
+          only in single entry configuration case (not in reuse case)"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<< link to the old pmp_verif_plan.txt and pmp_verif_plan_features.txt
+          files (not up-to-date) : reading below not mandatory but may help for better
+          understanding >>\n\nFTR01-d\n[PMP checks are applied to all accesses whose
+          effective privilege mode is S or U]\n\nFTR02-b1\n[the lowest-numbered PMP
+          CSRs must be implemented first (QUESTION: does it mean programmed first)]\n
+          \nFTR08-e1 (refers to FTR01-f) (refers to FTR09-d2-1)\n [When the L bit
+          is set, these permissions are enforced for all privilege modes]\nFTR01-f
+          (refers to FTR08-e1)\n [PMP checks may additionally apply to M-mode accesses,
+          in which case the PMP registers themselves are locked, so that even M-mode
+          software cannot change them until the hart is reset]\n FTR09-d2-1 (refers
+          to FTR08-e1) (refers to FTR01-f)\n[if the L bit is set, then the access
+          succeeds only if the R, W, or X bit corresponding to the access type is
+          set]\n\n\nTST15-5x(group)\n  [same as TST11-5x(group), but with pmpcfg(i).A=TOR]\n
+          TST15-54 (LOWEST-PRIO)\n  [same as TST11-54(group), but with pmpcfg(i).A=TOR]"
+- 028_store_MPP_L1_W0_addr_hit: !Subfeature
+    name: 028_store_MPP_L1_W0_addr_hit
+    tag: VP_PMP_F015_S055
+    next_elt_id: 1
+    display_order: 28
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F015_S055_I000
+        description: 'reuse of VP_PMP_F011_S055_I000 feature description (Cf. Feature:
+          "cfg NA4 access S/U")'
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "reuse of VP_PMP_F011_S055_I000 verification goals (Cf. Feature:
+          \"cfg NA4 access S/U\")\n\nCONFIGURATION\n    - pmpcfg(i): A=TOR\n    -
+          [for i>0] pmpaddr(i) > pmpaddr(i-1): any TOR address range\n    - [for i=0]
+          pmpaddr(0) > 0: any TOR address range\n    - [for j=unused] pmpaddr(j)=random:
+          only in single entry configuration case (not in reuse case)"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<< link to the old pmp_verif_plan.txt and pmp_verif_plan_features.txt
+          files (not up-to-date) : reading below not mandatory but may help for better
+          understanding >>\n\nFTR01-d\n[PMP checks are applied to all accesses whose
+          effective privilege mode is S or U]\n\nFTR02-b1\n[the lowest-numbered PMP
+          CSRs must be implemented first (QUESTION: does it mean programmed first)]\n
+          \nFTR08-e1 (refers to FTR01-f) (refers to FTR09-d2-1)\n [When the L bit
+          is set, these permissions are enforced for all privilege modes]\nFTR01-f
+          (refers to FTR08-e1)\n [PMP checks may additionally apply to M-mode accesses,
+          in which case the PMP registers themselves are locked, so that even M-mode
+          software cannot change them until the hart is reset]\n FTR09-d2-1 (refers
+          to FTR08-e1) (refers to FTR01-f)\n[if the L bit is set, then the access
+          succeeds only if the R, W, or X bit corresponding to the access type is
+          set]\n\nFTR04-d\n[Attempting to execute a store, store-conditional, or AMO
+          instruction which accesses a physical address within a PMP region without
+          write permissions raises a store access-fault exception]\n\n\nTST15-5x(group)\n\
+          \  [same as TST11-5x(group), but with pmpcfg(i).A=TOR]\nTST15-55 (LOWEST-PRIO)\n\
+          \  [same as TST11-55(group), but with pmpcfg(i).A=TOR]"
+- 029_store_MPP_L1_W1_addr_miss: !Subfeature
+    name: 029_store_MPP_L1_W1_addr_miss
+    tag: VP_PMP_F015_S056
+    next_elt_id: 1
+    display_order: 29
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F015_S056_I000
+        description: 'reuse of VP_PMP_F011_S056_I000 feature description (Cf. Feature:
+          "cfg NA4 access S/U")'
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "reuse of VP_PMP_F011_S056_I000 verification goals (Cf. Feature:
+          \"cfg NA4 access S/U\")\n\nCONFIGURATION\n    - pmpcfg(i): A=TOR\n    -
+          [for i>0] pmpaddr(i) > pmpaddr(i-1): any TOR address range\n    - [for i=0]
+          pmpaddr(0) > 0: any TOR address range\n    - [for j=unused] pmpaddr(j)=random:
+          only in single entry configuration case (not in reuse case)"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<< link to the old pmp_verif_plan.txt and pmp_verif_plan_features.txt
+          files (not up-to-date) : reading below not mandatory but may help for better
+          understanding >>\n\nFTR01-d\n[PMP checks are applied to all accesses whose
+          effective privilege mode is S or U]\n\nFTR02-b1\n[the lowest-numbered PMP
+          CSRs must be implemented first (QUESTION: does it mean programmed first)]\n
+          \nFTR08-e1 (refers to FTR01-f) (refers to FTR09-d2-1)\n [When the L bit
+          is set, these permissions are enforced for all privilege modes]\nFTR01-f
+          (refers to FTR08-e1)\n [PMP checks may additionally apply to M-mode accesses,
+          in which case the PMP registers themselves are locked, so that even M-mode
+          software cannot change them until the hart is reset]\n FTR09-d2-1 (refers
+          to FTR08-e1) (refers to FTR01-f)\n[if the L bit is set, then the access
+          succeeds only if the R, W, or X bit corresponding to the access type is
+          set]\n\n\nTST15-5x(group)\n  [same as TST11-5x(group), but with pmpcfg(i).A=TOR]\n
+          TST15-56 (LOWEST-PRIO)\n  [same as TST11-56(group), but with pmpcfg(i).A=TOR]"
+- 030_fetch_L0_X1_addr_forbidden: !Subfeature
+    name: 030_fetch_L0_X1_addr_forbidden
+    tag: VP_PMP_F015_S061
+    next_elt_id: 1
+    display_order: 30
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F015_S061_I000
+        description: "reuse of VP_PMP_F011_S011_I000 feature description (Cf. Feature:
+          \"cfg NA4 access S/U\")\n\n{Page 59 Volume II: RISC-V Privileged Architectures
+          V20211203}\nIf pmpaddri−1 ≥ pmpaddri and pmpcfgi.A=TOR, then PMP entry i
+          matches no addresses\nIf PMP entry 0’s A field is set to TOR, zero is used
+          for the lower bound, and so it matches any address y < pmpaddr(0)"
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "reuse of VP_PMP_F011_S011_I000 verification goals (Cf. Feature:
+          \"cfg NA4 access S/U\")\n\nCONFIGURATION\n    - pmpcfg(i): A=TOR\n    -
+          [for i>0] pmpaddr(i-1) > pmpaddr(i): invalid TOR address range\n    - [for
+          i=0] pmpaddr(0) = 0: invalid TOR address range\n    - [for j=unused] pmpaddr(j)=random:
+          only in single entry configuration case (not in reuse case)\n\nCHECK UPDATE\n\
+          \    - check instruction fetch access-fault exception raised"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<< link to the old pmp_verif_plan.txt and pmp_verif_plan_features.txt
+          files (not up-to-date) : reading below not mandatory but may help for better
+          understanding >>\n\nFTR01-d\n[PMP checks are applied to all accesses whose
+          effective privilege mode is S or U]\n\nFTR02-b1\n[the lowest-numbered PMP
+          CSRs must be implemented first (QUESTION: does it mean programmed first)]\n
+          \nFTR08-e2-2 (refers to FTR09-d2-2)\n[When the L bit is clear, the R/W/X
+          permissions apply only to S and U modes]\nFTR09-d2-2 (L=0 refers to FTR08-e2-2)\n
+          [if the privilege mode of the access is S or U (whatever L), then the access
+          succeeds only if the R, W, or X bit corresponding to the access type is
+          set]\n\n\nTST15-1x(group)\n  [same as TST11-1x(group), but with pmpcfg(i).A=TOR]\n
+          TST15-11 (LOW-PRIO)\n  [same as TST11-11(group), but with pmpcfg(i).A=TOR]\n
+          \n\n//TO COMPLETE => FTR06-b\nTST25 = same as TST15+TST16 (groups) with
+          PMP entry (0) with pmpaddr(0) > 0\nTST26 = same as TST15+TST16 (groups)
+          with PMP entry (0) with pmpaddr(0) = 0\n  [create scenario where PMP entry
+          pmpcfg(0) with TOR:\n    - pmpaddr(0) > 0\n    - pmpaddr(0) = 0]\n\n//TO
+          COMPLETE => FTR06-c\n TST27 = same as TST23-2 but with pmpaddr(i) ≤ pmpaddr(i-1)
+          and with pmpcfg(i) and pmpcfg(i-1) correct\n  [create scenario where PMP
+          entry pmpcfg(i) with TOR:\n    - pmpaddr(i) ≤ pmpaddr(i-1) and PMP entry
+          pmpcfg(i-1) correct]\n  [create scenario where PMP entry pmpcfg(0) with
+          TOR:\n    - pmpaddr(0) >= pmpaddr(1/2/3/…)]"
+- 031_fetch_L1_X1_addr_forbidden: !Subfeature
+    name: 031_fetch_L1_X1_addr_forbidden
+    tag: VP_PMP_F015_S062
+    next_elt_id: 1
+    display_order: 31
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F015_S062_I000
+        description: "reuse of VP_PMP_F011_S014_I000 feature description (Cf. Feature:
+          \"cfg NA4 access S/U\")\n\n{Page 59 Volume II: RISC-V Privileged Architectures
+          V20211203}\nIf pmpaddri−1 ≥ pmpaddri and pmpcfgi.A=TOR, then PMP entry i
+          matches no addresses\nIf PMP entry 0’s A field is set to TOR, zero is used
+          for the lower bound, and so it matches any address y < pmpaddr(0)"
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "reuse of VP_PMP_F011_S014_I000 verification goals (Cf. Feature:
+          \"cfg NA4 access S/U\")\n\nCONFIGURATION\n    - pmpcfg(i): A=TOR\n    -
+          [for i>0] pmpaddr(i-1) > pmpaddr(i): invalid TOR address range\n    - [for
+          i=0] pmpaddr(0) = 0: invalid TOR address range\n    - [for j=unused] pmpaddr(j)=random:
+          only in single entry configuration case (not in reuse case)\n\nCHECK UPDATE\n\
+          \    - check instruction fetch access-fault exception raised"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<< link to the old pmp_verif_plan.txt and pmp_verif_plan_features.txt
+          files (not up-to-date) : reading below not mandatory but may help for better
+          understanding >>\n\nFTR01-d\n[PMP checks are applied to all accesses whose
+          effective privilege mode is S or U]\n\nFTR02-b1\n[the lowest-numbered PMP
+          CSRs must be implemented first (QUESTION: does it mean programmed first)]\n
+          \nFTR08-e1 (refers to FTR01-f) (refers to FTR09-d2-1)\n [When the L bit
+          is set, these permissions are enforced for all privilege modes]\nFTR01-f
+          (refers to FTR08-e1)\n [PMP checks may additionally apply to M-mode accesses,
+          in which case the PMP registers themselves are locked, so that even M-mode
+          software cannot change them until the hart is reset]\n FTR09-d2-1 (refers
+          to FTR08-e1) (refers to FTR01-f)\n[if the L bit is set, then the access
+          succeeds only if the R, W, or X bit corresponding to the access type is
+          set]\n\n\nTST15-1x(group)\n  [same as TST11-1x(group), but with pmpcfg(i).A=TOR]\n
+          TST15-14 (LOW-PRIO)\n  [same as TST11-14(group), but with pmpcfg(i).A=TOR]\n
+          \n\n//TO COMPLETE => FTR06-b\nTST25 = same as TST15+TST16 (groups) with
+          PMP entry (0) with pmpaddr(0) > 0\nTST26 = same as TST15+TST16 (groups)
+          with PMP entry (0) with pmpaddr(0) = 0\n  [create scenario where PMP entry
+          pmpcfg(0) with TOR:\n    - pmpaddr(0) > 0\n    - pmpaddr(0) = 0]\n\n//TO
+          COMPLETE => FTR06-c\n TST27 = same as TST23-2 but with pmpaddr(i) ≤ pmpaddr(i-1)
+          and with pmpcfg(i) and pmpcfg(i-1) correct\n  [create scenario where PMP
+          entry pmpcfg(i) with TOR:\n    - pmpaddr(i) ≤ pmpaddr(i-1) and PMP entry
+          pmpcfg(i-1) correct]\n  [create scenario where PMP entry pmpcfg(0) with
+          TOR:\n    - pmpaddr(0) >= pmpaddr(1/2/3/…)]"
+- 032_load_L0_R1_addr_forbidden: !Subfeature
+    name: 032_load_L0_R1_addr_forbidden
+    tag: VP_PMP_F015_S063
+    next_elt_id: 1
+    display_order: 32
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F015_S063_I000
+        description: "reuse of VP_PMP_F011_S021_I000 feature description (Cf. Feature:
+          \"cfg NA4 access S/U\")\n\n{Page 59 Volume II: RISC-V Privileged Architectures
+          V20211203}\nIf pmpaddri−1 ≥ pmpaddri and pmpcfgi.A=TOR, then PMP entry i
+          matches no addresses\nIf PMP entry 0’s A field is set to TOR, zero is used
+          for the lower bound, and so it matches any address y < pmpaddr(0)"
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "reuse of VP_PMP_F011_S021_I000 verification goals (Cf. Feature:
+          \"cfg NA4 access S/U\")\n\nCONFIGURATION\n    - pmpcfg(i): A=TOR\n    -
+          [for i>0] pmpaddr(i-1) > pmpaddr(i): invalid TOR address range\n    - [for
+          i=0] pmpaddr(0) = 0: invalid TOR address range\n    - [for j=unused] pmpaddr(j)=random:
+          only in single entry configuration case (not in reuse case)\n\nCHECK UPDATE\n\
+          \    - check load access-fault exception raised"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<< link to the old pmp_verif_plan.txt and pmp_verif_plan_features.txt
+          files (not up-to-date) : reading below not mandatory but may help for better
+          understanding >>\n\nFTR01-d\n[PMP checks are applied to all accesses whose
+          effective privilege mode is S or U]\n\nFTR02-b1\n[the lowest-numbered PMP
+          CSRs must be implemented first (QUESTION: does it mean programmed first)]\n
+          \nFTR08-e2-2 (refers to FTR09-d2-2)\n[When the L bit is clear, the R/W/X
+          permissions apply only to S and U modes]\nFTR09-d2-2 (L=0 refers to FTR08-e2-2)\n
+          [if the privilege mode of the access is S or U (whatever L), then the access
+          succeeds only if the R, W, or X bit corresponding to the access type is
+          set]\n\n\nTST15-2x(group)\n  [same as TST11-2x(group), but with pmpcfg(i).A=TOR]\n
+          TST15-21 (HIGH-PRIO)\n  [same as TST11-21(group), but with pmpcfg(i).A=TOR]\n
+          \n\n//TO COMPLETE => FTR06-b\nTST25 = same as TST15+TST16 (groups) with
+          PMP entry (0) with pmpaddr(0) > 0\nTST26 = same as TST15+TST16 (groups)
+          with PMP entry (0) with pmpaddr(0) = 0\n  [create scenario where PMP entry
+          pmpcfg(0) with TOR:\n    - pmpaddr(0) > 0\n    - pmpaddr(0) = 0]\n\n//TO
+          COMPLETE => FTR06-c\n TST27 = same as TST23-2 but with pmpaddr(i) ≤ pmpaddr(i-1)
+          and with pmpcfg(i) and pmpcfg(i-1) correct\n  [create scenario where PMP
+          entry pmpcfg(i) with TOR:\n    - pmpaddr(i) ≤ pmpaddr(i-1) and PMP entry
+          pmpcfg(i-1) correct]\n  [create scenario where PMP entry pmpcfg(0) with
+          TOR:\n    - pmpaddr(0) >= pmpaddr(1/2/3/…)]"
+- 033_load_L1_R1_addr_forbidden: !Subfeature
+    name: 033_load_L1_R1_addr_forbidden
+    tag: VP_PMP_F015_S064
+    next_elt_id: 1
+    display_order: 33
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F015_S064_I000
+        description: "reuse of VP_PMP_F011_S024_I000 feature description (Cf. Feature:
+          \"cfg NA4 access S/U\")\n\n{Page 59 Volume II: RISC-V Privileged Architectures
+          V20211203}\nIf pmpaddri−1 ≥ pmpaddri and pmpcfgi.A=TOR, then PMP entry i
+          matches no addresses\nIf PMP entry 0’s A field is set to TOR, zero is used
+          for the lower bound, and so it matches any address y < pmpaddr(0)"
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "reuse of VP_PMP_F011_S024_I000 verification goals (Cf. Feature:
+          \"cfg NA4 access S/U\")\n\nCONFIGURATION\n    - pmpcfg(i): A=TOR\n    -
+          [for i>0] pmpaddr(i-1) > pmpaddr(i): invalid TOR address range\n    - [for
+          i=0] pmpaddr(0) = 0: invalid TOR address range\n    - [for j=unused] pmpaddr(j)=random:
+          only in single entry configuration case (not in reuse case)\n\nCHECK UPDATE\n\
+          \    - check load access-fault exception raised"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<< link to the old pmp_verif_plan.txt and pmp_verif_plan_features.txt
+          files (not up-to-date) : reading below not mandatory but may help for better
+          understanding >>\n\nFTR01-d\n[PMP checks are applied to all accesses whose
+          effective privilege mode is S or U]\n\nFTR02-b1\n[the lowest-numbered PMP
+          CSRs must be implemented first (QUESTION: does it mean programmed first)]\n
+          \nFTR08-e1 (refers to FTR01-f) (refers to FTR09-d2-1)\n [When the L bit
+          is set, these permissions are enforced for all privilege modes]\nFTR01-f
+          (refers to FTR08-e1)\n [PMP checks may additionally apply to M-mode accesses,
+          in which case the PMP registers themselves are locked, so that even M-mode
+          software cannot change them until the hart is reset]\n FTR09-d2-1 (refers
+          to FTR08-e1) (refers to FTR01-f)\n[if the L bit is set, then the access
+          succeeds only if the R, W, or X bit corresponding to the access type is
+          set]\n\n\nTST15-2x(group)\n  [same as TST11-2x(group), but with pmpcfg(i).A=TOR]\n
+          TST15-24 (LOW-PRIO)\n  [same as TST11-24(group), but with pmpcfg(i).A=TOR]\n
+          \n\n//TO COMPLETE => FTR06-b\nTST25 = same as TST15+TST16 (groups) with
+          PMP entry (0) with pmpaddr(0) > 0\nTST26 = same as TST15+TST16 (groups)
+          with PMP entry (0) with pmpaddr(0) = 0\n  [create scenario where PMP entry
+          pmpcfg(0) with TOR:\n    - pmpaddr(0) > 0\n    - pmpaddr(0) = 0]\n\n//TO
+          COMPLETE => FTR06-c\n TST27 = same as TST23-2 but with pmpaddr(i) ≤ pmpaddr(i-1)
+          and with pmpcfg(i) and pmpcfg(i-1) correct\n  [create scenario where PMP
+          entry pmpcfg(i) with TOR:\n    - pmpaddr(i) ≤ pmpaddr(i-1) and PMP entry
+          pmpcfg(i-1) correct]\n  [create scenario where PMP entry pmpcfg(0) with
+          TOR:\n    - pmpaddr(0) >= pmpaddr(1/2/3/…)]"
+- 034_store_L0_W1_addr_forbidden: !Subfeature
+    name: 034_store_L0_W1_addr_forbidden
+    tag: VP_PMP_F015_S065
+    next_elt_id: 1
+    display_order: 34
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F015_S065_I000
+        description: "reuse of VP_PMP_F011_S031_I000 feature description (Cf. Feature:
+          \"cfg NA4 access S/U\")\n\n{Page 59 Volume II: RISC-V Privileged Architectures
+          V20211203}\nIf pmpaddri−1 ≥ pmpaddri and pmpcfgi.A=TOR, then PMP entry i
+          matches no addresses\nIf PMP entry 0’s A field is set to TOR, zero is used
+          for the lower bound, and so it matches any address y < pmpaddr(0)"
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "reuse of VP_PMP_F011_S031_I000 verification goals (Cf. Feature:
+          \"cfg NA4 access S/U\")\n\nCONFIGURATION\n    - pmpcfg(i): A=TOR\n    -
+          [for i>0] pmpaddr(i-1) > pmpaddr(i): invalid TOR address range\n    - [for
+          i=0] pmpaddr(0) = 0: invalid TOR address range\n    - [for j=unused] pmpaddr(j)=random:
+          only in single entry configuration case (not in reuse case)\n\nCHECK UPDATE\n\
+          \    - check store access-fault exception raised"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<< link to the old pmp_verif_plan.txt and pmp_verif_plan_features.txt
+          files (not up-to-date) : reading below not mandatory but may help for better
+          understanding >>\n\nFTR01-d\n[PMP checks are applied to all accesses whose
+          effective privilege mode is S or U]\n\nFTR02-b1\n[the lowest-numbered PMP
+          CSRs must be implemented first (QUESTION: does it mean programmed first)]\n
+          \nFTR08-e2-2 (refers to FTR09-d2-2)\n[When the L bit is clear, the R/W/X
+          permissions apply only to S and U modes]\nFTR09-d2-2 (L=0 refers to FTR08-e2-2)\n
+          [if the privilege mode of the access is S or U (whatever L), then the access
+          succeeds only if the R, W, or X bit corresponding to the access type is
+          set]\n\n\nTST15-3x(group)\n  [same as TST11-3x(group), but with pmpcfg(i).A=TOR]\n
+          TST15-31 (HIGH-PRIO)\n  [same as TST11-31(group), but with pmpcfg(i).A=TOR]\n
+          \n\n//TO COMPLETE => FTR06-b\nTST25 = same as TST15+TST16 (groups) with
+          PMP entry (0) with pmpaddr(0) > 0\nTST26 = same as TST15+TST16 (groups)
+          with PMP entry (0) with pmpaddr(0) = 0\n  [create scenario where PMP entry
+          pmpcfg(0) with TOR:\n    - pmpaddr(0) > 0\n    - pmpaddr(0) = 0]\n\n//TO
+          COMPLETE => FTR06-c\n TST27 = same as TST23-2 but with pmpaddr(i) ≤ pmpaddr(i-1)
+          and with pmpcfg(i) and pmpcfg(i-1) correct\n  [create scenario where PMP
+          entry pmpcfg(i) with TOR:\n    - pmpaddr(i) ≤ pmpaddr(i-1) and PMP entry
+          pmpcfg(i-1) correct]\n  [create scenario where PMP entry pmpcfg(0) with
+          TOR:\n    - pmpaddr(0) >= pmpaddr(1/2/3/…)]"
+- 035_store_L1_W1_addr_forbidden: !Subfeature
+    name: 035_store_L1_W1_addr_forbidden
+    tag: VP_PMP_F015_S066
+    next_elt_id: 1
+    display_order: 35
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F015_S066_I000
+        description: "reuse of VP_PMP_F011_S034_I000 feature description (Cf. Feature:
+          \"cfg NA4 access S/U\")\n\n{Page 59 Volume II: RISC-V Privileged Architectures
+          V20211203}\nIf pmpaddri−1 ≥ pmpaddri and pmpcfgi.A=TOR, then PMP entry i
+          matches no addresses\nIf PMP entry 0’s A field is set to TOR, zero is used
+          for the lower bound, and so it matches any address y < pmpaddr(0)"
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "reuse of VP_PMP_F011_S034_I000 verification goals (Cf. Feature:
+          \"cfg NA4 access S/U\")\n\nCONFIGURATION\n    - pmpcfg(i): A=TOR\n    -
+          [for i>0] pmpaddr(i-1) > pmpaddr(i): invalid TOR address range\n    - [for
+          i=0] pmpaddr(0) = 0: invalid TOR address range\n    - [for j=unused] pmpaddr(j)=random:
+          only in single entry configuration case (not in reuse case)\n\nCHECK UPDATE\n\
+          \    - check store access-fault exception raised"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<< link to the old pmp_verif_plan.txt and pmp_verif_plan_features.txt
+          files (not up-to-date) : reading below not mandatory but may help for better
+          understanding >>\n\nFTR01-d\n[PMP checks are applied to all accesses whose
+          effective privilege mode is S or U]\n\nFTR02-b1\n[the lowest-numbered PMP
+          CSRs must be implemented first (QUESTION: does it mean programmed first)]\n
+          \nFTR08-e1 (refers to FTR01-f) (refers to FTR09-d2-1)\n [When the L bit
+          is set, these permissions are enforced for all privilege modes]\nFTR01-f
+          (refers to FTR08-e1)\n [PMP checks may additionally apply to M-mode accesses,
+          in which case the PMP registers themselves are locked, so that even M-mode
+          software cannot change them until the hart is reset]\n FTR09-d2-1 (refers
+          to FTR08-e1) (refers to FTR01-f)\n[if the L bit is set, then the access
+          succeeds only if the R, W, or X bit corresponding to the access type is
+          set]\n\n\nTST15-3x(group)\n  [same as TST11-3x(group), but with pmpcfg(i).A=TOR]\n
+          TST15-34 (LOW-PRIO)\n  [same as TST11-34(group), but with pmpcfg(i).A=TOR]\n
+          \n\n//TO COMPLETE => FTR06-b\nTST25 = same as TST15+TST16 (groups) with
+          PMP entry (0) with pmpaddr(0) > 0\nTST26 = same as TST15+TST16 (groups)
+          with PMP entry (0) with pmpaddr(0) = 0\n  [create scenario where PMP entry
+          pmpcfg(0) with TOR:\n    - pmpaddr(0) > 0\n    - pmpaddr(0) = 0]\n\n//TO
+          COMPLETE => FTR06-c\n TST27 = same as TST23-2 but with pmpaddr(i) ≤ pmpaddr(i-1)
+          and with pmpcfg(i) and pmpcfg(i-1) correct\n  [create scenario where PMP
+          entry pmpcfg(i) with TOR:\n    - pmpaddr(i) ≤ pmpaddr(i-1) and PMP entry
+          pmpcfg(i-1) correct]\n  [create scenario where PMP entry pmpcfg(0) with
+          TOR:\n    - pmpaddr(0) >= pmpaddr(1/2/3/…)]"
+vptool_gitrev: '$Id: a8b561f68549658061625891c533e7d45996bc9e $'
+io_fmt_gitrev: '$Id: 61ab4e53ca49e21d56c416f0af0fa04d148e8001 $'
+config_gitrev: '$Id: 5192fced2cfa10be5e18e827922e31e7489ed987 $'
+ymlcfg_gitrev: '$Id: ce5e73bd5e8e0099334cb657afb7a624a99afbda $'

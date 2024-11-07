@@ -1,0 +1,2052 @@
+!Feature
+next_elt_id: 30
+name: cfg NA4 access M (G=0)
+id: 12
+display_order: 12
+subfeatures: !!omap
+- 000_fetch_L0_X1_addr_hit: !Subfeature
+    name: 000_fetch_L0_X1_addr_hit
+    tag: VP_PMP_F012_S011
+    next_elt_id: 1
+    display_order: 0
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F012_S011_I000
+        description: "{Page 56 Volume II: RISC-V Privileged Architectures V20211203}\n
+          PMP checks may additionally apply to M-mode accesses, in which case the
+          PMP registers themselves are locked, so that even M-mode software cannot
+          change them until the hart is reset\n\n{Page 60 Section \"Locking and Privilege
+          Mode\" Volume II: RISC-V Privileged Architectures V20211203}\nWhen the L
+          bit is clear, any M-mode access matching the PMP entry will succeed\n\n
+          {Page 60 Section \"Priority and Matching Logic\" Volume II: RISC-V Privileged
+          Architectures V20211203}\nIf the L bit is clear and the privilege mode of
+          the access is M, the access succeeds"
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "M mode single access instruction fetch inside defined NA4 address
+          range with execute permissions and with L=0\n    - choose an executable
+          pmp region and address range\n    - choose only one PMP entry (i)\n\nCONFIGURATION\n\
+          \    - pmpcfg(i): A=NA4, X=1, L=0, R/W:random, with reserve on R=0 & W=1\n\
+          \    - pmpaddr(i): NA4 address range\n    - mstatus.MPRV=0\n\nACCESS\n \
+          \   - fetch an instruction from that region (with exact address-matching)\n\
+          \nCHECK\n    - check no access-fault exception\n\nREUSABILITY\n    - if
+          possible, the PMP entry number (i) is a configurable parameter\n    - if
+          possible, the PMP entry lock (L) is a configurable parameter\n    - if possible,
+          the PMP entry permissions (R,W,X) are configurable parameters\n    - if
+          possible, the PMP entry adress-matching mode (A) is a configurable parameter\n\
+          \    - if possible, the PMP entry address range (pmpaddr) is a configurable
+          parameter\n    - if possible, the PMP entry associated access address is
+          a configurable parameter\n    - so a single CONFIGURATION function and a
+          single ACCESS function can be reused and combined"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<<Since G=1 the NA4 mode is not selectable>>\n\n<< link to the
+          old pmp_verif_plan.txt and pmp_verif_plan_features.txt files (not up-to-date)
+          : reading below not mandatory but may help for better understanding >>\n
+          \nFTR01-f (refers to FTR08-e1)\n[PMP checks may additionally apply to M-mode
+          accesses, in which case the PMP registers themselves are locked, so that
+          even M-mode software cannot change them until the hart is reset]\n \nFTR08-e2-1
+          (refers to  FTR09-d1)\n[When the L bit is clear, any M-mode access matching
+          the PMP entry will succeed]\nFTR09-d1 (refers to FTR08-e2-1)\n [If the L
+          bit is clear and the privilege mode of the access is M, the access succeeds]\n
+          \nFTR02-b1\n[the lowest-numbered PMP CSRs must be implemented first (QUESTION:
+          does it mean programmed first)]\n\nTST12-1x(group) => FTR01-f\n  [PMP check
+          on instruction fetch where effective privilege mode is M:\n    - choose
+          an executable pmp region and address range\n    - choose only one PMP entry
+          (i) ([FTR02-b1]: maybe mandatorily the 1st one)\n    - if possible, the
+          PMP entry number is a configurable parameter\n    - choose pmpcfg(i).A=NA4\n\
+          \    - single access instruction fetch in M mode]\n  [create scenarios where
+          PMP entries with A=2 (NA4) and with/without matching permissions\n    -
+          check only NA4 defined addresses are matching]\nTST12-11 (LOW-PRIO)\n [with
+          L=0 => FTR08-e2-1 (refers to  FTR09-d1),\n  - configure the PMP entry with
+          execute permissions for the PMP region\n  - fetch an instruction from that
+          region (with exact address-matching)\n  - check no access-fault exception]"
+- 001_fetch_L0_X0_addr_hit: !Subfeature
+    name: 001_fetch_L0_X0_addr_hit
+    tag: VP_PMP_F012_S012
+    next_elt_id: 1
+    display_order: 1
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F012_S012_I000
+        description: "{Page 56 Volume II: RISC-V Privileged Architectures V20211203}\n
+          PMP checks may additionally apply to M-mode accesses, in which case the
+          PMP registers themselves are locked, so that even M-mode software cannot
+          change them until the hart is reset\n\n{Page 60 Section \"Locking and Privilege
+          Mode\" Volume II: RISC-V Privileged Architectures V20211203}\nWhen the L
+          bit is clear, any M-mode access matching the PMP entry will succeed\n\n
+          {Page 60 Section \"Priority and Matching Logic\" Volume II: RISC-V Privileged
+          Architectures V20211203}\nIf the L bit is clear and the privilege mode of
+          the access is M, the access succeeds"
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "M mode single access instruction fetch inside defined NA4 address
+          range without execute permissions and with L=0\n    - choose an executable
+          pmp region and address range\n    - choose only one PMP entry (i)\n\nCONFIGURATION\n\
+          \    - pmpcfg(i): A=NA4, X=0, L=0, R/W:random, with reserve on R=0 & W=1\n\
+          \    - pmpaddr(i): NA4 address range\n    - mstatus.MPRV=0\n\nACCESS\n \
+          \   - fetch an instruction from that region (with exact address-matching)\n\
+          \nCHECK\n    - check no access-fault exception\n\nREUSABILITY\n    - if
+          possible, the PMP entry number (i) is a configurable parameter\n    - if
+          possible, the PMP entry lock (L) is a configurable parameter\n    - if possible,
+          the PMP entry permissions (R,W,X) are configurable parameters\n    - if
+          possible, the PMP entry adress-matching mode (A) is a configurable parameter\n\
+          \    - if possible, the PMP entry address range (pmpaddr) is a configurable
+          parameter\n    - if possible, the PMP entry associated access address is
+          a configurable parameter\n    - so a single CONFIGURATION function and a
+          single ACCESS function can be reused and combined"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<<Since G=1 the NA4 mode is not selectable>>\n\n<< link to the
+          old pmp_verif_plan.txt and pmp_verif_plan_features.txt files (not up-to-date)
+          : reading below not mandatory but may help for better understanding >>\n
+          \nFTR01-f (refers to FTR08-e1)\n[PMP checks may additionally apply to M-mode
+          accesses, in which case the PMP registers themselves are locked, so that
+          even M-mode software cannot change them until the hart is reset]\n \nFTR08-e2-1
+          (refers to  FTR09-d1)\n[When the L bit is clear, any M-mode access matching
+          the PMP entry will succeed]\nFTR09-d1 (refers to FTR08-e2-1)\n [If the L
+          bit is clear and the privilege mode of the access is M, the access succeeds]\n
+          \nFTR02-b1\n[the lowest-numbered PMP CSRs must be implemented first (QUESTION:
+          does it mean programmed first)]\n\nTST12-1x(group) => FTR01-f\n  [PMP check
+          on instruction fetch where effective privilege mode is M:\n    - choose
+          an executable pmp region and address range\n    - choose only one PMP entry
+          (i) ([FTR02-b1]: maybe mandatorily the 1st one)\n    - if possible, the
+          PMP entry number is a configurable parameter\n    - choose pmpcfg(i).A=NA4\n\
+          \    - single access instruction fetch in M mode]\n  [create scenarios where
+          PMP entries with A=2 (NA4) and with/without matching permissions\n    -
+          check only NA4 defined addresses are matching]\nTST12-12 (LOW-PRIO)\n [with
+          L=0 => FTR08-e2-1 (refers to  FTR09-d1),\n  - configure the PMP entry without
+          execute permissions for the PMP region\n  - fetch an instruction from that
+          region (with exact address-matching)\n  - check no access-fault exception]"
+- 002_fetch_L0_X1_addr_miss: !Subfeature
+    name: 002_fetch_L0_X1_addr_miss
+    tag: VP_PMP_F012_S013
+    next_elt_id: 1
+    display_order: 2
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F012_S013_I000
+        description: "{Page 56 Volume II: RISC-V Privileged Architectures V20211203}\n
+          PMP checks may additionally apply to M-mode accesses, in which case the
+          PMP registers themselves are locked, so that even M-mode software cannot
+          change them until the hart is reset\n\n{Page 60 Section \"Locking and Privilege
+          Mode\" Volume II: RISC-V Privileged Architectures V20211203}\nWhen the L
+          bit is clear, any M-mode access matching the PMP entry will succeed\n\n
+          {Page 60 Section \"Priority and Matching Logic\" Volume II: RISC-V Privileged
+          Architectures V20211203}\nIf the L bit is clear and the privilege mode of
+          the access is M, the access succeeds"
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "M mode single access instruction fetch from outside defined
+          NA4 address range with execute permissions and with L=0\n    - choose an
+          executable pmp region and address range\n    - choose only one PMP entry
+          (i)\n\nCONFIGURATION\n    - pmpcfg(i): A=NA4, X=1, L=0, R/W:random, with
+          reserve on R=0 & W=1\n    - pmpaddr(i): NA4 address range\n    - mstatus.MPRV=0\n\
+          \nACCESS\n    - fetch an instruction from outside all PMP defined regions\n\
+          \nCHECK\n    - check no access-fault exception (Feature: \"no cfg matching\"\
+          )\n\nREUSABILITY\n    - if possible, the PMP entry number (i) is a configurable
+          parameter\n    - if possible, the PMP entry lock (L) is a configurable parameter\n\
+          \    - if possible, the PMP entry permissions (R,W,X) are configurable parameters\n\
+          \    - if possible, the PMP entry adress-matching mode (A) is a configurable
+          parameter\n    - if possible, the PMP entry address range (pmpaddr) is a
+          configurable parameter\n    - if possible, the PMP entry associated access
+          address is a configurable parameter\n    - so a single CONFIGURATION function
+          and a single ACCESS function can be reused and combined"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<<Since G=1 the NA4 mode is not selectable>>\n\n<< link to the
+          old pmp_verif_plan.txt and pmp_verif_plan_features.txt files (not up-to-date)
+          : reading below not mandatory but may help for better understanding >>\n
+          \nFTR01-f (refers to FTR08-e1)\n[PMP checks may additionally apply to M-mode
+          accesses, in which case the PMP registers themselves are locked, so that
+          even M-mode software cannot change them until the hart is reset]\n \nFTR08-e2-1
+          (refers to  FTR09-d1)\n[When the L bit is clear, any M-mode access matching
+          the PMP entry will succeed]\nFTR09-d1 (refers to FTR08-e2-1)\n [If the L
+          bit is clear and the privilege mode of the access is M, the access succeeds]\n
+          \nFTR02-b1\n[the lowest-numbered PMP CSRs must be implemented first (QUESTION:
+          does it mean programmed first)]\n\nTST12-1x(group) => FTR01-f\n  [PMP check
+          on instruction fetch where effective privilege mode is M:\n    - choose
+          an executable pmp region and address range\n    - choose only one PMP entry
+          (i) ([FTR02-b1]: maybe mandatorily the 1st one)\n    - if possible, the
+          PMP entry number is a configurable parameter\n    - choose pmpcfg(i).A=NA4\n\
+          \    - single access instruction fetch in M mode]\n  [create scenarios where
+          PMP entries with A=2 (NA4) and with/without matching permissions\n    -
+          check only NA4 defined addresses are matching]\nTST12-13 (LOW-PRIO)\n [with
+          L=0 => FTR08-e2-1 (refers to  FTR09-d1),\n  - configure the PMP entry with
+          execute permissions for the PMP region\n  - fetch an instruction from outside
+          all PMP defined regions\n  - check no access-fault exception] //TODO: CHECK
+          IF M-MODE ALLOWED"
+- 003_fetch_L1_X1_addr_hit: !Subfeature
+    name: 003_fetch_L1_X1_addr_hit
+    tag: VP_PMP_F012_S014
+    next_elt_id: 1
+    display_order: 3
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F012_S014_I000
+        description: "{Page 56 Volume II: RISC-V Privileged Architectures V20211203}\n
+          PMP checks may additionally apply to M-mode accesses, in which case the
+          PMP registers themselves are locked, so that even M-mode software cannot
+          change them until the hart is reset\n\n{Page 60 Section \"Locking and Privilege
+          Mode\" Volume II: RISC-V Privileged Architectures V20211203}\nWhen the L
+          bit is set, these permissions are enforced for all privilege modes\n\n{Page
+          60 Section \"Priority and Matching Logic\" Volume II: RISC-V Privileged
+          Architectures V20211203}\nif the L bit is set, then the access succeeds
+          only if the R, W, or X bit corresponding to the access type is set"
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "M mode single access instruction fetch inside defined NA4 address
+          range with execute permissions and with L=1\n    - choose an executable
+          pmp region and address range\n    - choose only one PMP entry (i)\n\nCONFIGURATION\n\
+          \    - pmpcfg(i): A=NA4, X=1, L=1, R/W:random, with reserve on R=0 & W=1\n\
+          \    - pmpaddr(i): NA4 address range\n    - mstatus.MPRV=0\n\nACCESS\n \
+          \   - fetch an instruction from that region (with exact address-matching)\n\
+          \nCHECK\n    - check no access-fault exception\n\nREUSABILITY\n    - if
+          possible, the PMP entry number (i) is a configurable parameter\n    - if
+          possible, the PMP entry lock (L) is a configurable parameter\n    - if possible,
+          the PMP entry permissions (R,W,X) are configurable parameters\n    - if
+          possible, the PMP entry adress-matching mode (A) is a configurable parameter\n\
+          \    - if possible, the PMP entry address range (pmpaddr) is a configurable
+          parameter\n    - if possible, the PMP entry associated access address is
+          a configurable parameter\n    - so a single CONFIGURATION function and a
+          single ACCESS function can be reused and combined"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<<Since G=1 the NA4 mode is not selectable>>\n\n<< link to the
+          old pmp_verif_plan.txt and pmp_verif_plan_features.txt files (not up-to-date)
+          : reading below not mandatory but may help for better understanding >>\n
+          \nFTR01-f (refers to FTR08-e1)\n[PMP checks may additionally apply to M-mode
+          accesses, in which case the PMP registers themselves are locked, so that
+          even M-mode software cannot change them until the hart is reset]\n \nFTR08-e1
+          (refers to FTR01-f) (refers to FTR09-d2-1)\n[When the L bit is set, these
+          permissions are enforced for all privilege modes]\nFTR09-d2-1 (refers to
+          FTR08-e1) (refers to FTR01-f)\n[if the L bit is set, then the access succeeds
+          only if the R, W, or X bit corresponding to the access type is set]\n\n
+          FTR02-b1\n[the lowest-numbered PMP CSRs must be implemented first (QUESTION:
+          does it mean programmed first)]\n\nTST12-1x(group) => FTR01-f\n  [PMP check
+          on instruction fetch where effective privilege mode is M:\n    - choose
+          an executable pmp region and address range\n    - choose only one PMP entry
+          (i) ([FTR02-b1]: maybe mandatorily the 1st one)\n    - if possible, the
+          PMP entry number is a configurable parameter\n    - choose pmpcfg(i).A=NA4\n\
+          \    - single access instruction fetch in M mode]\n  [create scenarios where
+          PMP entries with A=2 (NA4) and with/without matching permissions\n    -
+          check only NA4 defined addresses are matching]\nTST12-14 (HIGH-PRIO)\n [with
+          L=1 => FTR08-e1 (refers to FTR01-f) (refers to FTR09-d2-1),\n  - configure
+          the PMP entry with execute permissions for the PMP region\n  - fetch an
+          instruction from that region (with exact address-matching)\n  - check no
+          access-fault exception]"
+- 004_fetch_L1_X0_addr_hit: !Subfeature
+    name: 004_fetch_L1_X0_addr_hit
+    tag: VP_PMP_F012_S015
+    next_elt_id: 1
+    display_order: 4
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F012_S015_I000
+        description: "{Page 56 Volume II: RISC-V Privileged Architectures V20211203}\n
+          PMP checks may additionally apply to M-mode accesses, in which case the
+          PMP registers themselves are locked, so that even M-mode software cannot
+          change them until the hart is reset\n\n{Page 60 Section \"Locking and Privilege
+          Mode\" Volume II: RISC-V Privileged Architectures V20211203}\nWhen the L
+          bit is set, these permissions are enforced for all privilege modes\n\n{Page
+          60 Section \"Priority and Matching Logic\" Volume II: RISC-V Privileged
+          Architectures V20211203}\nif the L bit is set, then the access succeeds
+          only if the R, W, or X bit corresponding to the access type is set\n\n{Page
+          58 Volume II: RISC-V Privileged Architectures V20211203}\nAttempting to
+          fetch an instruction from a PMP region that does not have execute permissions
+          raises an instruction access-fault exception"
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "M mode single access instruction fetch inside defined NA4 address
+          range without execute permissions and with L=1\n    - choose an executable
+          pmp region and address range\n    - choose only one PMP entry (i)\n\nCONFIGURATION\n\
+          \    - pmpcfg(i): A=NA4, X=0, L=1, R/W:random, with reserve on R=0 & W=1\n\
+          \    - pmpaddr(i): NA4 address range\n    - mstatus.MPRV=0\n\nACCESS\n \
+          \   - fetch an instruction from that region (with exact address-matching)\n\
+          \nCHECK\n    - check instruction fetch access-fault exception raised\n\n\
+          REUSABILITY\n    - if possible, the PMP entry number (i) is a configurable
+          parameter\n    - if possible, the PMP entry lock (L) is a configurable parameter\n\
+          \    - if possible, the PMP entry permissions (R,W,X) are configurable parameters\n\
+          \    - if possible, the PMP entry adress-matching mode (A) is a configurable
+          parameter\n    - if possible, the PMP entry address range (pmpaddr) is a
+          configurable parameter\n    - if possible, the PMP entry associated access
+          address is a configurable parameter\n    - so a single CONFIGURATION function
+          and a single ACCESS function can be reused and combined"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<<Since G=1 the NA4 mode is not selectable>>\n\n<< link to the
+          old pmp_verif_plan.txt and pmp_verif_plan_features.txt files (not up-to-date)
+          : reading below not mandatory but may help for better understanding >>\n
+          \nFTR01-f (refers to FTR08-e1)\n[PMP checks may additionally apply to M-mode
+          accesses, in which case the PMP registers themselves are locked, so that
+          even M-mode software cannot change them until the hart is reset]\n \nFTR08-e1
+          (refers to FTR01-f) (refers to FTR09-d2-1)\n[When the L bit is set, these
+          permissions are enforced for all privilege modes]\nFTR09-d2-1 (refers to
+          FTR08-e1) (refers to FTR01-f)\n[if the L bit is set, then the access succeeds
+          only if the R, W, or X bit corresponding to the access type is set]\n\n
+          FTR04-b\n[Attempting to fetch an instruction from a PMP region that does
+          not have execute permissions raises an instruction access-fault exception]\n
+          \nFTR02-b1\n[the lowest-numbered PMP CSRs must be implemented first (QUESTION:
+          does it mean programmed first)]\n \nTST12-1x(group) => FTR01-f\n  [PMP check
+          on instruction fetch where effective privilege mode is M:\n    - choose
+          an executable pmp region and address range\n    - choose only one PMP entry
+          (i) ([FTR02-b1]: maybe mandatorily the 1st one)\n    - if possible, the
+          PMP entry number is a configurable parameter\n    - choose pmpcfg(i).A=NA4\n\
+          \    - single access instruction fetch in M mode]\n  [create scenarios where
+          PMP entries with A=2 (NA4) and with/without matching permissions\n    -
+          check only NA4 defined addresses are matching]\nTST12-15 (MEDIUM-PRIO)\n
+          [with L=1 => FTR08-e1 (refers to FTR01-f) (refers to FTR09-d2-1),\n  - configure
+          the PMP entry without execute permissions for the PMP region\n  - fetch
+          an instruction from that region (with exact address-matching)\n  - check
+          instruction fetch access-fault exception raised => FTR04-b]"
+- 005_fetch_L1_X1_addr_miss: !Subfeature
+    name: 005_fetch_L1_X1_addr_miss
+    tag: VP_PMP_F012_S016
+    next_elt_id: 1
+    display_order: 5
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F012_S016_I000
+        description: "{Page 56 Volume II: RISC-V Privileged Architectures V20211203}\n
+          PMP checks may additionally apply to M-mode accesses, in which case the
+          PMP registers themselves are locked, so that even M-mode software cannot
+          change them until the hart is reset\n\n{Page 60 Section \"Locking and Privilege
+          Mode\" Volume II: RISC-V Privileged Architectures V20211203}\nWhen the L
+          bit is set, these permissions are enforced for all privilege modes\n\n{Page
+          60 Section \"Priority and Matching Logic\" Volume II: RISC-V Privileged
+          Architectures V20211203}\nif the L bit is set, then the access succeeds
+          only if the R, W, or X bit corresponding to the access type is set"
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "M mode single access instruction fetch from outside defined
+          NA4 address range with execute permissions and with L=1\n    - choose an
+          executable pmp region and address range\n    - choose only one PMP entry
+          (i)\n\nCONFIGURATION\n    - pmpcfg(i): A=NA4, X=1, L=1, R/W:random, with
+          reserve on R=0 & W=1\n    - pmpaddr(i): NA4 address range\n    - mstatus.MPRV=0\n\
+          \nACCESS\n    - fetch an instruction from outside all PMP defined regions\n\
+          \nCHECK\n    - check no access-fault exception (Feature: \"no cfg matching\"\
+          )\n\nREUSABILITY\n    - if possible, the PMP entry number (i) is a configurable
+          parameter\n    - if possible, the PMP entry lock (L) is a configurable parameter\n\
+          \    - if possible, the PMP entry permissions (R,W,X) are configurable parameters\n\
+          \    - if possible, the PMP entry adress-matching mode (A) is a configurable
+          parameter\n    - if possible, the PMP entry address range (pmpaddr) is a
+          configurable parameter\n    - if possible, the PMP entry associated access
+          address is a configurable parameter\n    - so a single CONFIGURATION function
+          and a single ACCESS function can be reused and combined"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<<Since G=1 the NA4 mode is not selectable>>\n\n<< link to the
+          old pmp_verif_plan.txt and pmp_verif_plan_features.txt files (not up-to-date)
+          : reading below not mandatory but may help for better understanding >>\n
+          \nFTR01-f (refers to FTR08-e1)\n[PMP checks may additionally apply to M-mode
+          accesses, in which case the PMP registers themselves are locked, so that
+          even M-mode software cannot change them until the hart is reset]\n \nFTR08-e1
+          (refers to FTR01-f) (refers to FTR09-d2-1)\n[When the L bit is set, these
+          permissions are enforced for all privilege modes]\nFTR09-d2-1 (refers to
+          FTR08-e1) (refers to FTR01-f)\n[if the L bit is set, then the access succeeds
+          only if the R, W, or X bit corresponding to the access type is set]\n\n
+          FTR02-b1\n[the lowest-numbered PMP CSRs must be implemented first (QUESTION:
+          does it mean programmed first)]\n\nTST12-1x(group) => FTR01-f\n  [PMP check
+          on instruction fetch where effective privilege mode is M:\n    - choose
+          an executable pmp region and address range\n    - choose only one PMP entry
+          (i) ([FTR02-b1]: maybe mandatorily the 1st one)\n    - if possible, the
+          PMP entry number is a configurable parameter\n    - choose pmpcfg(i).A=NA4\n\
+          \    - single access instruction fetch in M mode]\n  [create scenarios where
+          PMP entries with A=2 (NA4) and with/without matching permissions\n    -
+          check only NA4 defined addresses are matching]\nTST12-16 (HIGH-PRIO)\n [with
+          L=1 => FTR08-e1 (refers to FTR01-f) (refers to FTR09-d2-1),\n  - configure
+          the PMP entry with execute permissions for the PMP region\n  - fetch an
+          instruction from outside all PMP defined regions\n  - check no access-fault
+          exception] //TODO: CHECK IF M-MODE ALLOWED"
+- 006_load_L0_R1_addr_hit: !Subfeature
+    name: 006_load_L0_R1_addr_hit
+    tag: VP_PMP_F012_S021
+    next_elt_id: 1
+    display_order: 6
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F012_S021_I000
+        description: "{Page 56 Volume II: RISC-V Privileged Architectures V20211203}\n
+          PMP checks may additionally apply to M-mode accesses, in which case the
+          PMP registers themselves are locked, so that even M-mode software cannot
+          change them until the hart is reset\n\n{Page 60 Section \"Locking and Privilege
+          Mode\" Volume II: RISC-V Privileged Architectures V20211203}\nWhen the L
+          bit is clear, any M-mode access matching the PMP entry will succeed\n\n
+          {Page 60 Section \"Priority and Matching Logic\" Volume II: RISC-V Privileged
+          Architectures V20211203}\nIf the L bit is clear and the privilege mode of
+          the access is M, the access succeeds"
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "M mode single access load or load-reserved instruction inside
+          defined NA4 address range with read permissions and with L=0\n    - choose
+          a readable pmp region and address range\n    - choose only one PMP entry
+          (i)\n\nCONFIGURATION\n    - pmpcfg(i): A=NA4, R=1, L=0, X/W:random\n   \
+          \ - pmpaddr(i): NA4 address range\n    - mstatus.MPRV=0\n\nACCESS\n    -
+          execute a load or load-reserved instruction from that region (with exact
+          address-matching)\n\nCHECK\n    - check no access-fault exception\n\nREUSABILITY\n\
+          \    - if possible, the PMP entry number (i) is a configurable parameter\n\
+          \    - if possible, the PMP entry lock (L) is a configurable parameter\n\
+          \    - if possible, the PMP entry permissions (R,W,X) are configurable parameters\n\
+          \    - if possible, the PMP entry adress-matching mode (A) is a configurable
+          parameter\n    - if possible, the PMP entry address range (pmpaddr) is a
+          configurable parameter\n    - if possible, the PMP entry associated access
+          address is a configurable parameter\n    - so a single CONFIGURATION function
+          and a single ACCESS function can be reused and combined"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<<Since G=1 the NA4 mode is not selectable>>\n\n<< link to the
+          old pmp_verif_plan.txt and pmp_verif_plan_features.txt files (not up-to-date)
+          : reading below not mandatory but may help for better understanding >>\n
+          \nFTR01-f (refers to FTR08-e1)\n[PMP checks may additionally apply to M-mode
+          accesses, in which case the PMP registers themselves are locked, so that
+          even M-mode software cannot change them until the hart is reset]\n \nFTR08-e2-1
+          (refers to  FTR09-d1)\n[When the L bit is clear, any M-mode access matching
+          the PMP entry will succeed]\nFTR09-d1 (refers to FTR08-e2-1)\n [If the L
+          bit is clear and the privilege mode of the access is M, the access succeeds]\n
+          \nFTR02-b1\n[the lowest-numbered PMP CSRs must be implemented first (QUESTION:
+          does it mean programmed first)]\n\nTST12-2x(group) => FTR01-f\n  [PMP check
+          on load or load-reserved instruction where effective privilege mode is M:\n\
+          \    - choose a data readable pmp region and address range\n    - choose
+          only one PMP entry (i) ([FTR02-b1]: maybe mandatorily the 1st one)\n   \
+          \ - if possible, the PMP entry number is a configurable parameter\n    -
+          choose pmpcfg(i).A=NA4\n    - single access data load in M mode when the
+          bit mstatus.MPRV=0]\n  [create scenarios where PMP entries with A=2 (NA4)
+          and with/without matching permissions\n    - check only NA4 defined addresses
+          are matching]\nTST12-21 (LOW-PRIO)\n[with L=0 => FTR08-e2-1 (refers to \
+          \ FTR09-d1)\n  - configure the PMP entry with read permissions for the PMP
+          region\n  - execute a load or load-reserved instruction from that region
+          (with exact address-matching)\n  - check no access-fault exception]"
+- 007_load_L0_R0_addr_hit: !Subfeature
+    name: 007_load_L0_R0_addr_hit
+    tag: VP_PMP_F012_S022
+    next_elt_id: 1
+    display_order: 7
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F012_S022_I000
+        description: "{Page 56 Volume II: RISC-V Privileged Architectures V20211203}\n
+          PMP checks may additionally apply to M-mode accesses, in which case the
+          PMP registers themselves are locked, so that even M-mode software cannot
+          change them until the hart is reset\n\n{Page 60 Section \"Locking and Privilege
+          Mode\" Volume II: RISC-V Privileged Architectures V20211203}\nWhen the L
+          bit is clear, any M-mode access matching the PMP entry will succeed\n\n
+          {Page 60 Section \"Priority and Matching Logic\" Volume II: RISC-V Privileged
+          Architectures V20211203}\nIf the L bit is clear and the privilege mode of
+          the access is M, the access succeeds"
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "M mode single access load or load-reserved instruction inside
+          defined NA4 address range without read permissions and with L=0\n    - choose
+          a readable pmp region and address range\n    - choose only one PMP entry
+          (i)\n\nCONFIGURATION\n    - pmpcfg(i): A=NA4, R=0, L=0, X/W:random\n   \
+          \ - pmpaddr(i): NA4 address range\n    - mstatus.MPRV=0\n\nACCESS\n    -
+          execute a load or load-reserved instruction from that region (with exact
+          address-matching)\n\nCHECK\n    - check no access-fault exception\n\nREUSABILITY\n\
+          \    - if possible, the PMP entry number (i) is a configurable parameter\n\
+          \    - if possible, the PMP entry lock (L) is a configurable parameter\n\
+          \    - if possible, the PMP entry permissions (R,W,X) are configurable parameters\n\
+          \    - if possible, the PMP entry adress-matching mode (A) is a configurable
+          parameter\n    - if possible, the PMP entry address range (pmpaddr) is a
+          configurable parameter\n    - if possible, the PMP entry associated access
+          address is a configurable parameter\n    - so a single CONFIGURATION function
+          and a single ACCESS function can be reused and combined"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<<Since G=1 the NA4 mode is not selectable>>\n\n<< link to the
+          old pmp_verif_plan.txt and pmp_verif_plan_features.txt files (not up-to-date)
+          : reading below not mandatory but may help for better understanding >>\n
+          \nFTR01-f (refers to FTR08-e1)\n[PMP checks may additionally apply to M-mode
+          accesses, in which case the PMP registers themselves are locked, so that
+          even M-mode software cannot change them until the hart is reset]\n \nFTR08-e2-1
+          (refers to  FTR09-d1)\n[When the L bit is clear, any M-mode access matching
+          the PMP entry will succeed]\nFTR09-d1 (refers to FTR08-e2-1)\n [If the L
+          bit is clear and the privilege mode of the access is M, the access succeeds]\n
+          \nFTR02-b1\n[the lowest-numbered PMP CSRs must be implemented first (QUESTION:
+          does it mean programmed first)]\n\nTST12-2x(group) => FTR01-f\n  [PMP check
+          on load or load-reserved instruction where effective privilege mode is M:\n\
+          \    - choose a data readable pmp region and address range\n    - choose
+          only one PMP entry (i) ([FTR02-b1]: maybe mandatorily the 1st one)\n   \
+          \ - if possible, the PMP entry number is a configurable parameter\n    -
+          choose pmpcfg(i).A=NA4\n    - single access data load in M mode when the
+          bit mstatus.MPRV=0]\n  [create scenarios where PMP entries with A=2 (NA4)
+          and with/without matching permissions\n    - check only NA4 defined addresses
+          are matching]\nTST12-22 (LOW-PRIO)\n[with L=0 => FTR08-e2-1 (refers to \
+          \ FTR09-d1)\n  - configure the PMP entry without read permissions for the
+          PMP region\n  - execute a load or load-reserved instruction from that region
+          (with exact address-matching)\n  - check no access-fault exception]"
+- 008_load_L0_R1_addr_miss: !Subfeature
+    name: 008_load_L0_R1_addr_miss
+    tag: VP_PMP_F012_S023
+    next_elt_id: 1
+    display_order: 8
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F012_S023_I000
+        description: "{Page 56 Volume II: RISC-V Privileged Architectures V20211203}\n
+          PMP checks may additionally apply to M-mode accesses, in which case the
+          PMP registers themselves are locked, so that even M-mode software cannot
+          change them until the hart is reset\n\n{Page 60 Section \"Locking and Privilege
+          Mode\" Volume II: RISC-V Privileged Architectures V20211203}\nWhen the L
+          bit is clear, any M-mode access matching the PMP entry will succeed\n\n
+          {Page 60 Section \"Priority and Matching Logic\" Volume II: RISC-V Privileged
+          Architectures V20211203}\nIf the L bit is clear and the privilege mode of
+          the access is M, the access succeeds"
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "M mode single access load or load-reserved instruction from
+          outside defined NA4 address range with read permissions and with L=0\n \
+          \   - choose a readable pmp region and address range\n    - choose only
+          one PMP entry (i)\n\nCONFIGURATION\n    - pmpcfg(i): A=NA4, R=1, L=0, X/W:random\n\
+          \    - pmpaddr(i): NA4 address range\n    - mstatus.MPRV=0\n\nACCESS\n \
+          \   - execute a load or load-reserved instruction from outside all PMP defined
+          regions\n\nCHECK\n    - check no access-fault exception (Feature: \"no cfg
+          matching\")\n\nREUSABILITY\n    - if possible, the PMP entry number (i)
+          is a configurable parameter\n    - if possible, the PMP entry lock (L) is
+          a configurable parameter\n    - if possible, the PMP entry permissions (R,W,X)
+          are configurable parameters\n    - if possible, the PMP entry adress-matching
+          mode (A) is a configurable parameter\n    - if possible, the PMP entry address
+          range (pmpaddr) is a configurable parameter\n    - if possible, the PMP
+          entry associated access address is a configurable parameter\n    - so a
+          single CONFIGURATION function and a single ACCESS function can be reused
+          and combined"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<<Since G=1 the NA4 mode is not selectable>>\n\n<< link to the
+          old pmp_verif_plan.txt and pmp_verif_plan_features.txt files (not up-to-date)
+          : reading below not mandatory but may help for better understanding >>\n
+          \nFTR01-f (refers to FTR08-e1)\n[PMP checks may additionally apply to M-mode
+          accesses, in which case the PMP registers themselves are locked, so that
+          even M-mode software cannot change them until the hart is reset]\n \nFTR08-e2-1
+          (refers to  FTR09-d1)\n[When the L bit is clear, any M-mode access matching
+          the PMP entry will succeed]\nFTR09-d1 (refers to FTR08-e2-1)\n [If the L
+          bit is clear and the privilege mode of the access is M, the access succeeds]\n
+          \nFTR02-b1\n[the lowest-numbered PMP CSRs must be implemented first (QUESTION:
+          does it mean programmed first)]\n\nTST12-2x(group) => FTR01-f\n  [PMP check
+          on load or load-reserved instruction where effective privilege mode is M:\n\
+          \    - choose a data readable pmp region and address range\n    - choose
+          only one PMP entry (i) ([FTR02-b1]: maybe mandatorily the 1st one)\n   \
+          \ - if possible, the PMP entry number is a configurable parameter\n    -
+          choose pmpcfg(i).A=NA4\n    - single access data load in M mode when the
+          bit mstatus.MPRV=0]\n  [create scenarios where PMP entries with A=2 (NA4)
+          and with/without matching permissions\n    - check only NA4 defined addresses
+          are matching]\nTST12-23 (LOW-PRIO)\n[with L=0 => FTR08-e2-1 (refers to \
+          \ FTR09-d1)\n  - configure the PMP entry with read permissions for the PMP
+          region\n  - execute a load or load-reserved instruction from outside all
+          PMP defined regions\n  - check no access-fault exception] //TODO: CHECK
+          IF M-MODE ALLOWED"
+- 009_load_L1_R1_addr_hit: !Subfeature
+    name: 009_load_L1_R1_addr_hit
+    tag: VP_PMP_F012_S024
+    next_elt_id: 1
+    display_order: 9
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F012_S024_I000
+        description: "{Page 56 Volume II: RISC-V Privileged Architectures V20211203}\n
+          PMP checks may additionally apply to M-mode accesses, in which case the
+          PMP registers themselves are locked, so that even M-mode software cannot
+          change them until the hart is reset\n\n{Page 60 Section \"Locking and Privilege
+          Mode\" Volume II: RISC-V Privileged Architectures V20211203}\nWhen the L
+          bit is set, these permissions are enforced for all privilege modes\n\n{Page
+          60 Section \"Priority and Matching Logic\" Volume II: RISC-V Privileged
+          Architectures V20211203}\nif the L bit is set, then the access succeeds
+          only if the R, W, or X bit corresponding to the access type is set"
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "M mode single access load or load-reserved instruction inside
+          defined NA4 address range with read permissions and with L=1\n    - choose
+          a readable pmp region and address range\n    - choose only one PMP entry
+          (i)\n\nCONFIGURATION\n    - pmpcfg(i): A=NA4, R=1, L=1, X/W:random\n   \
+          \ - pmpaddr(i): NA4 address range\n    - mstatus.MPRV=0\n\nACCESS\n    -
+          execute a load or load-reserved instruction from that region (with exact
+          address-matching)\n\nCHECK\n    - check no access-fault exception\n\nREUSABILITY\n\
+          \    - if possible, the PMP entry number (i) is a configurable parameter\n\
+          \    - if possible, the PMP entry lock (L) is a configurable parameter\n\
+          \    - if possible, the PMP entry permissions (R,W,X) are configurable parameters\n\
+          \    - if possible, the PMP entry adress-matching mode (A) is a configurable
+          parameter\n    - if possible, the PMP entry address range (pmpaddr) is a
+          configurable parameter\n    - if possible, the PMP entry associated access
+          address is a configurable parameter\n    - so a single CONFIGURATION function
+          and a single ACCESS function can be reused and combined"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<<Since G=1 the NA4 mode is not selectable>>\n\n<< link to the
+          old pmp_verif_plan.txt and pmp_verif_plan_features.txt files (not up-to-date)
+          : reading below not mandatory but may help for better understanding >>\n
+          \nFTR01-f (refers to FTR08-e1)\n[PMP checks may additionally apply to M-mode
+          accesses, in which case the PMP registers themselves are locked, so that
+          even M-mode software cannot change them until the hart is reset]\n \nFTR08-e1
+          (refers to FTR01-f) (refers to FTR09-d2-1)\n[When the L bit is set, these
+          permissions are enforced for all privilege modes]\nFTR09-d2-1 (refers to
+          FTR08-e1) (refers to FTR01-f)\n[if the L bit is set, then the access succeeds
+          only if the R, W, or X bit corresponding to the access type is set]\n\n
+          FTR02-b1\n[the lowest-numbered PMP CSRs must be implemented first (QUESTION:
+          does it mean programmed first)]\n\nTST12-2x(group) => FTR01-f\n  [PMP check
+          on load or load-reserved instruction where effective privilege mode is M:\n\
+          \    - choose a data readable pmp region and address range\n    - choose
+          only one PMP entry (i) ([FTR02-b1]: maybe mandatorily the 1st one)\n   \
+          \ - if possible, the PMP entry number is a configurable parameter\n    -
+          choose pmpcfg(i).A=NA4\n    - single access data load in M mode when the
+          bit mstatus.MPRV=0]\n  [create scenarios where PMP entries with A=2 (NA4)
+          and with/without matching permissions\n    - check only NA4 defined addresses
+          are matching]\nTST12-24 (HIGH-PRIO)\n[with L=1 => FTR08-e1 (refers to FTR01-f)
+          (refers to FTR09-d2-1),\n  - configure the PMP entry with read permissions
+          for the PMP region\n  - execute a load or load-reserved instruction from
+          that region (with exact address-matching)\n  - check no access-fault exception]"
+- 010_load_L1_R0_addr_hit: !Subfeature
+    name: 010_load_L1_R0_addr_hit
+    tag: VP_PMP_F012_S025
+    next_elt_id: 1
+    display_order: 10
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F012_S025_I000
+        description: "{Page 56 Volume II: RISC-V Privileged Architectures V20211203}\n
+          PMP checks may additionally apply to M-mode accesses, in which case the
+          PMP registers themselves are locked, so that even M-mode software cannot
+          change them until the hart is reset\n\n{Page 60 Section \"Locking and Privilege
+          Mode\" Volume II: RISC-V Privileged Architectures V20211203}\nWhen the L
+          bit is set, these permissions are enforced for all privilege modes\n\n{Page
+          60 Section \"Priority and Matching Logic\" Volume II: RISC-V Privileged
+          Architectures V20211203}\nif the L bit is set, then the access succeeds
+          only if the R, W, or X bit corresponding to the access type is set\n\n{Page
+          58 Volume II: RISC-V Privileged Architectures V20211203}\nAttempting to
+          execute a load or load-reserved instruction which accesses a physical address
+          within a PMP region without read permissions raises a load access-fault
+          exception"
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "M mode single access load or load-reserved instruction inside
+          defined NA4 address range without read permissions and with L=1\n    - choose
+          a readable pmp region and address range\n    - choose only one PMP entry
+          (i)\n\nCONFIGURATION\n    - pmpcfg(i): A=NA4, R=0, L=1, X/W:random\n   \
+          \ - pmpaddr(i): NA4 address range\n    - mstatus.MPRV=0\n\nACCESS\n    -
+          execute a load or load-reserved instruction from that region (with exact
+          address-matching)\n\nCHECK\n    - check load access-fault exception raised\n\
+          \nREUSABILITY\n    - if possible, the PMP entry number (i) is a configurable
+          parameter\n    - if possible, the PMP entry lock (L) is a configurable parameter\n\
+          \    - if possible, the PMP entry permissions (R,W,X) are configurable parameters\n\
+          \    - if possible, the PMP entry adress-matching mode (A) is a configurable
+          parameter\n    - if possible, the PMP entry address range (pmpaddr) is a
+          configurable parameter\n    - if possible, the PMP entry associated access
+          address is a configurable parameter\n    - so a single CONFIGURATION function
+          and a single ACCESS function can be reused and combined"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<<Since G=1 the NA4 mode is not selectable>>\n\n<< link to the
+          old pmp_verif_plan.txt and pmp_verif_plan_features.txt files (not up-to-date)
+          : reading below not mandatory but may help for better understanding >>\n
+          \nFTR01-f (refers to FTR08-e1)\n[PMP checks may additionally apply to M-mode
+          accesses, in which case the PMP registers themselves are locked, so that
+          even M-mode software cannot change them until the hart is reset]\n \nFTR08-e1
+          (refers to FTR01-f) (refers to FTR09-d2-1)\n[When the L bit is set, these
+          permissions are enforced for all privilege modes]\nFTR09-d2-1 (refers to
+          FTR08-e1) (refers to FTR01-f)\n[if the L bit is set, then the access succeeds
+          only if the R, W, or X bit corresponding to the access type is set]\n\n
+          FTR04-c\n[Attempting to execute a load or load-reserved instruction which
+          accesses a physical address within a PMP region without read permissions
+          raises a load access-fault exception]\n\nFTR02-b1\n[the lowest-numbered
+          PMP CSRs must be implemented first (QUESTION: does it mean programmed first)]\n
+          \nTST12-2x(group) => FTR01-f\n  [PMP check on load or load-reserved instruction
+          where effective privilege mode is M:\n    - choose a data readable pmp region
+          and address range\n    - choose only one PMP entry (i) ([FTR02-b1]: maybe
+          mandatorily the 1st one)\n    - if possible, the PMP entry number is a configurable
+          parameter\n    - choose pmpcfg(i).A=NA4\n    - single access data load in
+          M mode when the bit mstatus.MPRV=0]\n  [create scenarios where PMP entries
+          with A=2 (NA4) and with/without matching permissions\n    - check only NA4
+          defined addresses are matching]\nTST12-25 (MEDIUM-PRIO)\n[with L=1 => FTR08-e1
+          (refers to FTR01-f) (refers to FTR09-d2-1),\n  - configure the PMP entry
+          without read permissions for the PMP region\n  - execute a load or load-reserved
+          instruction from that region (with exact address-matching)\n  - check load
+          access-fault exception raised => FTR04-c]"
+- 011_load_L1_R1_addr_miss: !Subfeature
+    name: 011_load_L1_R1_addr_miss
+    tag: VP_PMP_F012_S026
+    next_elt_id: 1
+    display_order: 11
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F012_S026_I000
+        description: "{Page 56 Volume II: RISC-V Privileged Architectures V20211203}\n
+          PMP checks may additionally apply to M-mode accesses, in which case the
+          PMP registers themselves are locked, so that even M-mode software cannot
+          change them until the hart is reset\n\n{Page 60 Section \"Locking and Privilege
+          Mode\" Volume II: RISC-V Privileged Architectures V20211203}\nWhen the L
+          bit is set, these permissions are enforced for all privilege modes\n\n{Page
+          60 Section \"Priority and Matching Logic\" Volume II: RISC-V Privileged
+          Architectures V20211203}\nif the L bit is set, then the access succeeds
+          only if the R, W, or X bit corresponding to the access type is set"
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "M mode single access load or load-reserved instruction from
+          outside defined NA4 address range with read permissions and with L=1\n \
+          \   - choose a readable pmp region and address range\n    - choose only
+          one PMP entry (i)\n\nCONFIGURATION\n    - pmpcfg(i): A=NA4, R=1, L=1, X/W:random\n\
+          \    - pmpaddr(i): NA4 address range\n    - mstatus.MPRV=0\n\nACCESS\n \
+          \   - execute a load or load-reserved instruction from outside all PMP defined
+          regions\n\nCHECK\n    - check no access-fault exception (Feature: \"no cfg
+          matching\")\n\nREUSABILITY\n    - if possible, the PMP entry number (i)
+          is a configurable parameter\n    - if possible, the PMP entry lock (L) is
+          a configurable parameter\n    - if possible, the PMP entry permissions (R,W,X)
+          are configurable parameters\n    - if possible, the PMP entry adress-matching
+          mode (A) is a configurable parameter\n    - if possible, the PMP entry address
+          range (pmpaddr) is a configurable parameter\n    - if possible, the PMP
+          entry associated access address is a configurable parameter\n    - so a
+          single CONFIGURATION function and a single ACCESS function can be reused
+          and combined"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<<Since G=1 the NA4 mode is not selectable>>\n\n<< link to the
+          old pmp_verif_plan.txt and pmp_verif_plan_features.txt files (not up-to-date)
+          : reading below not mandatory but may help for better understanding >>\n
+          \nFTR01-f (refers to FTR08-e1)\n[PMP checks may additionally apply to M-mode
+          accesses, in which case the PMP registers themselves are locked, so that
+          even M-mode software cannot change them until the hart is reset]\n \nFTR08-e1
+          (refers to FTR01-f) (refers to FTR09-d2-1)\n[When the L bit is set, these
+          permissions are enforced for all privilege modes]\nFTR09-d2-1 (refers to
+          FTR08-e1) (refers to FTR01-f)\n[if the L bit is set, then the access succeeds
+          only if the R, W, or X bit corresponding to the access type is set]\n\n
+          FTR02-b1\n[the lowest-numbered PMP CSRs must be implemented first (QUESTION:
+          does it mean programmed first)]\n\nTST12-2x(group) => FTR01-f\n  [PMP check
+          on load or load-reserved instruction where effective privilege mode is M:\n\
+          \    - choose a data readable pmp region and address range\n    - choose
+          only one PMP entry (i) ([FTR02-b1]: maybe mandatorily the 1st one)\n   \
+          \ - if possible, the PMP entry number is a configurable parameter\n    -
+          choose pmpcfg(i).A=NA4\n    - single access data load in M mode when the
+          bit mstatus.MPRV=0]\n  [create scenarios where PMP entries with A=2 (NA4)
+          and with/without matching permissions\n    - check only NA4 defined addresses
+          are matching]\nTST12-26 (HIGH-PRIO)\n[with L=1 => FTR08-e1 (refers to FTR01-f)
+          (refers to FTR09-d2-1),\n  - configure the PMP entry with read permissions
+          for the PMP region\n  - execute a load or load-reserved instruction from
+          outside all PMP defined regions\n  - check no access-fault exception] //TODO:
+          CHECK IF M-MODE ALLOWED"
+- 012_store_L0_W1_addr_hit: !Subfeature
+    name: 012_store_L0_W1_addr_hit
+    tag: VP_PMP_F012_S031
+    next_elt_id: 1
+    display_order: 12
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F012_S031_I000
+        description: "{Page 56 Volume II: RISC-V Privileged Architectures V20211203}\n
+          PMP checks may additionally apply to M-mode accesses, in which case the
+          PMP registers themselves are locked, so that even M-mode software cannot
+          change them until the hart is reset\n\n{Page 60 Section \"Locking and Privilege
+          Mode\" Volume II: RISC-V Privileged Architectures V20211203}\nWhen the L
+          bit is clear, any M-mode access matching the PMP entry will succeed\n\n
+          {Page 60 Section \"Priority and Matching Logic\" Volume II: RISC-V Privileged
+          Architectures V20211203}\nIf the L bit is clear and the privilege mode of
+          the access is M, the access succeeds"
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "M mode single access store, store-conditional, or AMO instruction
+          inside defined NA4 address range with write permissions and with L=0\n \
+          \   - choose a data writable pmp region and address range\n    - choose
+          only one PMP entry (i)\n\nCONFIGURATION\n    - pmpcfg(i): A=NA4, W=1, L=0,
+          X/R:random\n    - pmpaddr(i): NA4 address range\n    - mstatus.MPRV=0\n\n\
+          ACCESS\n    - execute a store, store-conditional, or AMO instruction to
+          that region (with exact address-matching)\n\nCHECK\n    - check no access-fault
+          exception\n\nREUSABILITY\n    - if possible, the PMP entry number (i) is
+          a configurable parameter\n    - if possible, the PMP entry lock (L) is a
+          configurable parameter\n    - if possible, the PMP entry permissions (R,W,X)
+          are configurable parameters\n    - if possible, the PMP entry adress-matching
+          mode (A) is a configurable parameter\n    - if possible, the PMP entry address
+          range (pmpaddr) is a configurable parameter\n    - if possible, the PMP
+          entry associated access address is a configurable parameter\n    - so a
+          single CONFIGURATION function and a single ACCESS function can be reused
+          and combined"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<<Since G=1 the NA4 mode is not selectable>>\n\n<< link to the
+          old pmp_verif_plan.txt and pmp_verif_plan_features.txt files (not up-to-date)
+          : reading below not mandatory but may help for better understanding >>\n
+          \nFTR01-f (refers to FTR08-e1)\n[PMP checks may additionally apply to M-mode
+          accesses, in which case the PMP registers themselves are locked, so that
+          even M-mode software cannot change them until the hart is reset]\n \nFTR08-e2-1
+          (refers to  FTR09-d1)\n[When the L bit is clear, any M-mode access matching
+          the PMP entry will succeed]\nFTR09-d1 (refers to FTR08-e2-1)\n [If the L
+          bit is clear and the privilege mode of the access is M, the access succeeds]\n
+          \nFTR02-b1\n[the lowest-numbered PMP CSRs must be implemented first (QUESTION:
+          does it mean programmed first)]\n\nTST12-3x(group) => FTR01-f\n  [PMP check
+          on store, store-conditional, or AMO instruction where effective privilege
+          mode is M:\n    - choose a data writable pmp region and address range\n\
+          \    - choose only one PMP entry (i) ([FTR02-b1]: maybe mandatorily the
+          1st one)\n    - if possible, the PMP entry number is a configurable parameter\n\
+          \    - choose pmpcfg(i).A=NA4\n    - single access data store in M mode
+          when the bit mstatus.MPRV=0]\n  [create scenarios where PMP entries with
+          A=2 (NA4) and with/without matching permissions\n    - check only NA4 defined
+          addresses are matching]\nTST12-31 (LOW-PRIO)\n[with L=0 => FTR08-e2-1 (refers
+          to  FTR09-d1)\n  - configure the PMP entry with write permissions for the
+          PMP region\n  - execute a store, store-conditional, or AMO instruction to
+          that region (with exact address-matching)\n  - check no access-fault exception]"
+- 013_store_L0_W0_addr_hit: !Subfeature
+    name: 013_store_L0_W0_addr_hit
+    tag: VP_PMP_F012_S032
+    next_elt_id: 1
+    display_order: 13
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F012_S032_I000
+        description: "{Page 56 Volume II: RISC-V Privileged Architectures V20211203}\n
+          PMP checks may additionally apply to M-mode accesses, in which case the
+          PMP registers themselves are locked, so that even M-mode software cannot
+          change them until the hart is reset\n\n{Page 60 Section \"Locking and Privilege
+          Mode\" Volume II: RISC-V Privileged Architectures V20211203}\nWhen the L
+          bit is clear, any M-mode access matching the PMP entry will succeed\n\n
+          {Page 60 Section \"Priority and Matching Logic\" Volume II: RISC-V Privileged
+          Architectures V20211203}\nIf the L bit is clear and the privilege mode of
+          the access is M, the access succeeds"
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "M mode single access store, store-conditional, or AMO instruction
+          inside defined NA4 address range without write permissions and with L=0\n\
+          \    - choose a data writable pmp region and address range\n    - choose
+          only one PMP entry (i)\n\nCONFIGURATION\n    - pmpcfg(i): A=NA4, W=0, L=0,
+          X/R:random\n    - pmpaddr(i): NA4 address range\n    - mstatus.MPRV=0\n\n\
+          ACCESS\n    - execute a store, store-conditional, or AMO instruction to
+          that region (with exact address-matching)\n\nCHECK\n    - check no access-fault
+          exception\n\nREUSABILITY\n    - if possible, the PMP entry number (i) is
+          a configurable parameter\n    - if possible, the PMP entry lock (L) is a
+          configurable parameter\n    - if possible, the PMP entry permissions (R,W,X)
+          are configurable parameters\n    - if possible, the PMP entry adress-matching
+          mode (A) is a configurable parameter\n    - if possible, the PMP entry address
+          range (pmpaddr) is a configurable parameter\n    - if possible, the PMP
+          entry associated access address is a configurable parameter\n    - so a
+          single CONFIGURATION function and a single ACCESS function can be reused
+          and combined"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<<Since G=1 the NA4 mode is not selectable>>\n\n<< link to the
+          old pmp_verif_plan.txt and pmp_verif_plan_features.txt files (not up-to-date)
+          : reading below not mandatory but may help for better understanding >>\n
+          \nFTR01-f (refers to FTR08-e1)\n[PMP checks may additionally apply to M-mode
+          accesses, in which case the PMP registers themselves are locked, so that
+          even M-mode software cannot change them until the hart is reset]\n \nFTR08-e2-1
+          (refers to  FTR09-d1)\n[When the L bit is clear, any M-mode access matching
+          the PMP entry will succeed]\nFTR09-d1 (refers to FTR08-e2-1)\n [If the L
+          bit is clear and the privilege mode of the access is M, the access succeeds]\n
+          \nFTR02-b1\n[the lowest-numbered PMP CSRs must be implemented first (QUESTION:
+          does it mean programmed first)]\n\nTST12-3x(group) => FTR01-f\n  [PMP check
+          on store, store-conditional, or AMO instruction where effective privilege
+          mode is M:\n    - choose a data writable pmp region and address range\n\
+          \    - choose only one PMP entry (i) ([FTR02-b1]: maybe mandatorily the
+          1st one)\n    - if possible, the PMP entry number is a configurable parameter\n\
+          \    - choose pmpcfg(i).A=NA4\n    - single access data store in M mode
+          when the bit mstatus.MPRV=0]\n  [create scenarios where PMP entries with
+          A=2 (NA4) and with/without matching permissions\n    - check only NA4 defined
+          addresses are matching]\nTST12-32 (LOW-PRIO)\n[with L=0 => FTR08-e2-1 (refers
+          to  FTR09-d1)\n  - configure the PMP entry without write permissions for
+          the PMP region\n  - execute a store, store-conditional, or AMO instruction
+          to that region (with exact address-matching)\n  - check no access-fault
+          exception]"
+- 014_store_L0_W1_addr_miss: !Subfeature
+    name: 014_store_L0_W1_addr_miss
+    tag: VP_PMP_F012_S033
+    next_elt_id: 1
+    display_order: 14
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F012_S033_I000
+        description: "{Page 56 Volume II: RISC-V Privileged Architectures V20211203}\n
+          PMP checks may additionally apply to M-mode accesses, in which case the
+          PMP registers themselves are locked, so that even M-mode software cannot
+          change them until the hart is reset\n\n{Page 60 Section \"Locking and Privilege
+          Mode\" Volume II: RISC-V Privileged Architectures V20211203}\nWhen the L
+          bit is clear, any M-mode access matching the PMP entry will succeed\n\n
+          {Page 60 Section \"Priority and Matching Logic\" Volume II: RISC-V Privileged
+          Architectures V20211203}\nIf the L bit is clear and the privilege mode of
+          the access is M, the access succeeds"
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "M mode single access store, store-conditional, or AMO instruction
+          from outside defined NA4 address range with write permissions and with L=0\n\
+          \    - choose a data writable pmp region and address range\n    - choose
+          only one PMP entry (i)\n\nCONFIGURATION\n    - pmpcfg(i): A=NA4, W=1, L=0,
+          X/R:random\n    - pmpaddr(i): NA4 address range\n    - mstatus.MPRV=0\n\n\
+          ACCESS\n    - execute a store, store-conditional, or AMO instruction to
+          outside all PMP defined regions\n\nCHECK\n    - check no access-fault exception
+          (Feature: \"no cfg matching\")\n\nREUSABILITY\n    - if possible, the PMP
+          entry number (i) is a configurable parameter\n    - if possible, the PMP
+          entry lock (L) is a configurable parameter\n    - if possible, the PMP entry
+          permissions (R,W,X) are configurable parameters\n    - if possible, the
+          PMP entry adress-matching mode (A) is a configurable parameter\n    - if
+          possible, the PMP entry address range (pmpaddr) is a configurable parameter\n\
+          \    - if possible, the PMP entry associated access address is a configurable
+          parameter\n    - so a single CONFIGURATION function and a single ACCESS
+          function can be reused and combined"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<<Since G=1 the NA4 mode is not selectable>>\n\n<< link to the
+          old pmp_verif_plan.txt and pmp_verif_plan_features.txt files (not up-to-date)
+          : reading below not mandatory but may help for better understanding >>\n
+          \nFTR01-f (refers to FTR08-e1)\n[PMP checks may additionally apply to M-mode
+          accesses, in which case the PMP registers themselves are locked, so that
+          even M-mode software cannot change them until the hart is reset]\n \nFTR08-e2-1
+          (refers to  FTR09-d1)\n[When the L bit is clear, any M-mode access matching
+          the PMP entry will succeed]\nFTR09-d1 (refers to FTR08-e2-1)\n [If the L
+          bit is clear and the privilege mode of the access is M, the access succeeds]\n
+          \nFTR02-b1\n[the lowest-numbered PMP CSRs must be implemented first (QUESTION:
+          does it mean programmed first)]\n\nTST12-3x(group) => FTR01-f\n  [PMP check
+          on store, store-conditional, or AMO instruction where effective privilege
+          mode is M:\n    - choose a data writable pmp region and address range\n\
+          \    - choose only one PMP entry (i) ([FTR02-b1]: maybe mandatorily the
+          1st one)\n    - if possible, the PMP entry number is a configurable parameter\n\
+          \    - choose pmpcfg(i).A=NA4\n    - single access data store in M mode
+          when the bit mstatus.MPRV=0]\n  [create scenarios where PMP entries with
+          A=2 (NA4) and with/without matching permissions\n    - check only NA4 defined
+          addresses are matching]\nTST12-33 (LOW-PRIO)\n[with L=0 => FTR08-e2-1 (refers
+          to  FTR09-d1)\n  - configure the PMP entry with write permissions for the
+          PMP region\n  - execute a store, store-conditional, or AMO instruction to
+          outside all PMP defined regions\n  - check no access-fault exception] //TODO:
+          CHECK IF M-MODE ALLOWED"
+- 015_store_L1_W1_addr_hit: !Subfeature
+    name: 015_store_L1_W1_addr_hit
+    tag: VP_PMP_F012_S034
+    next_elt_id: 1
+    display_order: 15
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F012_S034_I000
+        description: "{Page 56 Volume II: RISC-V Privileged Architectures V20211203}\n
+          PMP checks may additionally apply to M-mode accesses, in which case the
+          PMP registers themselves are locked, so that even M-mode software cannot
+          change them until the hart is reset\n\n{Page 60 Section \"Locking and Privilege
+          Mode\" Volume II: RISC-V Privileged Architectures V20211203}\nWhen the L
+          bit is set, these permissions are enforced for all privilege modes\n\n{Page
+          60 Section \"Priority and Matching Logic\" Volume II: RISC-V Privileged
+          Architectures V20211203}\nif the L bit is set, then the access succeeds
+          only if the R, W, or X bit corresponding to the access type is set"
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "M mode single access store, store-conditional, or AMO instruction
+          inside defined NA4 address range with write permissions and with L=1\n \
+          \   - choose a data writable pmp region and address range\n    - choose
+          only one PMP entry (i)\n\nCONFIGURATION\n    - pmpcfg(i): A=NA4, W=1, L=1,
+          X/R:random\n    - pmpaddr(i): NA4 address range\n    - mstatus.MPRV=0\n\n\
+          ACCESS\n    - execute a store, store-conditional, or AMO instruction to
+          that region (with exact address-matching)\n\nCHECK\n    - check no access-fault
+          exception\n\nREUSABILITY\n    - if possible, the PMP entry number (i) is
+          a configurable parameter\n    - if possible, the PMP entry lock (L) is a
+          configurable parameter\n    - if possible, the PMP entry permissions (R,W,X)
+          are configurable parameters\n    - if possible, the PMP entry adress-matching
+          mode (A) is a configurable parameter\n    - if possible, the PMP entry address
+          range (pmpaddr) is a configurable parameter\n    - if possible, the PMP
+          entry associated access address is a configurable parameter\n    - so a
+          single CONFIGURATION function and a single ACCESS function can be reused
+          and combined"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<<Since G=1 the NA4 mode is not selectable>>\n\n<< link to the
+          old pmp_verif_plan.txt and pmp_verif_plan_features.txt files (not up-to-date)
+          : reading below not mandatory but may help for better understanding >>\n
+          \nFTR01-f (refers to FTR08-e1)\n[PMP checks may additionally apply to M-mode
+          accesses, in which case the PMP registers themselves are locked, so that
+          even M-mode software cannot change them until the hart is reset]\n \nFTR08-e1
+          (refers to FTR01-f) (refers to FTR09-d2-1)\n[When the L bit is set, these
+          permissions are enforced for all privilege modes]\nFTR09-d2-1 (refers to
+          FTR08-e1) (refers to FTR01-f)\n[if the L bit is set, then the access succeeds
+          only if the R, W, or X bit corresponding to the access type is set]\n\n
+          FTR02-b1\n[the lowest-numbered PMP CSRs must be implemented first (QUESTION:
+          does it mean programmed first)]\n\nTST12-3x(group) => FTR01-f\n  [PMP check
+          on store, store-conditional, or AMO instruction where effective privilege
+          mode is M:\n    - choose a data writable pmp region and address range\n\
+          \    - choose only one PMP entry (i) ([FTR02-b1]: maybe mandatorily the
+          1st one)\n    - if possible, the PMP entry number is a configurable parameter\n\
+          \    - choose pmpcfg(i).A=NA4\n    - single access data store in M mode
+          when the bit mstatus.MPRV=0]\n  [create scenarios where PMP entries with
+          A=2 (NA4) and with/without matching permissions\n    - check only NA4 defined
+          addresses are matching]\nTST12-34 (HIGH-PRIO)\n[with L=1 => FTR08-e1 (refers
+          to FTR01-f) (refers to FTR09-d2-1),\n  - configure the PMP entry with write
+          permissions for the PMP region\n  - execute a store, store-conditional,
+          or AMO instruction to that region (with exact address-matching)\n  - check
+          no access-fault exception]"
+- 016_store_L1_W0_addr_hit: !Subfeature
+    name: 016_store_L1_W0_addr_hit
+    tag: VP_PMP_F012_S035
+    next_elt_id: 1
+    display_order: 16
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F012_S035_I000
+        description: "{Page 56 Volume II: RISC-V Privileged Architectures V20211203}\n
+          PMP checks may additionally apply to M-mode accesses, in which case the
+          PMP registers themselves are locked, so that even M-mode software cannot
+          change them until the hart is reset\n\n{Page 60 Section \"Locking and Privilege
+          Mode\" Volume II: RISC-V Privileged Architectures V20211203}\nWhen the L
+          bit is set, these permissions are enforced for all privilege modes\n\n{Page
+          60 Section \"Priority and Matching Logic\" Volume II: RISC-V Privileged
+          Architectures V20211203}\nif the L bit is set, then the access succeeds
+          only if the R, W, or X bit corresponding to the access type is set\n\n{Page
+          58 Volume II: RISC-V Privileged Architectures V20211203}\nAttempting to
+          execute a store, store-conditional, or AMO instruction which accesses a
+          physical address within a PMP region without write permissions raises a
+          store access-fault exception"
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "M mode single access store, store-conditional, or AMO instruction
+          inside defined NA4 address range without write permissions and with L=1\n\
+          \    - choose a data writable pmp region and address range\n    - choose
+          only one PMP entry (i)\n\nCONFIGURATION\n    - pmpcfg(i): A=NA4, W=0, L=1,
+          X/R:random\n    - pmpaddr(i): NA4 address range\n    - mstatus.MPRV=0\n\n\
+          ACCESS\n    - execute a store, store-conditional, or AMO instruction to
+          that region (with exact address-matching)\n\nCHECK\n    - check store access-fault
+          exception raised\n\nREUSABILITY\n    - if possible, the PMP entry number
+          (i) is a configurable parameter\n    - if possible, the PMP entry lock (L)
+          is a configurable parameter\n    - if possible, the PMP entry permissions
+          (R,W,X) are configurable parameters\n    - if possible, the PMP entry adress-matching
+          mode (A) is a configurable parameter\n    - if possible, the PMP entry address
+          range (pmpaddr) is a configurable parameter\n    - if possible, the PMP
+          entry associated access address is a configurable parameter\n    - so a
+          single CONFIGURATION function and a single ACCESS function can be reused
+          and combined"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<<Since G=1 the NA4 mode is not selectable>>\n\n<< link to the
+          old pmp_verif_plan.txt and pmp_verif_plan_features.txt files (not up-to-date)
+          : reading below not mandatory but may help for better understanding >>\n
+          \nFTR01-f (refers to FTR08-e1)\n[PMP checks may additionally apply to M-mode
+          accesses, in which case the PMP registers themselves are locked, so that
+          even M-mode software cannot change them until the hart is reset]\n \nFTR08-e1
+          (refers to FTR01-f) (refers to FTR09-d2-1)\n[When the L bit is set, these
+          permissions are enforced for all privilege modes]\nFTR09-d2-1 (refers to
+          FTR08-e1) (refers to FTR01-f)\n[if the L bit is set, then the access succeeds
+          only if the R, W, or X bit corresponding to the access type is set]\n\n
+          FTR04-d\n[Attempting to execute a store, store-conditional, or AMO instruction
+          which accesses a physical address within a PMP region without write permissions
+          raises a store access-fault exception]\n\nFTR02-b1\n[the lowest-numbered
+          PMP CSRs must be implemented first (QUESTION: does it mean programmed first)]\n
+          \n TST12-3x(group) => FTR01-f\n  [PMP check on store, store-conditional,
+          or AMO instruction where effective privilege mode is M:\n    - choose a
+          data writable pmp region and address range\n    - choose only one PMP entry
+          (i) ([FTR02-b1]: maybe mandatorily the 1st one)\n    - if possible, the
+          PMP entry number is a configurable parameter\n    - choose pmpcfg(i).A=NA4\n\
+          \    - single access data store in M mode when the bit mstatus.MPRV=0]\n\
+          \  [create scenarios where PMP entries with A=2 (NA4) and with/without matching
+          permissions\n    - check only NA4 defined addresses are matching]\nTST12-35
+          (MEDIUM-PRIO)\n[with L=1 => FTR08-e1 (refers to FTR01-f) (refers to FTR09-d2-1),\n\
+          \  - configure the PMP entry without write permissions for the PMP region\n\
+          \  - execute a store, store-conditional, or AMO instruction to that region
+          (with exact address-matching)\n  - check store access-fault exception raised
+          => FTR04-d]"
+- 017_store_L1_W1_addr_miss: !Subfeature
+    name: 017_store_L1_W1_addr_miss
+    tag: VP_PMP_F012_S036
+    next_elt_id: 1
+    display_order: 17
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F012_S036_I000
+        description: "{Page 56 Volume II: RISC-V Privileged Architectures V20211203}\n
+          PMP checks may additionally apply to M-mode accesses, in which case the
+          PMP registers themselves are locked, so that even M-mode software cannot
+          change them until the hart is reset\n\n{Page 60 Section \"Locking and Privilege
+          Mode\" Volume II: RISC-V Privileged Architectures V20211203}\nWhen the L
+          bit is set, these permissions are enforced for all privilege modes\n\n{Page
+          60 Section \"Priority and Matching Logic\" Volume II: RISC-V Privileged
+          Architectures V20211203}\nif the L bit is set, then the access succeeds
+          only if the R, W, or X bit corresponding to the access type is set"
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "M mode single access store, store-conditional, or AMO instruction
+          from outside defined NA4 address range with write permissions and with L=1\n\
+          \    - choose a data writable pmp region and address range\n    - choose
+          only one PMP entry (i)\n\nCONFIGURATION\n    - pmpcfg(i): A=NA4, W=1, L=1,
+          X/R:random\n    - pmpaddr(i): NA4 address range\n    - mstatus.MPRV=0\n\n\
+          ACCESS\n    - execute a store, store-conditional, or AMO instruction to
+          outside all PMP defined regions\n\nCHECK\n    - check no access-fault exception
+          (Feature: \"no cfg matching\")\n\nREUSABILITY\n    - if possible, the PMP
+          entry number (i) is a configurable parameter\n    - if possible, the PMP
+          entry lock (L) is a configurable parameter\n    - if possible, the PMP entry
+          permissions (R,W,X) are configurable parameters\n    - if possible, the
+          PMP entry adress-matching mode (A) is a configurable parameter\n    - if
+          possible, the PMP entry address range (pmpaddr) is a configurable parameter\n\
+          \    - if possible, the PMP entry associated access address is a configurable
+          parameter\n    - so a single CONFIGURATION function and a single ACCESS
+          function can be reused and combined"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<<Since G=1 the NA4 mode is not selectable>>\n\n<< link to the
+          old pmp_verif_plan.txt and pmp_verif_plan_features.txt files (not up-to-date)
+          : reading below not mandatory but may help for better understanding >>\n
+          \nFTR01-f (refers to FTR08-e1)\n[PMP checks may additionally apply to M-mode
+          accesses, in which case the PMP registers themselves are locked, so that
+          even M-mode software cannot change them until the hart is reset]\n \nFTR08-e1
+          (refers to FTR01-f) (refers to FTR09-d2-1)\n[When the L bit is set, these
+          permissions are enforced for all privilege modes]\nFTR09-d2-1 (refers to
+          FTR08-e1) (refers to FTR01-f)\n[if the L bit is set, then the access succeeds
+          only if the R, W, or X bit corresponding to the access type is set]\n\n
+          FTR02-b1\n[the lowest-numbered PMP CSRs must be implemented first (QUESTION:
+          does it mean programmed first)]\n\nTST12-3x(group) => FTR01-f\n  [PMP check
+          on store, store-conditional, or AMO instruction where effective privilege
+          mode is M:\n    - choose a data writable pmp region and address range\n\
+          \    - choose only one PMP entry (i) ([FTR02-b1]: maybe mandatorily the
+          1st one)\n    - if possible, the PMP entry number is a configurable parameter\n\
+          \    - choose pmpcfg(i).A=NA4\n    - single access data store in M mode
+          when the bit mstatus.MPRV=0]\n  [create scenarios where PMP entries with
+          A=2 (NA4) and with/without matching permissions\n    - check only NA4 defined
+          addresses are matching]\nTST12-36 (HIGH-PRIO)\n[with L=1 => FTR08-e1 (refers
+          to FTR01-f) (refers to FTR09-d2-1),\n  - configure the PMP entry with write
+          permissions for the PMP region\n  - execute a store, store-conditional,
+          or AMO instruction to outside all PMP defined regions\n  - check no access-fault
+          exception] //TODO: CHECK IF M-MODE ALLOWED"
+- 018_load_MPP_L0_R1_addr_hit: !Subfeature
+    name: 018_load_MPP_L0_R1_addr_hit
+    tag: VP_PMP_F012_S041
+    next_elt_id: 1
+    display_order: 18
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F012_S041_I000
+        description: "{Page 56 Volume II: RISC-V Privileged Architectures V20211203}\n
+          PMP checks may additionally apply to M-mode accesses, in which case the
+          PMP registers themselves are locked, so that even M-mode software cannot
+          change them until the hart is reset\n\n{Page 60 Section \"Locking and Privilege
+          Mode\" Volume II: RISC-V Privileged Architectures V20211203}\nWhen the L
+          bit is clear, any M-mode access matching the PMP entry will succeed\n\n
+          {Page 60 Section \"Priority and Matching Logic\" Volume II: RISC-V Privileged
+          Architectures V20211203}\nIf the L bit is clear and the privilege mode of
+          the access is M, the access succeeds"
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "M mode single access load or load-reserved instruction inside
+          defined NA4 address range with read permissions and with L=0\n    - choose
+          a readable pmp region and address range\n    - choose only one PMP entry
+          (i)\n\nCONFIGURATION\n    - pmpcfg(i): A=NA4, R=1, L=0, X/W:random\n   \
+          \ - pmpaddr(i): NA4 address range\n    - mstatus.MPRV=1 and mstatus.MPP
+          contains M (TODO: CHECK IF MAKING SENSE)\n\nACCESS\n    - execute a load
+          or load-reserved instruction from that region (with exact address-matching)\n\
+          \nCHECK\n    - check no access-fault exception\n\nREUSABILITY\n    - if
+          possible, the PMP entry number (i) is a configurable parameter\n    - if
+          possible, the PMP entry lock (L) is a configurable parameter\n    - if possible,
+          the PMP entry permissions (R,W,X) are configurable parameters\n    - if
+          possible, the PMP entry adress-matching mode (A) is a configurable parameter\n\
+          \    - if possible, the PMP entry address range (pmpaddr) is a configurable
+          parameter\n    - if possible, the PMP entry associated access address is
+          a configurable parameter\n    - so a single CONFIGURATION function and a
+          single ACCESS function can be reused and combined"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<<Since G=1 the NA4 mode is not selectable>>\n\n<< link to the
+          old pmp_verif_plan.txt and pmp_verif_plan_features.txt files (not up-to-date)
+          : reading below not mandatory but may help for better understanding >>\n
+          \nFTR01-f (refers to FTR08-e1)\n[PMP checks may additionally apply to M-mode
+          accesses, in which case the PMP registers themselves are locked, so that
+          even M-mode software cannot change them until the hart is reset]\n \nFTR08-e2-1
+          (refers to  FTR09-d1)\n[When the L bit is clear, any M-mode access matching
+          the PMP entry will succeed]\nFTR09-d1 (refers to FTR08-e2-1)\n [If the L
+          bit is clear and the privilege mode of the access is M, the access succeeds]\n
+          \nFTR02-b1\n[the lowest-numbered PMP CSRs must be implemented first (QUESTION:
+          does it mean programmed first)]\n\nTST12-4x(group) => FTR01-f\n  [PMP check
+          on load or load-reserved instruction where effective privilege mode is M:\n\
+          \    - choose a data readable pmp region and address range\n    - choose
+          only one PMP entry (i) ([FTR02-b1]: maybe mandatorily the 1st one)\n   \
+          \ - if possible, the PMP entry number is a configurable parameter\n    -
+          choose pmpcfg(i).A=NA4\n    - single access data load in any mode when the
+          bit mstatus.MPRV=1 and the mstatus.MPP contains M (TODO: CHECK IF MAKING
+          SENSE)]\n  [create scenarios where PMP entries with A=2 (NA4) and with/without
+          matching permissions\n    - check only NA4 defined addresses are matching]\n
+          TST12-41 (LOWEST-PRIO)\n[with L=0 => FTR08-e2-1 (refers to  FTR09-d1)\n\
+          \  - configure the PMP entry with read permissions for the PMP region\n\
+          \  - execute a load or load-reserved instruction from that region (with
+          exact address-matching)\n  - check no access-fault exception]"
+- 019_load_MPP_L0_R0_addr_hit: !Subfeature
+    name: 019_load_MPP_L0_R0_addr_hit
+    tag: VP_PMP_F012_S042
+    next_elt_id: 1
+    display_order: 19
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F012_S042_I000
+        description: "{Page 56 Volume II: RISC-V Privileged Architectures V20211203}\n
+          PMP checks may additionally apply to M-mode accesses, in which case the
+          PMP registers themselves are locked, so that even M-mode software cannot
+          change them until the hart is reset\n\n{Page 60 Section \"Locking and Privilege
+          Mode\" Volume II: RISC-V Privileged Architectures V20211203}\nWhen the L
+          bit is clear, any M-mode access matching the PMP entry will succeed\n\n
+          {Page 60 Section \"Priority and Matching Logic\" Volume II: RISC-V Privileged
+          Architectures V20211203}\nIf the L bit is clear and the privilege mode of
+          the access is M, the access succeeds"
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "M mode single access load or load-reserved instruction inside
+          defined NA4 address range without read permissions and with L=0\n    - choose
+          a readable pmp region and address range\n    - choose only one PMP entry
+          (i)\n\nCONFIGURATION\n    - pmpcfg(i): A=NA4, R=0, L=0, X/W:random\n   \
+          \ - pmpaddr(i): NA4 address range\n    - mstatus.MPRV=1 and mstatus.MPP
+          contains M (TODO: CHECK IF MAKING SENSE)\n\nACCESS\n    - execute a load
+          or load-reserved instruction from that region (with exact address-matching)\n\
+          \nCHECK\n    - check no access-fault exception\n\nREUSABILITY\n    - if
+          possible, the PMP entry number (i) is a configurable parameter\n    - if
+          possible, the PMP entry lock (L) is a configurable parameter\n    - if possible,
+          the PMP entry permissions (R,W,X) are configurable parameters\n    - if
+          possible, the PMP entry adress-matching mode (A) is a configurable parameter\n\
+          \    - if possible, the PMP entry address range (pmpaddr) is a configurable
+          parameter\n    - if possible, the PMP entry associated access address is
+          a configurable parameter\n    - so a single CONFIGURATION function and a
+          single ACCESS function can be reused and combined"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<<Since G=1 the NA4 mode is not selectable>>\n\n<< link to the
+          old pmp_verif_plan.txt and pmp_verif_plan_features.txt files (not up-to-date)
+          : reading below not mandatory but may help for better understanding >>\n
+          \nFTR01-f (refers to FTR08-e1)\n[PMP checks may additionally apply to M-mode
+          accesses, in which case the PMP registers themselves are locked, so that
+          even M-mode software cannot change them until the hart is reset]\n \nFTR08-e2-1
+          (refers to  FTR09-d1)\n[When the L bit is clear, any M-mode access matching
+          the PMP entry will succeed]\nFTR09-d1 (refers to FTR08-e2-1)\n [If the L
+          bit is clear and the privilege mode of the access is M, the access succeeds]\n
+          \nFTR02-b1\n[the lowest-numbered PMP CSRs must be implemented first (QUESTION:
+          does it mean programmed first)]\n\nTST12-4x(group) => FTR01-f\n  [PMP check
+          on load or load-reserved instruction where effective privilege mode is M:\n\
+          \    - choose a data readable pmp region and address range\n    - choose
+          only one PMP entry (i) ([FTR02-b1]: maybe mandatorily the 1st one)\n   \
+          \ - if possible, the PMP entry number is a configurable parameter\n    -
+          choose pmpcfg(i).A=NA4\n    - single access data load in any mode when the
+          bit mstatus.MPRV=1 and the mstatus.MPP contains M (TODO: CHECK IF MAKING
+          SENSE)]\n  [create scenarios where PMP entries with A=2 (NA4) and with/without
+          matching permissions\n    - check only NA4 defined addresses are matching]\n
+          TST12-42 (LOWEST-PRIO)\n[with L=0 => FTR08-e2-1 (refers to  FTR09-d1)\n\
+          \  - configure the PMP entry without read permissions for the PMP region\n\
+          \  - execute a load or load-reserved instruction from that region (with
+          exact address-matching)\n  - check no access-fault exception]"
+- 020_load_MPP_L0_R1_addr_miss: !Subfeature
+    name: 020_load_MPP_L0_R1_addr_miss
+    tag: VP_PMP_F012_S043
+    next_elt_id: 1
+    display_order: 20
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F012_S043_I000
+        description: "{Page 56 Volume II: RISC-V Privileged Architectures V20211203}\n
+          PMP checks may additionally apply to M-mode accesses, in which case the
+          PMP registers themselves are locked, so that even M-mode software cannot
+          change them until the hart is reset\n\n{Page 60 Section \"Locking and Privilege
+          Mode\" Volume II: RISC-V Privileged Architectures V20211203}\nWhen the L
+          bit is clear, any M-mode access matching the PMP entry will succeed\n\n
+          {Page 60 Section \"Priority and Matching Logic\" Volume II: RISC-V Privileged
+          Architectures V20211203}\nIf the L bit is clear and the privilege mode of
+          the access is M, the access succeeds"
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "M mode single access load or load-reserved instruction from
+          outside defined NA4 address range with read permissions and with L=0\n \
+          \   - choose a readable pmp region and address range\n    - choose only
+          one PMP entry (i)\n\nCONFIGURATION\n    - pmpcfg(i): A=NA4, R=1, L=0, X/W:random\n\
+          \    - pmpaddr(i): NA4 address range\n    - mstatus.MPRV=1 and mstatus.MPP
+          contains M (TODO: CHECK IF MAKING SENSE)\n\nACCESS\n    - execute a load
+          or load-reserved instruction from outside all PMP defined regions\n\nCHECK\n\
+          \    - check no access-fault exception (Feature: \"no cfg matching\")\n\n\
+          REUSABILITY\n    - if possible, the PMP entry number (i) is a configurable
+          parameter\n    - if possible, the PMP entry lock (L) is a configurable parameter\n\
+          \    - if possible, the PMP entry permissions (R,W,X) are configurable parameters\n\
+          \    - if possible, the PMP entry adress-matching mode (A) is a configurable
+          parameter\n    - if possible, the PMP entry address range (pmpaddr) is a
+          configurable parameter\n    - if possible, the PMP entry associated access
+          address is a configurable parameter\n    - so a single CONFIGURATION function
+          and a single ACCESS function can be reused and combined"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<<Since G=1 the NA4 mode is not selectable>>\n\n<< link to the
+          old pmp_verif_plan.txt and pmp_verif_plan_features.txt files (not up-to-date)
+          : reading below not mandatory but may help for better understanding >>\n
+          \nFTR01-f (refers to FTR08-e1)\n[PMP checks may additionally apply to M-mode
+          accesses, in which case the PMP registers themselves are locked, so that
+          even M-mode software cannot change them until the hart is reset]\n \nFTR08-e2-1
+          (refers to  FTR09-d1)\n[When the L bit is clear, any M-mode access matching
+          the PMP entry will succeed]\nFTR09-d1 (refers to FTR08-e2-1)\n [If the L
+          bit is clear and the privilege mode of the access is M, the access succeeds]\n
+          \nFTR02-b1\n[the lowest-numbered PMP CSRs must be implemented first (QUESTION:
+          does it mean programmed first)]\n\nTST12-4x(group) => FTR01-f\n  [PMP check
+          on load or load-reserved instruction where effective privilege mode is M:\n\
+          \    - choose a data readable pmp region and address range\n    - choose
+          only one PMP entry (i) ([FTR02-b1]: maybe mandatorily the 1st one)\n   \
+          \ - if possible, the PMP entry number is a configurable parameter\n    -
+          choose pmpcfg(i).A=NA4\n    - single access data load in any mode when the
+          bit mstatus.MPRV=1 and the mstatus.MPP contains M (TODO: CHECK IF MAKING
+          SENSE)]\n  [create scenarios where PMP entries with A=2 (NA4) and with/without
+          matching permissions\n    - check only NA4 defined addresses are matching]\n
+          TST12-43 (LOWEST-PRIO)\n[with L=0 => FTR08-e2-1 (refers to  FTR09-d1)\n\
+          \  - configure the PMP entry with read permissions for the PMP region\n\
+          \  - execute a load or load-reserved instruction from outside all PMP defined
+          regions\n  - check no access-fault exception] //TODO: CHECK IF M-MODE ALLOWED"
+- 021_load_MPP_L1_R1_addr_hit: !Subfeature
+    name: 021_load_MPP_L1_R1_addr_hit
+    tag: VP_PMP_F012_S044
+    next_elt_id: 1
+    display_order: 21
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F012_S044_I000
+        description: "{Page 56 Volume II: RISC-V Privileged Architectures V20211203}\n
+          PMP checks may additionally apply to M-mode accesses, in which case the
+          PMP registers themselves are locked, so that even M-mode software cannot
+          change them until the hart is reset\n\n{Page 60 Section \"Locking and Privilege
+          Mode\" Volume II: RISC-V Privileged Architectures V20211203}\nWhen the L
+          bit is set, these permissions are enforced for all privilege modes\n\n{Page
+          60 Section \"Priority and Matching Logic\" Volume II: RISC-V Privileged
+          Architectures V20211203}\nif the L bit is set, then the access succeeds
+          only if the R, W, or X bit corresponding to the access type is set"
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "M mode single access load or load-reserved instruction inside
+          defined NA4 address range with read permissions and with L=1\n    - choose
+          a readable pmp region and address range\n    - choose only one PMP entry
+          (i)\n\nCONFIGURATION\n    - pmpcfg(i): A=NA4, R=1, L=1, X/W:random\n   \
+          \ - pmpaddr(i): NA4 address range\n    - mstatus.MPRV=1 and mstatus.MPP
+          contains M (TODO: CHECK IF MAKING SENSE)\n\nACCESS\n    - execute a load
+          or load-reserved instruction from that region (with exact address-matching)\n\
+          \nCHECK\n    - check no access-fault exception\n\nREUSABILITY\n    - if
+          possible, the PMP entry number (i) is a configurable parameter\n    - if
+          possible, the PMP entry lock (L) is a configurable parameter\n    - if possible,
+          the PMP entry permissions (R,W,X) are configurable parameters\n    - if
+          possible, the PMP entry adress-matching mode (A) is a configurable parameter\n\
+          \    - if possible, the PMP entry address range (pmpaddr) is a configurable
+          parameter\n    - if possible, the PMP entry associated access address is
+          a configurable parameter\n    - so a single CONFIGURATION function and a
+          single ACCESS function can be reused and combined"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<<Since G=1 the NA4 mode is not selectable>>\n\n<< link to the
+          old pmp_verif_plan.txt and pmp_verif_plan_features.txt files (not up-to-date)
+          : reading below not mandatory but may help for better understanding >>\n
+          \nFTR01-f (refers to FTR08-e1)\n[PMP checks may additionally apply to M-mode
+          accesses, in which case the PMP registers themselves are locked, so that
+          even M-mode software cannot change them until the hart is reset]\n \nFTR08-e1
+          (refers to FTR01-f) (refers to FTR09-d2-1)\n[When the L bit is set, these
+          permissions are enforced for all privilege modes]\nFTR09-d2-1 (refers to
+          FTR08-e1) (refers to FTR01-f)\n[if the L bit is set, then the access succeeds
+          only if the R, W, or X bit corresponding to the access type is set]\n\n
+          FTR02-b1\n[the lowest-numbered PMP CSRs must be implemented first (QUESTION:
+          does it mean programmed first)]\n\nTST12-4x(group) => FTR01-f\n  [PMP check
+          on load or load-reserved instruction where effective privilege mode is M:\n\
+          \    - choose a data readable pmp region and address range\n    - choose
+          only one PMP entry (i) ([FTR02-b1]: maybe mandatorily the 1st one)\n   \
+          \ - if possible, the PMP entry number is a configurable parameter\n    -
+          choose pmpcfg(i).A=NA4\n    - single access data load in any mode when the
+          bit mstatus.MPRV=1 and the mstatus.MPP contains M (TODO: CHECK IF MAKING
+          SENSE)]\n  [create scenarios where PMP entries with A=2 (NA4) and with/without
+          matching permissions\n    - check only NA4 defined addresses are matching]\n
+          TST12-44 (LOWEST-PRIO)\n [with L=1 => FTR08-e1 (refers to FTR01-f) (refers
+          to FTR09-d2-1),\n  - configure the PMP entry with read permissions for the
+          PMP region\n  - execute a load or load-reserved instruction from that region
+          (with exact address-matching)\n  - check no access-fault exception]"
+- 022_load_MPP_L1_R0_addr_hit: !Subfeature
+    name: 022_load_MPP_L1_R0_addr_hit
+    tag: VP_PMP_F012_S045
+    next_elt_id: 1
+    display_order: 22
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F012_S045_I000
+        description: "{Page 56 Volume II: RISC-V Privileged Architectures V20211203}\n
+          PMP checks may additionally apply to M-mode accesses, in which case the
+          PMP registers themselves are locked, so that even M-mode software cannot
+          change them until the hart is reset\n\n{Page 60 Section \"Locking and Privilege
+          Mode\" Volume II: RISC-V Privileged Architectures V20211203}\nWhen the L
+          bit is set, these permissions are enforced for all privilege modes\n\n{Page
+          60 Section \"Priority and Matching Logic\" Volume II: RISC-V Privileged
+          Architectures V20211203}\nif the L bit is set, then the access succeeds
+          only if the R, W, or X bit corresponding to the access type is set\n\n{Page
+          58 Volume II: RISC-V Privileged Architectures V20211203}\nAttempting to
+          execute a load or load-reserved instruction which accesses a physical address
+          within a PMP region without read permissions raises a load access-fault
+          exception"
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "M mode single access load or load-reserved instruction inside
+          defined NA4 address range without read permissions and with L=1\n    - choose
+          a readable pmp region and address range\n    - choose only one PMP entry
+          (i)\n\nCONFIGURATION\n    - pmpcfg(i): A=NA4, R=0, L=1, X/W:random\n   \
+          \ - pmpaddr(i): NA4 address range\n    - mstatus.MPRV=1 and mstatus.MPP
+          contains M (TODO: CHECK IF MAKING SENSE)\n\nACCESS\n    - execute a load
+          or load-reserved instruction from that region (with exact address-matching)\n\
+          \nCHECK\n    - check load access-fault exception raised\n\nREUSABILITY\n\
+          \    - if possible, the PMP entry number (i) is a configurable parameter\n\
+          \    - if possible, the PMP entry lock (L) is a configurable parameter\n\
+          \    - if possible, the PMP entry permissions (R,W,X) are configurable parameters\n\
+          \    - if possible, the PMP entry adress-matching mode (A) is a configurable
+          parameter\n    - if possible, the PMP entry address range (pmpaddr) is a
+          configurable parameter\n    - if possible, the PMP entry associated access
+          address is a configurable parameter\n    - so a single CONFIGURATION function
+          and a single ACCESS function can be reused and combined"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<<Since G=1 the NA4 mode is not selectable>>\n\n<< link to the
+          old pmp_verif_plan.txt and pmp_verif_plan_features.txt files (not up-to-date)
+          : reading below not mandatory but may help for better understanding >>\n
+          \nFTR01-f (refers to FTR08-e1)\n[PMP checks may additionally apply to M-mode
+          accesses, in which case the PMP registers themselves are locked, so that
+          even M-mode software cannot change them until the hart is reset]\n \nFTR08-e1
+          (refers to FTR01-f) (refers to FTR09-d2-1)\n[When the L bit is set, these
+          permissions are enforced for all privilege modes]\nFTR09-d2-1 (refers to
+          FTR08-e1) (refers to FTR01-f)\n[if the L bit is set, then the access succeeds
+          only if the R, W, or X bit corresponding to the access type is set]\n\n
+          FTR04-c\n[Attempting to execute a load or load-reserved instruction which
+          accesses a physical address within a PMP region without read permissions
+          raises a load access-fault exception]\n\nFTR02-b1\n[the lowest-numbered
+          PMP CSRs must be implemented first (QUESTION: does it mean programmed first)]\n
+          \nTST12-4x(group) => FTR01-f\n  [PMP check on load or load-reserved instruction
+          where effective privilege mode is M:\n    - choose a data readable pmp region
+          and address range\n    - choose only one PMP entry (i) ([FTR02-b1]: maybe
+          mandatorily the 1st one)\n    - if possible, the PMP entry number is a configurable
+          parameter\n    - choose pmpcfg(i).A=NA4\n    - single access data load in
+          any mode when the bit mstatus.MPRV=1 and the mstatus.MPP contains M (TODO:
+          CHECK IF MAKING SENSE)]\n  [create scenarios where PMP entries with A=2
+          (NA4) and with/without matching permissions\n    - check only NA4 defined
+          addresses are matching]\nTST12-45 (LOWEST-PRIO)\n[with L=1 => FTR08-e1 (refers
+          to FTR01-f) (refers to FTR09-d2-1),\n  - configure the PMP entry without
+          read permissions for the PMP region\n  - execute a load or load-reserved
+          instruction from that region (with exact address-matching)\n  - check load
+          access-fault exception raised => FTR04-c]"
+- 023_load_MPP_L1_R1_addr_miss: !Subfeature
+    name: 023_load_MPP_L1_R1_addr_miss
+    tag: VP_PMP_F012_S046
+    next_elt_id: 1
+    display_order: 23
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F012_S046_I000
+        description: "{Page 56 Volume II: RISC-V Privileged Architectures V20211203}\n
+          PMP checks may additionally apply to M-mode accesses, in which case the
+          PMP registers themselves are locked, so that even M-mode software cannot
+          change them until the hart is reset\n\n{Page 60 Section \"Locking and Privilege
+          Mode\" Volume II: RISC-V Privileged Architectures V20211203}\nWhen the L
+          bit is set, these permissions are enforced for all privilege modes\n\n{Page
+          60 Section \"Priority and Matching Logic\" Volume II: RISC-V Privileged
+          Architectures V20211203}\nif the L bit is set, then the access succeeds
+          only if the R, W, or X bit corresponding to the access type is set"
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "M mode single access load or load-reserved instruction from
+          outside defined NA4 address range with read permissions and with L=1\n \
+          \   - choose a readable pmp region and address range\n    - choose only
+          one PMP entry (i)\n\nCONFIGURATION\n    - pmpcfg(i): A=NA4, R=1, L=1, X/W:random\n\
+          \    - pmpaddr(i): NA4 address range\n    - mstatus.MPRV=1 and mstatus.MPP
+          contains M (TODO: CHECK IF MAKING SENSE)\n\nACCESS\n    - execute a load
+          or load-reserved instruction from outside all PMP defined regions\n\nCHECK\n\
+          \    - check no access-fault exception (Feature: \"no cfg matching\")\n\n\
+          REUSABILITY\n    - if possible, the PMP entry number (i) is a configurable
+          parameter\n    - if possible, the PMP entry lock (L) is a configurable parameter\n\
+          \    - if possible, the PMP entry permissions (R,W,X) are configurable parameters\n\
+          \    - if possible, the PMP entry adress-matching mode (A) is a configurable
+          parameter\n    - if possible, the PMP entry address range (pmpaddr) is a
+          configurable parameter\n    - if possible, the PMP entry associated access
+          address is a configurable parameter\n    - so a single CONFIGURATION function
+          and a single ACCESS function can be reused and combined"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<<Since G=1 the NA4 mode is not selectable>>\n\n<< link to the
+          old pmp_verif_plan.txt and pmp_verif_plan_features.txt files (not up-to-date)
+          : reading below not mandatory but may help for better understanding >>\n
+          \nFTR01-f (refers to FTR08-e1)\n[PMP checks may additionally apply to M-mode
+          accesses, in which case the PMP registers themselves are locked, so that
+          even M-mode software cannot change them until the hart is reset]\n \nFTR08-e1
+          (refers to FTR01-f) (refers to FTR09-d2-1)\n[When the L bit is set, these
+          permissions are enforced for all privilege modes]\nFTR09-d2-1 (refers to
+          FTR08-e1) (refers to FTR01-f)\n[if the L bit is set, then the access succeeds
+          only if the R, W, or X bit corresponding to the access type is set]\n\n
+          FTR02-b1\n[the lowest-numbered PMP CSRs must be implemented first (QUESTION:
+          does it mean programmed first)]\n\nTST12-4x(group) => FTR01-f\n  [PMP check
+          on load or load-reserved instruction where effective privilege mode is M:\n\
+          \    - choose a data readable pmp region and address range\n    - choose
+          only one PMP entry (i) ([FTR02-b1]: maybe mandatorily the 1st one)\n   \
+          \ - if possible, the PMP entry number is a configurable parameter\n    -
+          choose pmpcfg(i).A=NA4\n    - single access data load in any mode when the
+          bit mstatus.MPRV=1 and the mstatus.MPP contains M (TODO: CHECK IF MAKING
+          SENSE)]\n  [create scenarios where PMP entries with A=2 (NA4) and with/without
+          matching permissions\n    - check only NA4 defined addresses are matching]\n
+          TST12-46 (LOWEST-PRIO)\n [with L=1 => FTR08-e1 (refers to FTR01-f) (refers
+          to FTR09-d2-1),\n  - configure the PMP entry with read permissions for the
+          PMP region\n  - execute a load or load-reserved instruction from outside
+          all PMP defined regions\n  - check no access-fault exception] //TODO: CHECK
+          IF M-MODE ALLOWED"
+- 024_store_MPP_L0_W1_addr_hit: !Subfeature
+    name: 024_store_MPP_L0_W1_addr_hit
+    tag: VP_PMP_F012_S051
+    next_elt_id: 1
+    display_order: 24
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F012_S051_I000
+        description: "{Page 56 Volume II: RISC-V Privileged Architectures V20211203}\n
+          PMP checks may additionally apply to M-mode accesses, in which case the
+          PMP registers themselves are locked, so that even M-mode software cannot
+          change them until the hart is reset\n\n{Page 60 Section \"Locking and Privilege
+          Mode\" Volume II: RISC-V Privileged Architectures V20211203}\nWhen the L
+          bit is clear, any M-mode access matching the PMP entry will succeed\n\n
+          {Page 60 Section \"Priority and Matching Logic\" Volume II: RISC-V Privileged
+          Architectures V20211203}\nIf the L bit is clear and the privilege mode of
+          the access is M, the access succeeds"
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "M mode single access store, store-conditional, or AMO instruction
+          inside defined NA4 address range with write permissions and with L=0\n \
+          \   - choose a data writable pmp region and address range\n    - choose
+          only one PMP entry (i)\n\nCONFIGURATION\n    - pmpcfg(i): A=NA4, W=1, L=0,
+          X/R:random\n    - pmpaddr(i): NA4 address range\n    - mstatus.MPRV=1 and
+          mstatus.MPP contains M (TODO: CHECK IF MAKING SENSE)\n\nACCESS\n    - execute
+          a store, store-conditional, or AMO instruction to that region (with exact
+          address-matching)\n\nCHECK\n    - check no access-fault exception\n\nREUSABILITY\n\
+          \    - if possible, the PMP entry number (i) is a configurable parameter\n\
+          \    - if possible, the PMP entry lock (L) is a configurable parameter\n\
+          \    - if possible, the PMP entry permissions (R,W,X) are configurable parameters\n\
+          \    - if possible, the PMP entry adress-matching mode (A) is a configurable
+          parameter\n    - if possible, the PMP entry address range (pmpaddr) is a
+          configurable parameter\n    - if possible, the PMP entry associated access
+          address is a configurable parameter\n    - so a single CONFIGURATION function
+          and a single ACCESS function can be reused and combined"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<<Since G=1 the NA4 mode is not selectable>>\n\n<< link to the
+          old pmp_verif_plan.txt and pmp_verif_plan_features.txt files (not up-to-date)
+          : reading below not mandatory but may help for better understanding >>\n
+          \nFTR01-f (refers to FTR08-e1)\n[PMP checks may additionally apply to M-mode
+          accesses, in which case the PMP registers themselves are locked, so that
+          even M-mode software cannot change them until the hart is reset]\n \nFTR08-e2-1
+          (refers to  FTR09-d1)\n[When the L bit is clear, any M-mode access matching
+          the PMP entry will succeed]\nFTR09-d1 (refers to FTR08-e2-1)\n [If the L
+          bit is clear and the privilege mode of the access is M, the access succeeds]\n
+          \nFTR02-b1\n[the lowest-numbered PMP CSRs must be implemented first (QUESTION:
+          does it mean programmed first)]\n\nTST12-5x(group) => FTR01-f\n  [PMP check
+          on store, store-conditional, or AMO instruction where effective privilege
+          mode is M:\n    - choose a data writable pmp region and address range\n\
+          \    - choose only one PMP entry (i) ([FTR02-b1]: maybe mandatorily the
+          1st one)\n    - if possible, the PMP entry number is a configurable parameter\n\
+          \    - choose pmpcfg(i).A=NA4\n    - single access data store in any mode
+          when the bit mstatus.MPRV=1 and the mstatus.MPP contains M (TODO: CHECK
+          IF MAKING SENSE)]\n  [create scenarios where PMP entries with A=2 (NA4)
+          and with/without matching permissions\n    - check only NA4 defined addresses
+          are matching]\nTST12-51 (LOWEST-PRIO)\n[with L=0 => FTR08-e2-1 (refers to\
+          \  FTR09-d1)\n  - configure the PMP entry with write permissions for the
+          PMP region\n  - execute a store, store-conditional, or AMO instruction to
+          that region (with exact address-matching)\n  - check no access-fault exception]"
+- 025_store_MPP_L0_W0_addr_hit: !Subfeature
+    name: 025_store_MPP_L0_W0_addr_hit
+    tag: VP_PMP_F012_S052
+    next_elt_id: 1
+    display_order: 25
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F012_S052_I000
+        description: "{Page 56 Volume II: RISC-V Privileged Architectures V20211203}\n
+          PMP checks may additionally apply to M-mode accesses, in which case the
+          PMP registers themselves are locked, so that even M-mode software cannot
+          change them until the hart is reset\n\n{Page 60 Section \"Locking and Privilege
+          Mode\" Volume II: RISC-V Privileged Architectures V20211203}\nWhen the L
+          bit is clear, any M-mode access matching the PMP entry will succeed\n\n
+          {Page 60 Section \"Priority and Matching Logic\" Volume II: RISC-V Privileged
+          Architectures V20211203}\nIf the L bit is clear and the privilege mode of
+          the access is M, the access succeeds"
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "M mode single access store, store-conditional, or AMO instruction
+          inside defined NA4 address range without write permissions and with L=0\n\
+          \    - choose a data writable pmp region and address range\n    - choose
+          only one PMP entry (i)\n\nCONFIGURATION\n    - pmpcfg(i): A=NA4, W=0, L=0,
+          X/R:random\n    - pmpaddr(i): NA4 address range\n    - mstatus.MPRV=1 and
+          mstatus.MPP contains M (TODO: CHECK IF MAKING SENSE)\n\nACCESS\n    - execute
+          a store, store-conditional, or AMO instruction to that region (with exact
+          address-matching)\n\nCHECK\n    - check no access-fault exception\n\nREUSABILITY\n\
+          \    - if possible, the PMP entry number (i) is a configurable parameter\n\
+          \    - if possible, the PMP entry lock (L) is a configurable parameter\n\
+          \    - if possible, the PMP entry permissions (R,W,X) are configurable parameters\n\
+          \    - if possible, the PMP entry adress-matching mode (A) is a configurable
+          parameter\n    - if possible, the PMP entry address range (pmpaddr) is a
+          configurable parameter\n    - if possible, the PMP entry associated access
+          address is a configurable parameter\n    - so a single CONFIGURATION function
+          and a single ACCESS function can be reused and combined"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<<Since G=1 the NA4 mode is not selectable>>\n\n<< link to the
+          old pmp_verif_plan.txt and pmp_verif_plan_features.txt files (not up-to-date)
+          : reading below not mandatory but may help for better understanding >>\n
+          \nFTR01-f (refers to FTR08-e1)\n[PMP checks may additionally apply to M-mode
+          accesses, in which case the PMP registers themselves are locked, so that
+          even M-mode software cannot change them until the hart is reset]\n \nFTR08-e2-1
+          (refers to  FTR09-d1)\n[When the L bit is clear, any M-mode access matching
+          the PMP entry will succeed]\nFTR09-d1 (refers to FTR08-e2-1)\n [If the L
+          bit is clear and the privilege mode of the access is M, the access succeeds]\n
+          \nFTR02-b1\n[the lowest-numbered PMP CSRs must be implemented first (QUESTION:
+          does it mean programmed first)]\n\nTST12-5x(group) => FTR01-f\n  [PMP check
+          on store, store-conditional, or AMO instruction where effective privilege
+          mode is M:\n    - choose a data writable pmp region and address range\n\
+          \    - choose only one PMP entry (i) ([FTR02-b1]: maybe mandatorily the
+          1st one)\n    - if possible, the PMP entry number is a configurable parameter\n\
+          \    - choose pmpcfg(i).A=NA4\n    - single access data store in any mode
+          when the bit mstatus.MPRV=1 and the mstatus.MPP contains M (TODO: CHECK
+          IF MAKING SENSE)]\n  [create scenarios where PMP entries with A=2 (NA4)
+          and with/without matching permissions\n    - check only NA4 defined addresses
+          are matching]\nTST12-52 (LOWEST-PRIO)\n[with L=0 => FTR08-e2-1 (refers to\
+          \  FTR09-d1)\n  - configure the PMP entry without write permissions for
+          the PMP region\n  - execute a store, store-conditional, or AMO instruction
+          to that region (with exact address-matching)\n  - check no access-fault
+          exception]"
+- 026_store_MPP_L0_W1_addr_miss: !Subfeature
+    name: 026_store_MPP_L0_W1_addr_miss
+    tag: VP_PMP_F012_S053
+    next_elt_id: 1
+    display_order: 26
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F012_S053_I000
+        description: "{Page 56 Volume II: RISC-V Privileged Architectures V20211203}\n
+          PMP checks may additionally apply to M-mode accesses, in which case the
+          PMP registers themselves are locked, so that even M-mode software cannot
+          change them until the hart is reset\n\n{Page 60 Section \"Locking and Privilege
+          Mode\" Volume II: RISC-V Privileged Architectures V20211203}\nWhen the L
+          bit is clear, any M-mode access matching the PMP entry will succeed\n\n
+          {Page 60 Section \"Priority and Matching Logic\" Volume II: RISC-V Privileged
+          Architectures V20211203}\nIf the L bit is clear and the privilege mode of
+          the access is M, the access succeeds"
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "M mode single access store, store-conditional, or AMO instruction
+          from outside defined NA4 address range with write permissions and with L=0\n\
+          \    - choose a data writable pmp region and address range\n    - choose
+          only one PMP entry (i)\n\nCONFIGURATION\n    - pmpcfg(i): A=NA4, W=1, L=0,
+          X/R:random\n    - pmpaddr(i): NA4 address range\n    - mstatus.MPRV=1 and
+          mstatus.MPP contains M (TODO: CHECK IF MAKING SENSE)\n\nACCESS\n    - execute
+          a store, store-conditional, or AMO instruction to outside all PMP defined
+          regions\n\nCHECK\n    - check no access-fault exception (Feature: \"no cfg
+          matching\")\n\nREUSABILITY\n    - if possible, the PMP entry number (i)
+          is a configurable parameter\n    - if possible, the PMP entry lock (L) is
+          a configurable parameter\n    - if possible, the PMP entry permissions (R,W,X)
+          are configurable parameters\n    - if possible, the PMP entry adress-matching
+          mode (A) is a configurable parameter\n    - if possible, the PMP entry address
+          range (pmpaddr) is a configurable parameter\n    - if possible, the PMP
+          entry associated access address is a configurable parameter\n    - so a
+          single CONFIGURATION function and a single ACCESS function can be reused
+          and combined"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<<Since G=1 the NA4 mode is not selectable>>\n\n<< link to the
+          old pmp_verif_plan.txt and pmp_verif_plan_features.txt files (not up-to-date)
+          : reading below not mandatory but may help for better understanding >>\n
+          \nFTR01-f (refers to FTR08-e1)\n[PMP checks may additionally apply to M-mode
+          accesses, in which case the PMP registers themselves are locked, so that
+          even M-mode software cannot change them until the hart is reset]\n \nFTR08-e2-1
+          (refers to  FTR09-d1)\n[When the L bit is clear, any M-mode access matching
+          the PMP entry will succeed]\nFTR09-d1 (refers to FTR08-e2-1)\n [If the L
+          bit is clear and the privilege mode of the access is M, the access succeeds]\n
+          \nFTR02-b1\n[the lowest-numbered PMP CSRs must be implemented first (QUESTION:
+          does it mean programmed first)]\n\nTST12-5x(group) => FTR01-f\n  [PMP check
+          on store, store-conditional, or AMO instruction where effective privilege
+          mode is M:\n    - choose a data writable pmp region and address range\n\
+          \    - choose only one PMP entry (i) ([FTR02-b1]: maybe mandatorily the
+          1st one)\n    - if possible, the PMP entry number is a configurable parameter\n\
+          \    - choose pmpcfg(i).A=NA4\n    - single access data store in any mode
+          when the bit mstatus.MPRV=1 and the mstatus.MPP contains M (TODO: CHECK
+          IF MAKING SENSE)]\n  [create scenarios where PMP entries with A=2 (NA4)
+          and with/without matching permissions\n    - check only NA4 defined addresses
+          are matching]\nTST12-53 (LOWEST-PRIO)\n[with L=0 => FTR08-e2-1 (refers to\
+          \  FTR09-d1)\n  - configure the PMP entry with write permissions for the
+          PMP region\n  - execute a store, store-conditional, or AMO instruction to
+          outside all PMP defined regions\n  - check no access-fault exception] //TODO:
+          CHECK IF M-MODE ALLOWED"
+- 027_store_MPP_L1_W1_addr_hit: !Subfeature
+    name: 027_store_MPP_L1_W1_addr_hit
+    tag: VP_PMP_F012_S054
+    next_elt_id: 1
+    display_order: 27
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F012_S054_I000
+        description: "{Page 56 Volume II: RISC-V Privileged Architectures V20211203}\n
+          PMP checks may additionally apply to M-mode accesses, in which case the
+          PMP registers themselves are locked, so that even M-mode software cannot
+          change them until the hart is reset\n\n{Page 60 Section \"Locking and Privilege
+          Mode\" Volume II: RISC-V Privileged Architectures V20211203}\nWhen the L
+          bit is set, these permissions are enforced for all privilege modes\n\n{Page
+          60 Section \"Priority and Matching Logic\" Volume II: RISC-V Privileged
+          Architectures V20211203}\nif the L bit is set, then the access succeeds
+          only if the R, W, or X bit corresponding to the access type is set"
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "M mode single access store, store-conditional, or AMO instruction
+          inside defined NA4 address range with write permissions and with L=1\n \
+          \   - choose a data writable pmp region and address range\n    - choose
+          only one PMP entry (i)\n\nCONFIGURATION\n    - pmpcfg(i): A=NA4, W=1, L=1,
+          X/R:random\n    - pmpaddr(i): NA4 address range\n    - mstatus.MPRV=1 and
+          mstatus.MPP contains M (TODO: CHECK IF MAKING SENSE)\n\nACCESS\n    - execute
+          a store, store-conditional, or AMO instruction to that region (with exact
+          address-matching)\n\nCHECK\n    - check no access-fault exception\n\nREUSABILITY\n\
+          \    - if possible, the PMP entry number (i) is a configurable parameter\n\
+          \    - if possible, the PMP entry lock (L) is a configurable parameter\n\
+          \    - if possible, the PMP entry permissions (R,W,X) are configurable parameters\n\
+          \    - if possible, the PMP entry adress-matching mode (A) is a configurable
+          parameter\n    - if possible, the PMP entry address range (pmpaddr) is a
+          configurable parameter\n    - if possible, the PMP entry associated access
+          address is a configurable parameter\n    - so a single CONFIGURATION function
+          and a single ACCESS function can be reused and combined"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<<Since G=1 the NA4 mode is not selectable>>\n\n<< link to the
+          old pmp_verif_plan.txt and pmp_verif_plan_features.txt files (not up-to-date)
+          : reading below not mandatory but may help for better understanding >>\n
+          \nFTR01-f (refers to FTR08-e1)\n[PMP checks may additionally apply to M-mode
+          accesses, in which case the PMP registers themselves are locked, so that
+          even M-mode software cannot change them until the hart is reset]\n \nFTR08-e1
+          (refers to FTR01-f) (refers to FTR09-d2-1)\n[When the L bit is set, these
+          permissions are enforced for all privilege modes]\nFTR09-d2-1 (refers to
+          FTR08-e1) (refers to FTR01-f)\n[if the L bit is set, then the access succeeds
+          only if the R, W, or X bit corresponding to the access type is set]\n\n
+          FTR02-b1\n[the lowest-numbered PMP CSRs must be implemented first (QUESTION:
+          does it mean programmed first)]\n\nTST12-5x(group) => FTR01-f\n  [PMP check
+          on store, store-conditional, or AMO instruction where effective privilege
+          mode is M:\n    - choose a data writable pmp region and address range\n\
+          \    - choose only one PMP entry (i) ([FTR02-b1]: maybe mandatorily the
+          1st one)\n    - if possible, the PMP entry number is a configurable parameter\n\
+          \    - choose pmpcfg(i).A=NA4\n    - single access data store in any mode
+          when the bit mstatus.MPRV=1 and the mstatus.MPP contains M (TODO: CHECK
+          IF MAKING SENSE)]\n  [create scenarios where PMP entries with A=2 (NA4)
+          and with/without matching permissions\n    - check only NA4 defined addresses
+          are matching]\n TST12-54 (LOWEST-PRIO)\n[with L=1 => FTR08-e1 (refers to
+          FTR01-f) (refers to FTR09-d2-1),\n  - configure the PMP entry with write
+          permissions for the PMP region\n  - execute a store, store-conditional,
+          or AMO instruction to that region (with exact address-matching)\n  - check
+          no access-fault exception]"
+- 028_store_MPP_L1_W0_addr_hit: !Subfeature
+    name: 028_store_MPP_L1_W0_addr_hit
+    tag: VP_PMP_F012_S055
+    next_elt_id: 1
+    display_order: 28
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F012_S055_I000
+        description: "{Page 56 Volume II: RISC-V Privileged Architectures V20211203}\n
+          PMP checks may additionally apply to M-mode accesses, in which case the
+          PMP registers themselves are locked, so that even M-mode software cannot
+          change them until the hart is reset\n\n{Page 60 Section \"Locking and Privilege
+          Mode\" Volume II: RISC-V Privileged Architectures V20211203}\nWhen the L
+          bit is set, these permissions are enforced for all privilege modes\n\n{Page
+          60 Section \"Priority and Matching Logic\" Volume II: RISC-V Privileged
+          Architectures V20211203}\nif the L bit is set, then the access succeeds
+          only if the R, W, or X bit corresponding to the access type is set\n\n{Page
+          58 Volume II: RISC-V Privileged Architectures V20211203}\nAttempting to
+          execute a store, store-conditional, or AMO instruction which accesses a
+          physical address within a PMP region without write permissions raises a
+          store access-fault exception"
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "M mode single access store, store-conditional, or AMO instruction
+          inside defined NA4 address range without write permissions and with L=1\n\
+          \    - choose a data writable pmp region and address range\n    - choose
+          only one PMP entry (i)\n\nCONFIGURATION\n    - pmpcfg(i): A=NA4, W=0, L=1,
+          X/R:random\n    - pmpaddr(i): NA4 address range\n    - mstatus.MPRV=1 and
+          mstatus.MPP contains M (TODO: CHECK IF MAKING SENSE)\n\nACCESS\n    - execute
+          a store, store-conditional, or AMO instruction to that region (with exact
+          address-matching)\n\nCHECK\n    - check store access-fault exception raised\n\
+          \nREUSABILITY\n    - if possible, the PMP entry number (i) is a configurable
+          parameter\n    - if possible, the PMP entry lock (L) is a configurable parameter\n\
+          \    - if possible, the PMP entry permissions (R,W,X) are configurable parameters\n\
+          \    - if possible, the PMP entry adress-matching mode (A) is a configurable
+          parameter\n    - if possible, the PMP entry address range (pmpaddr) is a
+          configurable parameter\n    - if possible, the PMP entry associated access
+          address is a configurable parameter\n    - so a single CONFIGURATION function
+          and a single ACCESS function can be reused and combined"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<<Since G=1 the NA4 mode is not selectable>>\n\n<< link to the
+          old pmp_verif_plan.txt and pmp_verif_plan_features.txt files (not up-to-date)
+          : reading below not mandatory but may help for better understanding >>\n
+          \nFTR01-f (refers to FTR08-e1)\n[PMP checks may additionally apply to M-mode
+          accesses, in which case the PMP registers themselves are locked, so that
+          even M-mode software cannot change them until the hart is reset]\n \nFTR08-e1
+          (refers to FTR01-f) (refers to FTR09-d2-1)\n[When the L bit is set, these
+          permissions are enforced for all privilege modes]\nFTR09-d2-1 (refers to
+          FTR08-e1) (refers to FTR01-f)\n[if the L bit is set, then the access succeeds
+          only if the R, W, or X bit corresponding to the access type is set]\n\n
+          FTR04-d\n[Attempting to execute a store, store-conditional, or AMO instruction
+          which accesses a physical address within a PMP region without write permissions
+          raises a store access-fault exception]\n\nFTR02-b1\n[the lowest-numbered
+          PMP CSRs must be implemented first (QUESTION: does it mean programmed first)]\n
+          \n TST12-5x(group) => FTR01-f\n  [PMP check on store, store-conditional,
+          or AMO instruction where effective privilege mode is M:\n    - choose a
+          data writable pmp region and address range\n    - choose only one PMP entry
+          (i) ([FTR02-b1]: maybe mandatorily the 1st one)\n    - if possible, the
+          PMP entry number is a configurable parameter\n    - choose pmpcfg(i).A=NA4\n\
+          \    - single access data store in any mode when the bit mstatus.MPRV=1
+          and the mstatus.MPP contains M (TODO: CHECK IF MAKING SENSE)]\n  [create
+          scenarios where PMP entries with A=2 (NA4) and with/without matching permissions\n\
+          \    - check only NA4 defined addresses are matching]\n TST12-55 (LOWEST-PRIO)\n
+          [with L=1 => FTR08-e1 (refers to FTR01-f) (refers to FTR09-d2-1),\n  - configure
+          the PMP entry without write permissions for the PMP region\n  - execute
+          a store, store-conditional, or AMO instruction to that region (with exact
+          address-matching)\n  - check store access-fault exception raised => FTR04-d]"
+- 029_store_MPP_L1_W1_addr_miss: !Subfeature
+    name: 029_store_MPP_L1_W1_addr_miss
+    tag: VP_PMP_F012_S056
+    next_elt_id: 1
+    display_order: 29
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F012_S056_I000
+        description: "{Page 56 Volume II: RISC-V Privileged Architectures V20211203}\n
+          PMP checks may additionally apply to M-mode accesses, in which case the
+          PMP registers themselves are locked, so that even M-mode software cannot
+          change them until the hart is reset\n\n{Page 60 Section \"Locking and Privilege
+          Mode\" Volume II: RISC-V Privileged Architectures V20211203}\nWhen the L
+          bit is set, these permissions are enforced for all privilege modes\n\n{Page
+          60 Section \"Priority and Matching Logic\" Volume II: RISC-V Privileged
+          Architectures V20211203}\nif the L bit is set, then the access succeeds
+          only if the R, W, or X bit corresponding to the access type is set"
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "M mode single access store, store-conditional, or AMO instruction
+          from outside defined NA4 address range with write permissions and with L=1\n\
+          \    - choose a data writable pmp region and address range\n    - choose
+          only one PMP entry (i)\n\nCONFIGURATION\n    - pmpcfg(i): A=NA4, W=1, L=1,
+          X/R:random\n    - pmpaddr(i): NA4 address range\n    - mstatus.MPRV=1 and
+          mstatus.MPP contains M (TODO: CHECK IF MAKING SENSE)\n\nACCESS\n    - execute
+          a store, store-conditional, or AMO instruction to outside all PMP defined
+          regions\n\nCHECK\n    - check no access-fault exception (Feature: \"no cfg
+          matching\")\n\nREUSABILITY\n    - if possible, the PMP entry number (i)
+          is a configurable parameter\n    - if possible, the PMP entry lock (L) is
+          a configurable parameter\n    - if possible, the PMP entry permissions (R,W,X)
+          are configurable parameters\n    - if possible, the PMP entry adress-matching
+          mode (A) is a configurable parameter\n    - if possible, the PMP entry address
+          range (pmpaddr) is a configurable parameter\n    - if possible, the PMP
+          entry associated access address is a configurable parameter\n    - so a
+          single CONFIGURATION function and a single ACCESS function can be reused
+          and combined"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<<Since G=1 the NA4 mode is not selectable>>\n\n<< link to the
+          old pmp_verif_plan.txt and pmp_verif_plan_features.txt files (not up-to-date)
+          : reading below not mandatory but may help for better understanding >>\n
+          \nFTR01-f (refers to FTR08-e1)\n[PMP checks may additionally apply to M-mode
+          accesses, in which case the PMP registers themselves are locked, so that
+          even M-mode software cannot change them until the hart is reset]\n \nFTR08-e1
+          (refers to FTR01-f) (refers to FTR09-d2-1)\n[When the L bit is set, these
+          permissions are enforced for all privilege modes]\nFTR09-d2-1 (refers to
+          FTR08-e1) (refers to FTR01-f)\n[if the L bit is set, then the access succeeds
+          only if the R, W, or X bit corresponding to the access type is set]\n\n
+          FTR02-b1\n[the lowest-numbered PMP CSRs must be implemented first (QUESTION:
+          does it mean programmed first)]\n\nTST12-5x(group) => FTR01-f\n  [PMP check
+          on store, store-conditional, or AMO instruction where effective privilege
+          mode is M:\n    - choose a data writable pmp region and address range\n\
+          \    - choose only one PMP entry (i) ([FTR02-b1]: maybe mandatorily the
+          1st one)\n    - if possible, the PMP entry number is a configurable parameter\n\
+          \    - choose pmpcfg(i).A=NA4\n    - single access data store in any mode
+          when the bit mstatus.MPRV=1 and the mstatus.MPP contains M (TODO: CHECK
+          IF MAKING SENSE)]\n  [create scenarios where PMP entries with A=2 (NA4)
+          and with/without matching permissions\n    - check only NA4 defined addresses
+          are matching]\n TST12-56 (LOWEST-PRIO)\n[with L=1 => FTR08-e1 (refers to
+          FTR01-f) (refers to FTR09-d2-1),\n  - configure the PMP entry with write
+          permissions for the PMP region\n  - execute a store, store-conditional,
+          or AMO instruction to outside all PMP defined regions\n  - check no access-fault
+          exception] //TODO: CHECK IF M-MODE ALLOWED"
+vptool_gitrev: '$Id: a8b561f68549658061625891c533e7d45996bc9e $'
+io_fmt_gitrev: '$Id: 61ab4e53ca49e21d56c416f0af0fa04d148e8001 $'
+config_gitrev: '$Id: 5192fced2cfa10be5e18e827922e31e7489ed987 $'
+ymlcfg_gitrev: '$Id: ce5e73bd5e8e0099334cb657afb7a624a99afbda $'

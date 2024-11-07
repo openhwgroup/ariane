@@ -1,0 +1,146 @@
+!Feature
+next_elt_id: 4
+name: CSRs programming order
+id: 4
+display_order: 4
+subfeatures: !!omap
+- 000_configure_1_pmp_entry: !Subfeature
+    name: 000_configure_1_pmp_entry
+    tag: VP_PMP_F004_S001
+    next_elt_id: 1
+    display_order: 0
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F004_S001_I000
+        description: "{Section 3.7.1 Page 57 Volume II: RISC-V Privileged Architectures
+          V20211203}\n\nthe lowest-numbered PMP CSRs must be implemented first (QUESTION:
+          does it mean programmed first)\nAll PMP CSR fields are WARL and may be read-only
+          zero (QUESTION: does read-only zero mean not implemented?)"
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "configure any PMP entry (i), but the first one\n  - reuse of
+          VP_PMP_F003_S003_I000 sequence (Feature: \"CSRs locked access\")"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<< link to the old pmp_verif_plan.txt and pmp_verif_plan_features.txt
+          files (not up-to-date) : reading below not mandatory but may help for better
+          understanding >>\n\nTST04 => FTR02-b1 and FTR02-b2\n  [check if the lowest-numbered
+          PMP CSRs must be programmed first before programming higher-numbered ones]\n
+          \nTST04-1 (LOW-PRIO) extends TST02-1\n[configure any PMP entry, but the
+          first one\n  - check for configured PMP entry (i), pmp(i)cfg and pmpaddr(i)
+          are writable/readable in M-mode only\n  - check for not configured PMP entry
+          (i), pmp(i)cfg and pmpaddr(i) are M-mode read zero]"
+- 001_configure_2_pmp_entries: !Subfeature
+    name: 001_configure_2_pmp_entries
+    tag: VP_PMP_F004_S002
+    next_elt_id: 1
+    display_order: 1
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F004_S002_I000
+        description: "{Section 3.7.1 Page 57 Volume II: RISC-V Privileged Architectures
+          V20211203}\n\nthe lowest-numbered PMP CSRs must be implemented first (QUESTION:
+          does it mean programmed first)\nAll PMP CSR fields are WARL and may be read-only
+          zero (QUESTION: does read-only zero mean not implemented?)"
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "configure 2 non-adjacent PMP entries (highest-numbered ones
+          first) (avoid the first PMP entry)\n  - reuse of VP_PMP_F003_S003_I000 sequence
+          (Feature: \"CSRs locked access\")"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<< link to the old pmp_verif_plan.txt and pmp_verif_plan_features.txt
+          files (not up-to-date) : reading below not mandatory but may help for better
+          understanding >>\n\nTST04 => FTR02-b1 and FTR02-b2\n  [check if the lowest-numbered
+          PMP CSRs must be programmed first before programming higher-numbered ones]\n
+          \nTST04-2 (HIGH-PRIO) extends TST02-2\n[configure 2 non-adjacent PMP entries
+          (highest-numbered ones first) (avoid the first PMP entry)\n  - check for
+          configured PMP entry (i), pmp(i)cfg and pmpaddr(i) are writable/readable
+          in M-mode only\n  - check for not configured PMP entry (i), pmp(i)cfg and
+          pmpaddr(i) are M-mode read zero]"
+- 002_configure_N_pmp_entries: !Subfeature
+    name: 002_configure_N_pmp_entries
+    tag: VP_PMP_F004_S003
+    next_elt_id: 1
+    display_order: 2
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F004_S003_I000
+        description: "{Section 3.7.1 Page 57 Volume II: RISC-V Privileged Architectures
+          V20211203}\n\nthe lowest-numbered PMP CSRs must be implemented first (QUESTION:
+          does it mean programmed first)\nAll PMP CSR fields are WARL and may be read-only
+          zero (QUESTION: does read-only zero mean not implemented?)"
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "configure N PMP entries (highest-numbered ones first) (as non-adjacent
+          as possible, and avoid the first PMP entry)\n  - reuse of VP_PMP_F003_S003_I000
+          sequence (Feature: \"CSRs locked access\")"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<< link to the old pmp_verif_plan.txt and pmp_verif_plan_features.txt
+          files (not up-to-date) : reading below not mandatory but may help for better
+          understanding >>\n\nTST04 => FTR02-b1 and FTR02-b2\n  [check if the lowest-numbered
+          PMP CSRs must be programmed first before programming higher-numbered ones]\n
+          \nTST04-3 (LOW-PRIO) extends TST02-3\n[configure N PMP entries (highest-numbered
+          ones first) (as non-adjacent as possible, and avoid the first PMP entry)\n\
+          \  - check for configured PMP entry (i), pmp(i)cfg and pmpaddr(i) are writable/readable
+          in M-mode only\n  - check for not configured PMP entry (i), pmp(i)cfg and
+          pmpaddr(i) are M-mode read zero]"
+- 003_configure_8_pmp_entries: !Subfeature
+    name: 003_configure_8_pmp_entries
+    tag: VP_PMP_F004_S004
+    next_elt_id: 1
+    display_order: 3
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F004_S004_I000
+        description: "{Section 3.7.1 Page 57 Volume II: RISC-V Privileged Architectures
+          V20211203}\n\nthe lowest-numbered PMP CSRs must be implemented first (QUESTION:
+          does it mean programmed first)\nAll PMP CSR fields are WARL and may be read-only
+          zero (QUESTION: does read-only zero mean not implemented?)"
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "configure all 8 PMP entries (highest-numbered ones first)\n\
+          \  - reuse of VP_PMP_F003_S003_I000 sequence (Feature: \"CSRs locked access\"\
+          )"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<< link to the old pmp_verif_plan.txt and pmp_verif_plan_features.txt
+          files (not up-to-date) : reading below not mandatory but may help for better
+          understanding >>\n\nTST04 => FTR02-b1 and FTR02-b2\n  [check if the lowest-numbered
+          PMP CSRs must be programmed first before programming higher-numbered ones]\n
+          \nTST04-4 (HIGH-PRIO) extends TST02-4\n[configure 8 PMP entries (highest-numbered
+          ones first)\n  - check for configured PMP entry (i), pmp(i)cfg and pmpaddr(i)
+          are writable/readable in M-mode only]"
+vptool_gitrev: '$Id: a8b561f68549658061625891c533e7d45996bc9e $'
+io_fmt_gitrev: '$Id: 61ab4e53ca49e21d56c416f0af0fa04d148e8001 $'
+config_gitrev: '$Id: 5192fced2cfa10be5e18e827922e31e7489ed987 $'
+ymlcfg_gitrev: '$Id: ce5e73bd5e8e0099334cb657afb7a624a99afbda $'

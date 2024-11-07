@@ -1,0 +1,45 @@
+!Feature
+next_elt_id: 1
+name: PMP granularity
+id: 1
+display_order: 1
+subfeatures: !!omap
+- 000_granularity_check: !Subfeature
+    name: 000_granularity_check
+    tag: VP_PMP_F001_S000
+    next_elt_id: 1
+    display_order: 0
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F001_S000_I000
+        description: "{Page 59 Volume II: RISC-V Privileged Architectures V20211203}\n
+          \nSoftware may determine the PMP granularity by writing zero to pmp0cfg,
+          then writing all ones to pmpaddr0, then reading back pmpaddr0.\nIf G is
+          the index of the least-signicant bit set, the PMP granularity is 2G+2 bytes."
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: '59'
+        ref_section: ''
+        ref_viewer: evince
+        verif_goals: determine the PMP granularity 2^(G+2) bytes by writing zero to
+          pmp(0)cfg, then writing all ones to pmpaddr(0), then reading back pmpaddr(0).
+          G is the index G of the least-significant bit set
+        pfc: 11
+        test_type: 2
+        cov_method: 0
+        cores: -1
+        coverage_loc: ''
+        comments: "<< link to the old pmp_verif_plan.txt and pmp_verif_plan_features.txt
+          files (not up-to-date) : reading below not mandatory but may help for better
+          understanding >>\n\nFTR07-b\nSoftware may determine the PMP granularity
+          by writing zero to pmp0cfg, then writing all ones to pmpaddr0, then reading
+          back pmpaddr0.\n If G is the index of the least-signicant bit set, the
+          PMP granularity is 2G+2 bytes.\n\n\nTST01 (HIGH-PRIO) => FTR07-b\n[determine
+          the PMP granularity 2^(G+2) bytes by writing zero to pmp(0)cfg, then writing
+          all ones to pmpaddr(0), then reading back pmpaddr(0). G is the index G of
+          the least-significant bit set]"
+vptool_gitrev: '$Id: a8b561f68549658061625891c533e7d45996bc9e $'
+io_fmt_gitrev: '$Id: 61ab4e53ca49e21d56c416f0af0fa04d148e8001 $'
+config_gitrev: '$Id: 5192fced2cfa10be5e18e827922e31e7489ed987 $'
+ymlcfg_gitrev: '$Id: ce5e73bd5e8e0099334cb657afb7a624a99afbda $'

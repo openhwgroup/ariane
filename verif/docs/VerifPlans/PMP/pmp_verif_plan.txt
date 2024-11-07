@@ -88,7 +88,7 @@ Determine how to use SV to factorize the similar tests
 TST01 (HIGH-PRIO) => FTR07-b
 [determine the PMP granularity 2^(G+2) bytes by writing zero to pmp(0)cfg, then writing all ones to pmpaddr(0), then reading back pmpaddr(0). G is the index G of the least-significant bit set]
 
-TST02 (group) => FTR02-d
+TST02(group) => FTR02-d
   [check that all 8 HW implemented PMP entries are writable/readable in M-mode (L=0)]
   [check that no HW implemented PMP entry are writable/readable in S or U modes (L=0)]
     - random values may be used
@@ -115,7 +115,7 @@ TST02-4 (HIGH-PRIO) = 8 times reuse/call of TST02-1
   - check for PMP entry (i) where L=0 that pmp(i)cfg and pmpaddr(i) are writable/readable in M-mode only
   - check for PMP entry (i) where L=0 that pmp(i)cfg and pmpaddr(i) are not writable/readable in S or U modes]
 
-TST03 (group) => FTR08-a and FTR08-b
+TST03(group) => FTR08-a and FTR08-b
   [check that HW implemented PMP entries are not writable/readable in M-mode (L=1)]
   [check that no HW implemented PMP entry are writable/readable in S or U modes (L=1)]
     - before any configuration, check all pmp(i)cfg and pmpaddr(i) are M-mode read zero
@@ -182,7 +182,7 @@ TST05-2 (LOW-PRIO) extends TST03-5
   - check the written pmp(i)cfg and pmpaddr(i) values can be read exactly the same as written (before hart reset)
 
 TST06 => FTR04-a
-[PMP CSR fields are WARL: PMP entry combinations with R=0 and W=1 are reserved/can't be read]
+[PMP CSR fields are WARL: PMP entry combinations with R=0 and W=1 are reserved/can‚Äôt be read]
 [permissions fields could be randomly written; should we try randomization ?]
 TST06-1 (HIGH-PRIO) extends TST02-4
   - write totally random values to pmp(i)cfg and pmpaddr(i)
@@ -205,7 +205,7 @@ TST10-4 (HIGH-PRIO) => FTR09-f-question
 
 ////////////////////////////
 
-TST11 (group) => FTR01-d
+TST11-1x(group) => FTR01-d
   [PMP check on instruction fetch where effective privilege mode is S or U:
     - choose an executable pmp region and address range
     - choose only one PMP entry (i) ([FTR02-b1]: maybe mandatorily the 1st one)
@@ -247,7 +247,7 @@ TST11-16 (LOW-PRIO)
 
 ---------------------------
 
-TST11 (group) => FTR01-d
+TST11-2x(group) => FTR01-d
   [PMP check on load or load-reserved instruction where effective privilege mode is S or U:
     - choose a data readable pmp region and address range
     - choose only one PMP entry (i) ([FTR02-b1]: maybe mandatorily the 1st one)
@@ -289,7 +289,7 @@ TST11-26 (LOW-PRIO)
 
 ---------------------------
 
-TST11 (group) => FTR01-d
+TST11-3x(group) => FTR01-d
   [PMP check on store, store-conditional, or AMO instruction where effective privilege mode is S or U:
     - choose a data writable pmp region and address range
     - choose only one PMP entry (i) ([FTR02-b1]: maybe mandatorily the 1st one)
@@ -331,7 +331,7 @@ TST11-36 (LOW-PRIO)
 
 ---------------------------
 
-TST11 (group) => FTR01-d
+TST11-4x(group) => FTR01-d
   [PMP check on load or load-reserved instruction where effective privilege mode is S or U:
     - choose a data readable pmp region and address range
     - choose only one PMP entry (i) ([FTR02-b1]: maybe mandatorily the 1st one)
@@ -373,7 +373,7 @@ TST11-46 (LOWEST-PRIO)
 
 ---------------------------
 
-TST11 (group) => FTR01-d
+TST11-5x(group) => FTR01-d
   [PMP check on store, store-conditional, or AMO instruction where effective privilege mode is S or U:
     - choose a data writable pmp region and address range
     - choose only one PMP entry (i) ([FTR02-b1]: maybe mandatorily the 1st one)
@@ -415,7 +415,7 @@ TST11-56 (LOWEST-PRIO)
 
 ////////////////////////////
 
-TST12 (group) => FTR01-f
+TST12-1x(group) => FTR01-f
   [PMP check on instruction fetch where effective privilege mode is M:
     - choose an executable pmp region and address range
     - choose only one PMP entry (i) ([FTR02-b1]: maybe mandatorily the 1st one)
@@ -457,7 +457,7 @@ TST12-16 (HIGH-PRIO)
 
 ---------------------------
 
-TST12 (group) => FTR01-f
+TST12-2x(group) => FTR01-f
   [PMP check on load or load-reserved instruction where effective privilege mode is M:
     - choose a data readable pmp region and address range
     - choose only one PMP entry (i) ([FTR02-b1]: maybe mandatorily the 1st one)
@@ -499,7 +499,7 @@ TST12-26 (HIGH-PRIO)
 
 ---------------------------
 
-TST12 (group) => FTR01-f
+TST12-3x(group) => FTR01-f
   [PMP check on store, store-conditional, or AMO instruction where effective privilege mode is M:
     - choose a data writable pmp region and address range
     - choose only one PMP entry (i) ([FTR02-b1]: maybe mandatorily the 1st one)
@@ -541,7 +541,7 @@ TST12-36 (HIGH-PRIO)
 
 ---------------------------
 
-TST12 (group) => FTR01-f
+TST12-4x(group) => FTR01-f
   [PMP check on load or load-reserved instruction where effective privilege mode is M:
     - choose a data readable pmp region and address range
     - choose only one PMP entry (i) ([FTR02-b1]: maybe mandatorily the 1st one)
@@ -583,7 +583,7 @@ TST12-46 (LOWEST-PRIO)
 
 ---------------------------
 
-TST12 (group) => FTR01-f
+TST12-5x(group) => FTR01-f
   [PMP check on store, store-conditional, or AMO instruction where effective privilege mode is M:
     - choose a data writable pmp region and address range
     - choose only one PMP entry (i) ([FTR02-b1]: maybe mandatorily the 1st one)
@@ -626,539 +626,534 @@ TST12-56 (LOWEST-PRIO)
 ////////////////////////////
 //TODO: complete specificities for A=NAPOT
 
-TST13 (group)
-  [same as TST11 (group), but with pmpcfg(i).A=NAPOT]
+TST13-1x(group)
+  [same as TST11-1x(group), but with pmpcfg(i).A=NAPOT]
 TST13-11 (HIGH-PRIO)
-  [same as TST11-11 (group), but with pmpcfg(i).A=NAPOT]
+  [same as TST11-11(group), but with pmpcfg(i).A=NAPOT]
 TST13-12 (MEDIUM-PRIO)
-  [same as TST11-12 (group), but with pmpcfg(i).A=NAPOT]
+  [same as TST11-12(group), but with pmpcfg(i).A=NAPOT]
 TST13-13 (MEDIUM-PRIO)
-  [same as TST11-13 (group), but with pmpcfg(i).A=NAPOT]
+  [same as TST11-13(group), but with pmpcfg(i).A=NAPOT]
 TST13-14 (LOW-PRIO)
-  [same as TST11-14 (group), but with pmpcfg(i).A=NAPOT]
+  [same as TST11-14(group), but with pmpcfg(i).A=NAPOT]
 TST13-15 (LOW-PRIO)
-  [same as TST11-15 (group), but with pmpcfg(i).A=NAPOT]
+  [same as TST11-15(group), but with pmpcfg(i).A=NAPOT]
 TST13-16 (LOW-PRIO)
-  [same as TST11-16 (group), but with pmpcfg(i).A=NAPOT]
+  [same as TST11-16(group), but with pmpcfg(i).A=NAPOT]
 
 ---------------------------
 
-TST13 (group)
-  [same as TST11 (group), but with pmpcfg(i).A=NAPOT]
+TST13-2x(group)
+  [same as TST11-2x(group), but with pmpcfg(i).A=NAPOT]
 TST13-21 (HIGH-PRIO)
-  [same as TST11-21 (group), but with pmpcfg(i).A=NAPOT]
+  [same as TST11-21(group), but with pmpcfg(i).A=NAPOT]
 TST13-22 (MEDIUM-PRIO)
-  [same as TST11-22 (group), but with pmpcfg(i).A=NAPOT]
+  [same as TST11-22(group), but with pmpcfg(i).A=NAPOT]
 TST13-23 (MEDIUM-PRIO)
-  [same as TST11-23 (group), but with pmpcfg(i).A=NAPOT]
+  [same as TST11-23(group), but with pmpcfg(i).A=NAPOT]
 TST13-24 (LOW-PRIO)
-  [same as TST11-24 (group), but with pmpcfg(i).A=NAPOT]
+  [same as TST11-24(group), but with pmpcfg(i).A=NAPOT]
 TST13-25 (LOW-PRIO)
-  [same as TST11-25 (group), but with pmpcfg(i).A=NAPOT]
+  [same as TST11-25(group), but with pmpcfg(i).A=NAPOT]
 TST13-26 (LOW-PRIO)
-  [same as TST11-26 (group), but with pmpcfg(i).A=NAPOT]
+  [same as TST11-26(group), but with pmpcfg(i).A=NAPOT]
 
 ---------------------------
 
-TST13 (group)
-  [same as TST11 (group), but with pmpcfg(i).A=NAPOT]
+TST13-3x(group)
+  [same as TST11-3x(group), but with pmpcfg(i).A=NAPOT]
 TST13-31 (HIGH-PRIO)
-  [same as TST11-31 (group), but with pmpcfg(i).A=NAPOT]
+  [same as TST11-31(group), but with pmpcfg(i).A=NAPOT]
 TST13-32 (MEDIUM-PRIO)
-  [same as TST11-32 (group), but with pmpcfg(i).A=NAPOT]
+  [same as TST11-32(group), but with pmpcfg(i).A=NAPOT]
 TST13-33 (MEDIUM-PRIO)
-  [same as TST11-33 (group), but with pmpcfg(i).A=NAPOT]
+  [same as TST11-33(group), but with pmpcfg(i).A=NAPOT]
 TST13-34 (LOW-PRIO)
-  [same as TST11-34 (group), but with pmpcfg(i).A=NAPOT]
+  [same as TST11-34(group), but with pmpcfg(i).A=NAPOT]
 TST13-35 (LOW-PRIO)
-  [same as TST11-35 (group), but with pmpcfg(i).A=NAPOT]
+  [same as TST11-35(group), but with pmpcfg(i).A=NAPOT]
 TST13-36 (LOW-PRIO)
-  [same as TST11-36 (group), but with pmpcfg(i).A=NAPOT]
+  [same as TST11-36(group), but with pmpcfg(i).A=NAPOT]
 
 ---------------------------
 
-TST13 (group)
-  [same as TST11 (group), but with pmpcfg(i).A=NAPOT]
+TST13-4x(group)
+  [same as TST11-4x(group), but with pmpcfg(i).A=NAPOT]
 TST13-41 (LOWEST-PRIO)
-  [same as TST11-41 (group), but with pmpcfg(i).A=NAPOT]
+  [same as TST11-41(group), but with pmpcfg(i).A=NAPOT]
 TST13-42 (LOWEST-PRIO)
-  [same as TST11-42 (group), but with pmpcfg(i).A=NAPOT]
+  [same as TST11-42(group), but with pmpcfg(i).A=NAPOT]
 TST13-43 (LOWEST-PRIO)
-  [same as TST11-43 (group), but with pmpcfg(i).A=NAPOT]
+  [same as TST11-43(group), but with pmpcfg(i).A=NAPOT]
 TST13-44 (LOWEST-PRIO)
-  [same as TST11-44 (group), but with pmpcfg(i).A=NAPOT]
+  [same as TST11-44(group), but with pmpcfg(i).A=NAPOT]
 TST13-45 (LOWEST-PRIO)
-  [same as TST11-45 (group), but with pmpcfg(i).A=NAPOT]
+  [same as TST11-45(group), but with pmpcfg(i).A=NAPOT]
 TST13-46 (LOWEST-PRIO)
-  [same as TST11-46 (group), but with pmpcfg(i).A=NAPOT]
+  [same as TST11-46(group), but with pmpcfg(i).A=NAPOT]
 
 ---------------------------
 
-TST13 (group)
-  [same as TST11 (group), but with pmpcfg(i).A=NAPOT]
+TST13-5x(group)
+  [same as TST11-5x(group), but with pmpcfg(i).A=NAPOT]
 TST13-51 (LOWEST-PRIO)
-  [same as TST11-51 (group), but with pmpcfg(i).A=NAPOT]
+  [same as TST11-51(group), but with pmpcfg(i).A=NAPOT]
 TST13-52 (LOWEST-PRIO)
-  [same as TST11-52 (group), but with pmpcfg(i).A=NAPOT]
+  [same as TST11-52(group), but with pmpcfg(i).A=NAPOT]
 TST13-53 (LOWEST-PRIO)
-  [same as TST11-53 (group), but with pmpcfg(i).A=NAPOT]
+  [same as TST11-53(group), but with pmpcfg(i).A=NAPOT]
 TST13-54 (LOWEST-PRIO)
-  [same as TST11-54 (group), but with pmpcfg(i).A=NAPOT]
+  [same as TST11-54(group), but with pmpcfg(i).A=NAPOT]
 TST13-55 (LOWEST-PRIO)
-  [same as TST11-55 (group), but with pmpcfg(i).A=NAPOT]
+  [same as TST11-55(group), but with pmpcfg(i).A=NAPOT]
 TST13-56 (LOWEST-PRIO)
-  [same as TST11-56 (group), but with pmpcfg(i).A=NAPOT]
+  [same as TST11-56(group), but with pmpcfg(i).A=NAPOT]
 
 ////////////////////////////
 
-TST14 (group)
-  [same as TST12 (group), but with pmpcfg(i).A=NAPOT]
+TST14-1x(group)
+  [same as TST12-1x(group), but with pmpcfg(i).A=NAPOT]
 TST14-11 (LOW-PRIO)
-  [same as TST12-11 (group), but with pmpcfg(i).A=NAPOT]
+  [same as TST12-11(group), but with pmpcfg(i).A=NAPOT]
 TST14-12 (LOW-PRIO)
-  [same as TST12-12 (group), but with pmpcfg(i).A=NAPOT]
+  [same as TST12-12(group), but with pmpcfg(i).A=NAPOT]
 TST14-13 (LOW-PRIO)
-  [same as TST12-13 (group), but with pmpcfg(i).A=NAPOT]
+  [same as TST12-13(group), but with pmpcfg(i).A=NAPOT]
 TST14-14 (HIGH-PRIO)
-  [same as TST12-14 (group), but with pmpcfg(i).A=NAPOT]
+  [same as TST12-14(group), but with pmpcfg(i).A=NAPOT]
 TST14-15 (MEDIUM-PRIO)
-  [same as TST12-15 (group), but with pmpcfg(i).A=NAPOT]
+  [same as TST12-15(group), but with pmpcfg(i).A=NAPOT]
 TST14-16 (HIGH-PRIO)
-  [same as TST12-16 (group), but with pmpcfg(i).A=NAPOT]
+  [same as TST12-16(group), but with pmpcfg(i).A=NAPOT]
 
 ---------------------------
 
-TST14 (group)
-  [same as TST12 (group), but with pmpcfg(i).A=NAPOT]
+TST14-2x(group)
+  [same as TST12-2x(group), but with pmpcfg(i).A=NAPOT]
 TST14-21 (LOW-PRIO)
-  [same as TST12-21 (group), but with pmpcfg(i).A=NAPOT]
+  [same as TST12-21(group), but with pmpcfg(i).A=NAPOT]
 TST14-22 (LOW-PRIO)
-  [same as TST12-22 (group), but with pmpcfg(i).A=NAPOT]
+  [same as TST12-22(group), but with pmpcfg(i).A=NAPOT]
 TST14-23 (LOW-PRIO)
-  [same as TST12-23 (group), but with pmpcfg(i).A=NAPOT]
+  [same as TST12-23(group), but with pmpcfg(i).A=NAPOT]
 TST14-24 (HIGH-PRIO)
-  [same as TST12-24 (group), but with pmpcfg(i).A=NAPOT]
+  [same as TST12-24(group), but with pmpcfg(i).A=NAPOT]
 TST14-25 (MEDIUM-PRIO)
-  [same as TST12-25 (group), but with pmpcfg(i).A=NAPOT]
+  [same as TST12-25(group), but with pmpcfg(i).A=NAPOT]
 TST14-26 (HIGH-PRIO)
-  [same as TST12-26 (group), but with pmpcfg(i).A=NAPOT]
+  [same as TST12-26(group), but with pmpcfg(i).A=NAPOT]
 
 ---------------------------
 
-TST14 (group)
-  [same as TST12 (group), but with pmpcfg(i).A=NAPOT]
+TST14-3x(group)
+  [same as TST12-3x(group), but with pmpcfg(i).A=NAPOT]
 TST14-31 (LOW-PRIO)
-  [same as TST12-31 (group), but with pmpcfg(i).A=NAPOT]
+  [same as TST12-31(group), but with pmpcfg(i).A=NAPOT]
 TST14-32 (LOW-PRIO)
-  [same as TST12-32 (group), but with pmpcfg(i).A=NAPOT]
+  [same as TST12-32(group), but with pmpcfg(i).A=NAPOT]
 TST14-33 (LOW-PRIO)
-  [same as TST12-33 (group), but with pmpcfg(i).A=NAPOT]
+  [same as TST12-33(group), but with pmpcfg(i).A=NAPOT]
 TST14-34 (HIGH-PRIO)
-  [same as TST12-34 (group), but with pmpcfg(i).A=NAPOT]
+  [same as TST12-34(group), but with pmpcfg(i).A=NAPOT]
 TST14-35 (MEDIUM-PRIO)
-  [same as TST12-35 (group), but with pmpcfg(i).A=NAPOT]
+  [same as TST12-35(group), but with pmpcfg(i).A=NAPOT]
 TST14-36 (HIGH-PRIO)
-  [same as TST12-36 (group), but with pmpcfg(i).A=NAPOT]
+  [same as TST12-36(group), but with pmpcfg(i).A=NAPOT]
 
 ---------------------------
 
-TST14 (group)
-  [same as TST12 (group), but with pmpcfg(i).A=NAPOT]
+TST14-4x(group)
+  [same as TST12-4x(group), but with pmpcfg(i).A=NAPOT]
 TST14-41 (LOWEST-PRIO)
-  [same as TST12-41 (group), but with pmpcfg(i).A=NAPOT]
+  [same as TST12-41(group), but with pmpcfg(i).A=NAPOT]
 TST14-42 (LOWEST-PRIO)
-  [same as TST12-42 (group), but with pmpcfg(i).A=NAPOT]
+  [same as TST12-42(group), but with pmpcfg(i).A=NAPOT]
 TST14-43 (LOWEST-PRIO)
-  [same as TST12-43 (group), but with pmpcfg(i).A=NAPOT]
+  [same as TST12-43(group), but with pmpcfg(i).A=NAPOT]
 TST14-44 (LOWEST-PRIO)
-  [same as TST12-44 (group), but with pmpcfg(i).A=NAPOT]
+  [same as TST12-44(group), but with pmpcfg(i).A=NAPOT]
 TST14-45 (LOWEST-PRIO)
-  [same as TST12-45 (group), but with pmpcfg(i).A=NAPOT]
+  [same as TST12-45(group), but with pmpcfg(i).A=NAPOT]
 TST14-46 (LOWEST-PRIO)
-  [same as TST12-46 (group), but with pmpcfg(i).A=NAPOT]
+  [same as TST12-46(group), but with pmpcfg(i).A=NAPOT]
 
 ---------------------------
 
-TST14 (group)
-  [same as TST12 (group), but with pmpcfg(i).A=NAPOT]
+TST14-5x(group)
+  [same as TST12-5x(group), but with pmpcfg(i).A=NAPOT]
 TST14-51 (LOWEST-PRIO)
-  [same as TST12-51 (group), but with pmpcfg(i).A=NAPOT]
+  [same as TST12-51(group), but with pmpcfg(i).A=NAPOT]
 TST14-52 (LOWEST-PRIO)
-  [same as TST12-52 (group), but with pmpcfg(i).A=NAPOT]
+  [same as TST12-52(group), but with pmpcfg(i).A=NAPOT]
 TST14-53 (LOWEST-PRIO)
-  [same as TST12-53 (group), but with pmpcfg(i).A=NAPOT]
+  [same as TST12-53(group), but with pmpcfg(i).A=NAPOT]
 TST14-54 (LOWEST-PRIO)
-  [same as TST12-54 (group), but with pmpcfg(i).A=NAPOT]
+  [same as TST12-54(group), but with pmpcfg(i).A=NAPOT]
 TST14-55 (LOWEST-PRIO)
-  [same as TST12-55 (group), but with pmpcfg(i).A=NAPOT]
+  [same as TST12-55(group), but with pmpcfg(i).A=NAPOT]
 TST14-56 (LOWEST-PRIO)
-  [same as TST12-56 (group), but with pmpcfg(i).A=NAPOT]
+  [same as TST12-56(group), but with pmpcfg(i).A=NAPOT]
 
 ////////////////////////////
 //TODO: complete specificities for A=TOR
 
-TST15 (group) => FTR06-a
-  [same as TST11 (group), but with pmpcfg(i).A=TOR]
+TST15-1x(group) => FTR06-a
+  [same as TST11-1x(group), but with pmpcfg(i).A=TOR]
 TST15-11 (HIGH-PRIO)
-  [same as TST11-11 (group), but with pmpcfg(i).A=TOR]
+  [same as TST11-11(group), but with pmpcfg(i).A=TOR]
 TST15-12 (MEDIUM-PRIO)
-  [same as TST11-12 (group), but with pmpcfg(i).A=TOR]
+  [same as TST11-12(group), but with pmpcfg(i).A=TOR]
 TST15-13 (MEDIUM-PRIO)
-  [same as TST11-13 (group), but with pmpcfg(i).A=TOR]
+  [same as TST11-13(group), but with pmpcfg(i).A=TOR]
 TST15-14 (LOW-PRIO)
-  [same as TST11-14 (group), but with pmpcfg(i).A=TOR]
+  [same as TST11-14(group), but with pmpcfg(i).A=TOR]
 TST15-15 (LOW-PRIO)
-  [same as TST11-15 (group), but with pmpcfg(i).A=TOR]
+  [same as TST11-15(group), but with pmpcfg(i).A=TOR]
 TST15-16 (LOW-PRIO)
-  [same as TST11-16 (group), but with pmpcfg(i).A=TOR]
+  [same as TST11-16(group), but with pmpcfg(i).A=TOR]
 
 ---------------------------
 
-TST15 (group) => FTR06-a
-  [same as TST11 (group), but with pmpcfg(i).A=TOR]
+TST15-2x(group) => FTR06-a
+  [same as TST11-2x(group), but with pmpcfg(i).A=TOR]
 TST15-21 (HIGH-PRIO)
-  [same as TST11-21 (group), but with pmpcfg(i).A=TOR]
+  [same as TST11-21(group), but with pmpcfg(i).A=TOR]
 TST15-22 (MEDIUM-PRIO)
-  [same as TST11-22 (group), but with pmpcfg(i).A=TOR]
+  [same as TST11-22(group), but with pmpcfg(i).A=TOR]
 TST15-23 (MEDIUM-PRIO)
-  [same as TST11-23 (group), but with pmpcfg(i).A=TOR]
+  [same as TST11-23(group), but with pmpcfg(i).A=TOR]
 TST15-24 (LOW-PRIO)
-  [same as TST11-24 (group), but with pmpcfg(i).A=TOR]
+  [same as TST11-24(group), but with pmpcfg(i).A=TOR]
 TST15-25 (LOW-PRIO)
-  [same as TST11-25 (group), but with pmpcfg(i).A=TOR]
+  [same as TST11-25(group), but with pmpcfg(i).A=TOR]
 TST15-26 (LOW-PRIO)
-  [same as TST11-26 (group), but with pmpcfg(i).A=TOR]
+  [same as TST11-26(group), but with pmpcfg(i).A=TOR]
 
 ---------------------------
 
-TST15 (group) => FTR06-a
-  [same as TST11 (group), but with pmpcfg(i).A=TOR]
+TST15-3x(group) => FTR06-a
+  [same as TST11-3x(group), but with pmpcfg(i).A=TOR]
 TST15-31 (HIGH-PRIO)
-  [same as TST11-31 (group), but with pmpcfg(i).A=TOR]
+  [same as TST11-31(group), but with pmpcfg(i).A=TOR]
 TST15-32 (MEDIUM-PRIO)
-  [same as TST11-32 (group), but with pmpcfg(i).A=TOR]
+  [same as TST11-32(group), but with pmpcfg(i).A=TOR]
 TST15-33 (MEDIUM-PRIO)
-  [same as TST11-33 (group), but with pmpcfg(i).A=TOR]
+  [same as TST11-33(group), but with pmpcfg(i).A=TOR]
 TST15-34 (LOW-PRIO)
-  [same as TST11-34 (group), but with pmpcfg(i).A=TOR]
+  [same as TST11-34(group), but with pmpcfg(i).A=TOR]
 TST15-35 (LOW-PRIO)
-  [same as TST11-35 (group), but with pmpcfg(i).A=TOR]
+  [same as TST11-35(group), but with pmpcfg(i).A=TOR]
 TST15-36 (LOW-PRIO)
-  [same as TST11-36 (group), but with pmpcfg(i).A=TOR]
+  [same as TST11-36(group), but with pmpcfg(i).A=TOR]
 
 ---------------------------
 
-TST15 (group) => FTR06-a
-  [same as TST11 (group), but with pmpcfg(i).A=TOR]
+TST15-4x(group) => FTR06-a
+  [same as TST11-4x(group), but with pmpcfg(i).A=TOR]
 TST15-41 (LOWEST-PRIO)
-  [same as TST11-41 (group), but with pmpcfg(i).A=TOR]
+  [same as TST11-41(group), but with pmpcfg(i).A=TOR]
 TST15-42 (LOWEST-PRIO)
-  [same as TST11-42 (group), but with pmpcfg(i).A=TOR]
+  [same as TST11-42(group), but with pmpcfg(i).A=TOR]
 TST15-43 (LOWEST-PRIO)
-  [same as TST11-43 (group), but with pmpcfg(i).A=TOR]
+  [same as TST11-43(group), but with pmpcfg(i).A=TOR]
 TST15-44 (LOWEST-PRIO)
-  [same as TST11-44 (group), but with pmpcfg(i).A=TOR]
+  [same as TST11-44(group), but with pmpcfg(i).A=TOR]
 TST15-45 (LOWEST-PRIO)
-  [same as TST11-45 (group), but with pmpcfg(i).A=TOR]
+  [same as TST11-45(group), but with pmpcfg(i).A=TOR]
 TST15-46 (LOWEST-PRIO)
-  [same as TST11-46 (group), but with pmpcfg(i).A=TOR]
+  [same as TST11-46(group), but with pmpcfg(i).A=TOR]
 
 ---------------------------
 
-TST15 (group) => FTR06-a
-  [same as TST11 (group), but with pmpcfg(i).A=TOR]
+TST15-5x(group) => FTR06-a
+  [same as TST11-5x(group), but with pmpcfg(i).A=TOR]
 TST15-51 (LOWEST-PRIO)
-  [same as TST11-51 (group), but with pmpcfg(i).A=TOR]
+  [same as TST11-51(group), but with pmpcfg(i).A=TOR]
 TST15-52 (LOWEST-PRIO)
-  [same as TST11-52 (group), but with pmpcfg(i).A=TOR]
+  [same as TST11-52(group), but with pmpcfg(i).A=TOR]
 TST15-53 (LOWEST-PRIO)
-  [same as TST11-53 (group), but with pmpcfg(i).A=TOR]
+  [same as TST11-53(group), but with pmpcfg(i).A=TOR]
 TST15-54 (LOWEST-PRIO)
-  [same as TST11-54 (group), but with pmpcfg(i).A=TOR]
+  [same as TST11-54(group), but with pmpcfg(i).A=TOR]
 TST15-55 (LOWEST-PRIO)
-  [same as TST11-55 (group), but with pmpcfg(i).A=TOR]
+  [same as TST11-55(group), but with pmpcfg(i).A=TOR]
 TST15-56 (LOWEST-PRIO)
-  [same as TST11-56 (group), but with pmpcfg(i).A=TOR]
+  [same as TST11-56(group), but with pmpcfg(i).A=TOR]
 
 ////////////////////////////
 
-TST16 (group) => FTR06-a
-  [same as TST12 (group), but with pmpcfg(i).A=TOR]
+TST16-1x(group) => FTR06-a
+  [same as TST12-1x(group), but with pmpcfg(i).A=TOR]
 TST16-11 (LOW-PRIO)
-  [same as TST12-11 (group), but with pmpcfg(i).A=TOR]
+  [same as TST12-11(group), but with pmpcfg(i).A=TOR]
 TST16-12 (LOW-PRIO)
-  [same as TST12-12 (group), but with pmpcfg(i).A=TOR]
+  [same as TST12-12(group), but with pmpcfg(i).A=TOR]
 TST16-13 (LOW-PRIO)
-  [same as TST12-13 (group), but with pmpcfg(i).A=TOR]
+  [same as TST12-13(group), but with pmpcfg(i).A=TOR]
 TST16-14 (HIGH-PRIO)
-  [same as TST12-14 (group), but with pmpcfg(i).A=TOR]
+  [same as TST12-14(group), but with pmpcfg(i).A=TOR]
 TST16-15 (MEDIUM-PRIO)
-  [same as TST12-15 (group), but with pmpcfg(i).A=TOR]
+  [same as TST12-15(group), but with pmpcfg(i).A=TOR]
 TST16-16 (HIGH-PRIO)
-  [same as TST12-16 (group), but with pmpcfg(i).A=TOR]
+  [same as TST12-16(group), but with pmpcfg(i).A=TOR]
 
 ---------------------------
 
-TST16 (group) => FTR06-a
-  [same as TST12 (group), but with pmpcfg(i).A=TOR]
+TST16-2x(group) => FTR06-a
+  [same as TST12-2x(group), but with pmpcfg(i).A=TOR]
 TST16-21 (LOW-PRIO)
-  [same as TST12-21 (group), but with pmpcfg(i).A=TOR]
+  [same as TST12-21(group), but with pmpcfg(i).A=TOR]
 TST16-22 (LOW-PRIO)
-  [same as TST12-22 (group), but with pmpcfg(i).A=TOR]
+  [same as TST12-22(group), but with pmpcfg(i).A=TOR]
 TST16-23 (LOW-PRIO)
-  [same as TST12-23 (group), but with pmpcfg(i).A=TOR]
+  [same as TST12-23(group), but with pmpcfg(i).A=TOR]
 TST16-24 (HIGH-PRIO)
-  [same as TST12-24 (group), but with pmpcfg(i).A=TOR]
+  [same as TST12-24(group), but with pmpcfg(i).A=TOR]
 TST16-25 (MEDIUM-PRIO)
-  [same as TST12-25 (group), but with pmpcfg(i).A=TOR]
+  [same as TST12-25(group), but with pmpcfg(i).A=TOR]
 TST16-26 (HIGH-PRIO)
-  [same as TST12-26 (group), but with pmpcfg(i).A=TOR]
+  [same as TST12-26(group), but with pmpcfg(i).A=TOR]
 
 ---------------------------
 
-TST16 (group) => FTR06-a
-  [same as TST12 (group), but with pmpcfg(i).A=TOR]
+TST16-3x(group) => FTR06-a
+  [same as TST12-3x(group), but with pmpcfg(i).A=TOR]
 TST16-31 (LOW-PRIO)
-  [same as TST12-31 (group), but with pmpcfg(i).A=TOR]
+  [same as TST12-31(group), but with pmpcfg(i).A=TOR]
 TST16-32 (LOW-PRIO)
-  [same as TST12-32 (group), but with pmpcfg(i).A=TOR]
+  [same as TST12-32(group), but with pmpcfg(i).A=TOR]
 TST16-33 (LOW-PRIO)
-  [same as TST12-33 (group), but with pmpcfg(i).A=TOR]
+  [same as TST12-33(group), but with pmpcfg(i).A=TOR]
 TST16-34 (HIGH-PRIO)
-  [same as TST12-34 (group), but with pmpcfg(i).A=TOR]
+  [same as TST12-34(group), but with pmpcfg(i).A=TOR]
 TST16-35 (MEDIUM-PRIO)
-  [same as TST12-35 (group), but with pmpcfg(i).A=TOR]
+  [same as TST12-35(group), but with pmpcfg(i).A=TOR]
 TST16-36 (HIGH-PRIO)
-  [same as TST12-36 (group), but with pmpcfg(i).A=TOR]
+  [same as TST12-36(group), but with pmpcfg(i).A=TOR]
 
 ---------------------------
 
-TST16 (group) => FTR06-a
-  [same as TST12 (group), but with pmpcfg(i).A=TOR]
+TST16-4x(group) => FTR06-a
+  [same as TST12-4x(group), but with pmpcfg(i).A=TOR]
 TST16-41 (LOWEST-PRIO)
-  [same as TST12-41 (group), but with pmpcfg(i).A=TOR]
+  [same as TST12-41(group), but with pmpcfg(i).A=TOR]
 TST16-42 (LOWEST-PRIO)
-  [same as TST12-42 (group), but with pmpcfg(i).A=TOR]
+  [same as TST12-42(group), but with pmpcfg(i).A=TOR]
 TST16-43 (LOWEST-PRIO)
-  [same as TST12-43 (group), but with pmpcfg(i).A=TOR]
+  [same as TST12-43(group), but with pmpcfg(i).A=TOR]
 TST16-44 (LOWEST-PRIO)
-  [same as TST12-44 (group), but with pmpcfg(i).A=TOR]
+  [same as TST12-44(group), but with pmpcfg(i).A=TOR]
 TST16-45 (LOWEST-PRIO)
-  [same as TST12-45 (group), but with pmpcfg(i).A=TOR]
+  [same as TST12-45(group), but with pmpcfg(i).A=TOR]
 TST16-46 (LOWEST-PRIO)
-  [same as TST12-46 (group), but with pmpcfg(i).A=TOR]
+  [same as TST12-46(group), but with pmpcfg(i).A=TOR]
 
 ---------------------------
 
-TST16 (group) => FTR06-a
-  [same as TST12 (group), but with pmpcfg(i).A=TOR]
+TST16-5x(group) => FTR06-a
+  [same as TST12-5x(group), but with pmpcfg(i).A=TOR]
 TST16-51 (LOWEST-PRIO)
-  [same as TST12-51 (group), but with pmpcfg(i).A=TOR]
+  [same as TST12-51(group), but with pmpcfg(i).A=TOR]
 TST16-52 (LOWEST-PRIO)
-  [same as TST12-52 (group), but with pmpcfg(i).A=TOR]
+  [same as TST12-52(group), but with pmpcfg(i).A=TOR]
 TST16-53 (LOWEST-PRIO)
-  [same as TST12-53 (group), but with pmpcfg(i).A=TOR]
+  [same as TST12-53(group), but with pmpcfg(i).A=TOR]
 TST16-54 (LOWEST-PRIO)
-  [same as TST12-54 (group), but with pmpcfg(i).A=TOR]
+  [same as TST12-54(group), but with pmpcfg(i).A=TOR]
 TST16-55 (LOWEST-PRIO)
-  [same as TST12-55 (group), but with pmpcfg(i).A=TOR]
+  [same as TST12-55(group), but with pmpcfg(i).A=TOR]
 TST16-56 (LOWEST-PRIO)
-  [same as TST12-56 (group), but with pmpcfg(i).A=TOR]
+  [same as TST12-56(group), but with pmpcfg(i).A=TOR]
 
 ////////////////////////////
 //TODO: complete specificities for A=OFF
 
-TST17 (group)
-  [same as TST11 (group), but with pmpcfg(i).A=OFF]
+TST17-1x(group)
+  [same as TST11-1x(group), but with pmpcfg(i).A=OFF]
 TST17-11 (HIGH-PRIO)
-  [same as TST11-11 (group), but with pmpcfg(i).A=OFF
+  [same as TST11-11(group), but with pmpcfg(i).A=OFF
   - check instruction fetch access-fault exception raised]
 TST17-12 (MEDIUM-PRIO)
-  [same as TST11-12 (group), but with pmpcfg(i).A=OFF]
+  [same as TST11-12(group), but with pmpcfg(i).A=OFF]
 TST17-13 (MEDIUM-PRIO)
-  [same as TST11-13 (group), but with pmpcfg(i).A=OFF]
+  [same as TST11-13(group), but with pmpcfg(i).A=OFF]
 TST17-14 (LOW-PRIO)
-  [same as TST11-14 (group), but with pmpcfg(i).A=OFF
+  [same as TST11-14(group), but with pmpcfg(i).A=OFF
   - check instruction fetch access-fault exception raised]
 TST17-15 (LOW-PRIO)
-  [same as TST11-15 (group), but with pmpcfg(i).A=OFF]
+  [same as TST11-15(group), but with pmpcfg(i).A=OFF]
 TST17-16 (LOW-PRIO)
-  [same as TST11-16 (group), but with pmpcfg(i).A=OFF]
+  [same as TST11-16(group), but with pmpcfg(i).A=OFF]
 
 ---------------------------
 
-TST17 (group)
-  [same as TST11 (group), but with pmpcfg(i).A=OFF]
+TST17-2x(group)
+  [same as TST11-2x(group), but with pmpcfg(i).A=OFF]
 TST17-21 (HIGH-PRIO)
-  [same as TST11-21 (group), but with pmpcfg(i).A=OFF
-  - check instruction fetch access-fault exception raised]
+  [same as TST11-21(group), but with pmpcfg(i).A=OFF
+  - check load access-fault exception raised]
 TST17-22 (MEDIUM-PRIO)
-  [same as TST11-22 (group), but with pmpcfg(i).A=OFF]
+  [same as TST11-22(group), but with pmpcfg(i).A=OFF]
 TST17-23 (MEDIUM-PRIO)
-  [same as TST11-23 (group), but with pmpcfg(i).A=OFF]
+  [same as TST11-23(group), but with pmpcfg(i).A=OFF]
 TST17-24 (LOW-PRIO)
-  [same as TST11-24 (group), but with pmpcfg(i).A=OFF
-  - check instruction fetch access-fault exception raised]
+  [same as TST11-24(group), but with pmpcfg(i).A=OFF
+  - check load access-fault exception raised]
 TST17-25 (LOW-PRIO)
-  [same as TST11-25 (group), but with pmpcfg(i).A=OFF]
+  [same as TST11-25(group), but with pmpcfg(i).A=OFF]
 TST17-26 (LOW-PRIO)
-  [same as TST11-26 (group), but with pmpcfg(i).A=OFF]
+  [same as TST11-26(group), but with pmpcfg(i).A=OFF]
 
 ---------------------------
 
-TST17 (group)
-  [same as TST11 (group), but with pmpcfg(i).A=OFF]
+TST17-3x(group)
+  [same as TST11-3x(group), but with pmpcfg(i).A=OFF]
 TST17-31 (HIGH-PRIO)
-  [same as TST11-31 (group), but with pmpcfg(i).A=OFF
-  - check instruction fetch access-fault exception raised]
+  [same as TST11-31(group), but with pmpcfg(i).A=OFF
+  - check store access-fault exception raised]
 TST17-32 (MEDIUM-PRIO)
-  [same as TST11-32 (group), but with pmpcfg(i).A=OFF]
+  [same as TST11-32(group), but with pmpcfg(i).A=OFF]
 TST17-33 (MEDIUM-PRIO)
-  [same as TST11-33 (group), but with pmpcfg(i).A=OFF]
+  [same as TST11-33(group), but with pmpcfg(i).A=OFF]
 TST17-34 (LOW-PRIO)
-  [same as TST11-34 (group), but with pmpcfg(i).A=OFF
-  - check instruction fetch access-fault exception raised]
+  [same as TST11-34(group), but with pmpcfg(i).A=OFF
+  - check store access-fault exception raised]
 TST17-35 (LOW-PRIO)
-  [same as TST11-35 (group), but with pmpcfg(i).A=OFF]
+  [same as TST11-35(group), but with pmpcfg(i).A=OFF]
 TST17-36 (LOW-PRIO)
-  [same as TST11-36 (group), but with pmpcfg(i).A=OFF]
+  [same as TST11-36(group), but with pmpcfg(i).A=OFF]
 
 ---------------------------
 
-TST17 (group)
-  [same as TST11 (group), but with pmpcfg(i).A=OFF]
+TST17-4x(group)
+  [same as TST11-4x(group), but with pmpcfg(i).A=OFF]
 TST17-41 (LOWEST-PRIO)
-  [same as TST11-41 (group), but with pmpcfg(i).A=OFF
-  - check instruction fetch access-fault exception raised]
+  [same as TST11-41(group), but with pmpcfg(i).A=OFF
+  - check load access-fault exception raised]
 TST17-42 (LOWEST-PRIO)
-  [same as TST11-42 (group), but with pmpcfg(i).A=OFF]
+  [same as TST11-42(group), but with pmpcfg(i).A=OFF]
 TST17-43 (LOWEST-PRIO)
-  [same as TST11-43 (group), but with pmpcfg(i).A=OFF]
+  [same as TST11-43(group), but with pmpcfg(i).A=OFF]
 TST17-44 (LOWEST-PRIO)
-  [same as TST11-44 (group), but with pmpcfg(i).A=OFF
-  - check instruction fetch access-fault exception raised]
+  [same as TST11-44(group), but with pmpcfg(i).A=OFF
+  - check load access-fault exception raised]
 TST17-45 (LOWEST-PRIO)
-  [same as TST11-45 (group), but with pmpcfg(i).A=OFF]
+  [same as TST11-45(group), but with pmpcfg(i).A=OFF]
 TST17-46 (LOWEST-PRIO)
-  [same as TST11-46 (group), but with pmpcfg(i).A=OFF]
+  [same as TST11-46(group), but with pmpcfg(i).A=OFF]
 
 ---------------------------
 
-TST17 (group)
-  [same as TST11 (group), but with pmpcfg(i).A=OFF]
+TST17-5x(group)
+  [same as TST11-5x(group), but with pmpcfg(i).A=OFF]
 TST17-51 (LOWEST-PRIO)
-  [same as TST11-51 (group), but with pmpcfg(i).A=OFF
-  - check instruction fetch access-fault exception raised]
+  [same as TST11-51(group), but with pmpcfg(i).A=OFF
+  - check store access-fault exception raised]
 TST17-52 (LOWEST-PRIO)
-  [same as TST11-52 (group), but with pmpcfg(i).A=OFF]
+  [same as TST11-52(group), but with pmpcfg(i).A=OFF]
 TST17-53 (LOWEST-PRIO)
-  [same as TST11-53 (group), but with pmpcfg(i).A=OFF]
+  [same as TST11-53(group), but with pmpcfg(i).A=OFF]
 TST17-54 (LOWEST-PRIO)
-  [same as TST11-54 (group), but with pmpcfg(i).A=OFF
-  - check instruction fetch access-fault exception raised]
+  [same as TST11-54(group), but with pmpcfg(i).A=OFF
+  - check store access-fault exception raised]
 TST17-55 (LOWEST-PRIO)
-  [same as TST11-55 (group), but with pmpcfg(i).A=OFF]
+  [same as TST11-55(group), but with pmpcfg(i).A=OFF]
 TST17-56 (LOWEST-PRIO)
-  [same as TST11-56 (group), but with pmpcfg(i).A=OFF]
+  [same as TST11-56(group), but with pmpcfg(i).A=OFF]
 
 ////////////////////////////
 
-TST18 (group)
-  [same as TST12 (group), but with pmpcfg(i).A=OFF]
+TST18-1x(group)
+  [same as TST12-1x(group), but with pmpcfg(i).A=OFF]
 TST18-11 (LOW-PRIO)
-  [same as TST12-11 (group), but with pmpcfg(i).A=OFF
-  - check instruction fetch access-fault exception raised]
+  [same as TST12-11(group), but with pmpcfg(i).A=OFF]
 TST18-12 (LOW-PRIO)
-  [same as TST12-12 (group), but with pmpcfg(i).A=OFF]
+  [same as TST12-12(group), but with pmpcfg(i).A=OFF]
 TST18-13 (LOW-PRIO)
-  [same as TST12-13 (group), but with pmpcfg(i).A=OFF]
+  [same as TST12-13(group), but with pmpcfg(i).A=OFF]
 TST18-14 (HIGH-PRIO)
-  [same as TST12-14 (group), but with pmpcfg(i).A=OFF
+  [same as TST12-14(group), but with pmpcfg(i).A=OFF
   - check instruction fetch access-fault exception raised]
 TST18-15 (MEDIUM-PRIO)
-  [same as TST12-15 (group), but with pmpcfg(i).A=OFF]
+  [same as TST12-15(group), but with pmpcfg(i).A=OFF]
 TST18-16 (HIGH-PRIO)
-  [same as TST12-16 (group), but with pmpcfg(i).A=OFF]
+  [same as TST12-16(group), but with pmpcfg(i).A=OFF]
 
 ---------------------------
 
-TST18 (group)
-  [same as TST12 (group), but with pmpcfg(i).A=OFF]
+TST18-2x(group)
+  [same as TST12-2x(group), but with pmpcfg(i).A=OFF]
 TST18-21 (LOW-PRIO)
-  [same as TST12-21 (group), but with pmpcfg(i).A=OFF
-  - check instruction fetch access-fault exception raised]
+  [same as TST12-21(group), but with pmpcfg(i).A=OFF]
 TST18-22 (LOW-PRIO)
-  [same as TST12-22 (group), but with pmpcfg(i).A=OFF]
+  [same as TST12-22(group), but with pmpcfg(i).A=OFF]
 TST18-23 (LOW-PRIO)
-  [same as TST12-23 (group), but with pmpcfg(i).A=OFF]
+  [same as TST12-23(group), but with pmpcfg(i).A=OFF]
 TST18-24 (HIGH-PRIO)
-  [same as TST12-24 (group), but with pmpcfg(i).A=OFF
+  [same as TST12-24(group), but with pmpcfg(i).A=OFF
   - check instruction fetch access-fault exception raised]
 TST18-25 (MEDIUM-PRIO)
-  [same as TST12-25 (group), but with pmpcfg(i).A=OFF]
+  [same as TST12-25(group), but with pmpcfg(i).A=OFF]
 TST18-26 (HIGH-PRIO)
-  [same as TST12-26 (group), but with pmpcfg(i).A=OFF]
+  [same as TST12-26(group), but with pmpcfg(i).A=OFF]
 
 ---------------------------
 
-TST18 (group)
-  [same as TST12 (group), but with pmpcfg(i).A=OFF]
+TST18-3x(group)
+  [same as TST12-3x(group), but with pmpcfg(i).A=OFF]
 TST18-31 (LOW-PRIO)
-  [same as TST12-31 (group), but with pmpcfg(i).A=OFF
-  - check instruction fetch access-fault exception raised]
+  [same as TST12-31(group), but with pmpcfg(i).A=OFF]
 TST18-32 (LOW-PRIO)
-  [same as TST12-32 (group), but with pmpcfg(i).A=OFF]
+  [same as TST12-32(group), but with pmpcfg(i).A=OFF]
 TST18-33 (LOW-PRIO)
-  [same as TST12-33 (group), but with pmpcfg(i).A=OFF]
+  [same as TST12-33(group), but with pmpcfg(i).A=OFF]
 TST18-34 (HIGH-PRIO)
-  [same as TST12-34 (group), but with pmpcfg(i).A=OFF
+  [same as TST12-34(group), but with pmpcfg(i).A=OFF
   - check instruction fetch access-fault exception raised]
 TST18-35 (MEDIUM-PRIO)
-  [same as TST12-35 (group), but with pmpcfg(i).A=OFF]
+  [same as TST12-35(group), but with pmpcfg(i).A=OFF]
 TST18-36 (HIGH-PRIO)
-  [same as TST12-36 (group), but with pmpcfg(i).A=OFF]
+  [same as TST12-36(group), but with pmpcfg(i).A=OFF]
 
 ---------------------------
 
-TST18 (group)
-  [same as TST12 (group), but with pmpcfg(i).A=OFF]
+TST18-4x(group)
+  [same as TST12-4x(group), but with pmpcfg(i).A=OFF]
 TST18-41 (LOWEST-PRIO)
-  [same as TST12-41 (group), but with pmpcfg(i).A=OFF
-  - check instruction fetch access-fault exception raised]
+  [same as TST12-41(group), but with pmpcfg(i).A=OFF]
 TST18-42 (LOWEST-PRIO)
-  [same as TST12-42 (group), but with pmpcfg(i).A=OFF]
+  [same as TST12-42(group), but with pmpcfg(i).A=OFF]
 TST18-43 (LOWEST-PRIO)
-  [same as TST12-43 (group), but with pmpcfg(i).A=OFF]
+  [same as TST12-43(group), but with pmpcfg(i).A=OFF]
 TST18-44 (LOWEST-PRIO)
-  [same as TST12-44 (group), but with pmpcfg(i).A=OFF
+  [same as TST12-44(group), but with pmpcfg(i).A=OFF
   - check instruction fetch access-fault exception raised]
 TST18-45 (LOWEST-PRIO)
-  [same as TST12-45 (group), but with pmpcfg(i).A=OFF]
+  [same as TST12-45(group), but with pmpcfg(i).A=OFF]
 TST18-46 (LOWEST-PRIO)
-  [same as TST12-46 (group), but with pmpcfg(i).A=OFF]
+  [same as TST12-46(group), but with pmpcfg(i).A=OFF]
 
 ---------------------------
 
-TST18 (group)
-  [same as TST12 (group), but with pmpcfg(i).A=OFF]
+TST18-5x(group)
+  [same as TST12-5x(group), but with pmpcfg(i).A=OFF]
 TST18-51 (LOWEST-PRIO)
-  [same as TST12-51 (group), but with pmpcfg(i).A=OFF
-  - check instruction fetch access-fault exception raised]
+  [same as TST12-51(group), but with pmpcfg(i).A=OFF]
 TST18-52 (LOWEST-PRIO)
-  [same as TST12-52 (group), but with pmpcfg(i).A=OFF]
+  [same as TST12-52(group), but with pmpcfg(i).A=OFF]
 TST18-53 (LOWEST-PRIO)
-  [same as TST12-53 (group), but with pmpcfg(i).A=OFF]
+  [same as TST12-53(group), but with pmpcfg(i).A=OFF]
 TST18-54 (LOWEST-PRIO)
-  [same as TST12-54 (group), but with pmpcfg(i).A=OFF
+  [same as TST12-54(group), but with pmpcfg(i).A=OFF
   - check instruction fetch access-fault exception raised]
 TST18-55 (LOWEST-PRIO)
-  [same as TST12-55 (group), but with pmpcfg(i).A=OFF]
+  [same as TST12-55(group), but with pmpcfg(i).A=OFF]
 TST18-56 (LOWEST-PRIO)
-  [same as TST12-56 (group), but with pmpcfg(i).A=OFF]
+  [same as TST12-56(group), but with pmpcfg(i).A=OFF]
 
 ////////////////////////////
 
-TST21 (group)
+TST21(group)
   [create scenarios where PMP entries with A=2 (NA4) and with/without matching permissions
     - check only NA4 defined addresses are matching]
 TST21-1 = extension of (TST11-11, TST11-21, TST11-31, TST11-41, TST11-51,
@@ -1228,7 +1223,7 @@ TST21-4 = extension of compatible group(8) of (TST11-11, TST11-21, TST11-31, TST
 
 ---------------------------
 
-TST22 (group)
+TST22(group)
   [create scenarios where PMP entries with A=3 (NAPOT) and with/without matching permissions
     - check only NAPOT defined addresses are matching]
 TST22-1 = extension of (TST13-11, TST13-21, TST13-31, TST13-41, TST13-51,
@@ -1298,9 +1293,9 @@ TST22-4 = extension of compatible group(8) of (TST13-11, TST13-21, TST13-31, TST
 
 ---------------------------
 
-TST23 (group) => 
+TST23(group) => 
   [create scenarios where PMP entries with A=1 (TOR) and with/without matching permissions
-    - pmpaddr(iÅ1) < pmpaddr(i), pmpcfg(i).A=TOR and pmpcfg(i-1) with/without matching permissions
+    - pmpaddr(i‚àí1) < pmpaddr(i), pmpcfg(i).A=TOR and pmpcfg(i-1) with/without matching permissions
     - check only TOR defined addresses are matching]
 TST23-1 = extension of (TST15-11, TST15-21, TST15-31, TST15-41, TST15-51,
                         TST15-12, TST15-22, TST15-32, TST15-42, TST15-52,
@@ -1365,7 +1360,7 @@ TST23-4 = extension of compatible group(8) of (TST15-11, TST15-21, TST15-31, TST
 
 ---------------------------
 
-TST24 (group) => FTR09-g
+TST24(group) => FTR09-g
   [create scenarios where PMP entries with A=0 (OFF) and with matching permissions
     - check no address matching for those PMP entries]
   [create scenarios where all PMP entries with A=0 (OFF) and with matching permissions
@@ -1426,15 +1421,15 @@ TST26 = same as TST15+TST16 (groups) with PMP entry (0) with pmpaddr(0) = 0
     - pmpaddr(0) = 0]
 
 //TO COMPLETE => FTR06-c
-TST27 = same as TST23-2 but with pmpaddr(i) Å pmpaddr(i-1) and with pmpcfg(i) and pmpcfg(i-1) correct
+TST27 = same as TST23-2 but with pmpaddr(i) ‚â§ pmpaddr(i-1) and with pmpcfg(i) and pmpcfg(i-1) correct
   [create scenario where PMP entry pmpcfg(i) with TOR:
-    - pmpaddr(i) Å pmpaddr(i-1) and PMP entry pmpcfg(i-1) correct]
+    - pmpaddr(i) ‚â§ pmpaddr(i-1) and PMP entry pmpcfg(i-1) correct]
   [create scenario where PMP entry pmpcfg(0) with TOR:
-    - pmpaddr(0) >= pmpaddr(1/2/3/Å)]
+    - pmpaddr(0) >= pmpaddr(1/2/3/‚Ä¶)]
 
 ////////////////////////////
 
-TST31 (group) => FTR08-a and FTR08-b
+TST31(group) => FTR08-a and FTR08-b
   [create scenario where L=0 for PMP entry (i)
     - check pmp(i)cfg and pmpaddr(i) are writable in M-mode only]
   [create scenario where L=1 for PMP entry (i)
@@ -1487,7 +1482,7 @@ TST31-7 = extension of compatible group(8) of (TST11-11, TST11-21, TST11-31, TST
 
 ---------------------------
 
-TST32 (group) => FTR08-a and FTR08-b
+TST32(group) => FTR08-a and FTR08-b
   [create scenario where pmp(i)cfg.L=1 and pmp(i)cfg.A=NAPOT for PMP entry (i)]
 TST32-1 = same as TST31-1 but with extension of (TST13-14, TST13-24, TST13-34, TST13-44, TST13-54,
                                                  TST14-14, TST14-24, TST14-34, TST14-44, TST14-54)
@@ -1512,7 +1507,7 @@ TST32-7 = same as TST31-7 but with extension of (TST13-11, TST13-21, TST13-31, T
 
 ---------------------------
 
-TST33 (group) => FTR08-a and FTR08-b
+TST33(group) => FTR08-a and FTR08-b
   [create scenario where pmp(i)cfg.L=1 and pmp(i)cfg.A=TOR for PMP entry (i)
     - additionally, check writes to pmpaddr(i-1) are ignored]
 TST33-1 = same as TST31-1 but with extension of (TST15-14, TST15-24, TST15-34, TST15-44, TST15-54,
@@ -1538,7 +1533,7 @@ TST33-7 = same as TST31-7 but with extension of (TST15-11, TST15-21, TST15-31, T
 
 ---------------------------
 
-TST34 (group) => FTR08-a and FTR08-b
+TST34(group) => FTR08-a and FTR08-b
   [create scenario where pmp(i)cfg.A=OFF, then pmp(i)cfg.L=1 for PMP entry (i)
     - check writes to pmp(i)cfg are ignored]
 TST34-1 = same as TST31-1 but with extension of (TST17-14, TST17-24, TST17-34, TST17-44, TST17-54,
@@ -1564,7 +1559,7 @@ TST34-7 = same as TST31-7 but with extension of (TST17-11, TST17-21, TST17-31, T
 
 ---------------------------
 
-TST39 (group) => FTR08-a and FTR08-b
+TST39(group) => FTR08-a and FTR08-b
   [create scenario where pmp(i)cfg.L=1 and pmp(i)cfg.A=NA4/NAPOT/TOR/OFF for PMP entry (i)]
 TST39-1 = same as TST31-1 but with extension of (TST1*-14, TST1*-24, TST1*-34, TST1*-44, TST1*-54)
 TST39-2 = same as TST31-2 but with extension of (TST1*-14, TST1*-24, TST1*-34, TST1*-44, TST1*-54)
@@ -1579,7 +1574,7 @@ TST39-7 = same as TST31-7 but with extension of (TST1*-11, TST1*-21, TST1*-31, T
 
 ////////////////////////////
 
-TST42 (group) => FTR02-b1
+TST42(group) => FTR02-b1
   [check if the lowest-numbered PMP CSRs must be programmed for higher-numbered ones to be taken into account in PMP checks]
 TST42-1 = extension of (TST11-11, TST11-21, TST11-31, TST11-41, TST11-51,
                         TST11-14, TST11-24, TST11-34, TST11-44, TST11-54,
@@ -1620,7 +1615,7 @@ TST42-3 = extension of compatible group(N) of (TST11-11, TST11-21, TST11-31, TST
 
 ////////////////////////////
 
-TST51 (group) => FTR09-a, FTR09-b and FTR09-c
+TST51(group) => FTR09-a, FTR09-b and FTR09-c
   [create scenarios where 2 PMP entries with same pmpaddr
     - one without matching permissions or with A=OFF
     - one with matching permissions and A=NA4/NAPOT/TOR
@@ -1736,7 +1731,7 @@ TST64
 
 //TST65 => FTR10-c
 [create scenario with misaligned loads, stores, and instruction fetches generating multiple accesses for which:
- - access-fault exception occurs at 1st, 2nd, Å last access
+ - access-fault exception occurs at 1st, 2nd, ‚Ä¶ last access
  - other accesses succeed]
 [if floating-point is enabled, create scenario for floating-point store wider than XLEN bits (e.g. FSD instruction)
 

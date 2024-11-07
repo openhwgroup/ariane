@@ -1,0 +1,277 @@
+!Feature
+next_elt_id: 5
+name: CSRs locked access
+id: 3
+display_order: 3
+subfeatures: !!omap
+- 000_configure_1_pmp_entry: !Subfeature
+    name: 000_configure_1_pmp_entry
+    tag: VP_PMP_F003_S001
+    next_elt_id: 1
+    display_order: 0
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F003_S001_I000
+        description: "{Page 60 Section \"Locking and Privilege Mode\" Volume II: RISC-V
+          Privileged Architectures V20211203}\n\nThe L bit indicates that the PMP
+          entry is locked, i.e., writes to the configuration register and associated
+          address registers are ignored\nIf PMP entry (i) is locked, writes to pmp(i)cfg
+          and pmpaddr(i) are ignored\nLocked PMP entries remain locked until the hart
+          is reset\n\n\n{Page 60 Section \"Locking and Privilege Mode\" Volume II:
+          RISC-V Privileged Architectures V20211203}\n\nSetting the L bit locks the
+          PMP entry even when the A field is set to OFF\n\nAdditionally, if PMP entry
+          (i) is locked and pmp(i)cfg.A is set to TOR, writes to pmpaddr(i-1) are
+          ignored"
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "configure 1 PMP entry (the 1st one) with L=1,\n  - write PMP
+          entry (i) with L=1 in M-mode\n  - A is random, should also be tried with
+          A=OFF when L=1 (to cover feature above)\n  - check PMP entry (i) written
+          value in M-mode\n  - check for PMP entry (i) where L=1 that pmp(i)cfg and
+          pmpaddr(i) are effectively locked (M-mode check only)\n  - also check for
+          PMP entry (i) where L=1 and pmp(i)cfg.A=TOR that pmpaddr(i-1) is effectively
+          locked\n  - apply hart reset\n  - check for PMP entry (i) reset value (read
+          zero) by reading in M mode\n  - write PMP entry (i) in M-mode\n  - check
+          PMP entry (i) written value in M-mode\n\nREUSABILITY\n  - if possible, the
+          PMP entry number (i) is a configurable parameter\n  - if possible, (L) value
+          is a configurable parameter\n  - so the same sub-functions are reused with
+          varying (i) and (L) parameters"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<< link to the old pmp_verif_plan.txt and pmp_verif_plan_features.txt
+          files (not up-to-date) : reading below not mandatory but may help for better
+          understanding >>\n\nTST03(group) => FTR08-a and FTR08-b\n  [check that HW
+          implemented PMP entries are not writable/readable in M-mode (L=1)]\n  [check
+          that no HW implemented PMP entry are writable/readable in S or U modes (L=1)]\n\
+          \    - before any configuration, check all pmp(i)cfg and pmpaddr(i) are
+          M-mode read zero\n    - configure PMP entry (i) with L=1 (or 0):  pmp(i)cfg
+          and pmpaddr(i) maybe random values\n    - execute following tests specific
+          checks\n    - check only hart reset unlocks all => FTR08-b\n    - check
+          reset values: all pmp(i)cfg and pmpaddr(i) are M-mode read zero\n\nTST03-1
+          (HIGH-PRIO)\n[configure 1 PMP entry ([FTR02-b1]: maybe mandatorily the first
+          one): with L=1,\n  - if possible, the PMP entry number is a configurable
+          parameter\n  - if possible, L value is a configurable parameter\n  - check
+          for PMP entry (i) where L=1 that pmp(i)cfg and pmpaddr(i) are effectively
+          locked whatever the SW mode => FTR08-a\n  - check for PMP entry (i) where
+          L=1 that pmp(i)cfg and pmpaddr(i) are not writable/readable in S or U modes]"
+- 001_configure_2_pmp_entries_L1: !Subfeature
+    name: 001_configure_2_pmp_entries_L1
+    tag: VP_PMP_F003_S002
+    next_elt_id: 1
+    display_order: 1
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F003_S002_I000
+        description: "{Page 60 Section \"Locking and Privilege Mode\" Volume II: RISC-V
+          Privileged Architectures V20211203}\n\nThe L bit indicates that the PMP
+          entry is locked, i.e., writes to the configuration register and associated
+          address registers are ignored\nIf PMP entry (i) is locked, writes to pmp(i)cfg
+          and pmpaddr(i) are ignored\nLocked PMP entries remain locked until the hart
+          is reset\n\n\n{Page 60 Section \"Locking and Privilege Mode\" Volume II:
+          RISC-V Privileged Architectures V20211203}\n\nSetting the L bit locks the
+          PMP entry even when the A field is set to OFF\n\nAdditionally, if PMP entry
+          (i) is locked and pmp(i)cfg.A is set to TOR, writes to pmpaddr(i-1) are
+          ignored"
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "configure 2 PMP entries (the 2 first ones in incrementing order)
+          with L=1,\n  - reuse of VP_PMP_F003_S001_I000 sequence"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<< link to the old pmp_verif_plan.txt and pmp_verif_plan_features.txt
+          files (not up-to-date) : reading below not mandatory but may help for better
+          understanding >>\n\nTST03(group) => FTR08-a and FTR08-b\n  [check that HW
+          implemented PMP entries are not writable/readable in M-mode (L=1)]\n  [check
+          that no HW implemented PMP entry are writable/readable in S or U modes (L=1)]\n\
+          \    - before any configuration, check all pmp(i)cfg and pmpaddr(i) are
+          M-mode read zero\n    - configure PMP entry (i) with L=1 (or 0):  pmp(i)cfg
+          and pmpaddr(i) maybe random values\n    - execute following tests specific
+          checks\n    - check only hart reset unlocks all => FTR08-b\n    - check
+          reset values: all pmp(i)cfg and pmpaddr(i) are M-mode read zero\n\nTST03-2
+          (LOW-PRIO) = 2 times reuse/call of TST02-1\n[configure 2 PMP entries ([FTR02-b1]:
+          maybe mandatorily the 2 first ones): both with L=1,\n  - check for PMP entry
+          (i) where L=1 that pmp(i)cfg and pmpaddr(i) are effectively locked whatever
+          the SW mode => FTR08-a\n  - check for PMP entry (i) where L=1 that pmp(i)cfg
+          and pmpaddr(i) are not writable/readable in S or U modes]"
+- 002_configure_2_pmp_entries_L0_L1: !Subfeature
+    name: 002_configure_2_pmp_entries_L0_L1
+    tag: VP_PMP_F003_S003
+    next_elt_id: 1
+    display_order: 2
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F003_S003_I000
+        description: "{Page 60 Section \"Locking and Privilege Mode\" Volume II: RISC-V
+          Privileged Architectures V20211203}\n\nThe L bit indicates that the PMP
+          entry is locked, i.e., writes to the configuration register and associated
+          address registers are ignored\nIf PMP entry (i) is locked, writes to pmp(i)cfg
+          and pmpaddr(i) are ignored\nLocked PMP entries remain locked until the hart
+          is reset\n\n\n{Page 60 Section \"Locking and Privilege Mode\" Volume II:
+          RISC-V Privileged Architectures V20211203}\n\nSetting the L bit locks the
+          PMP entry even when the A field is set to OFF\n\nAdditionally, if PMP entry
+          (i) is locked and pmp(i)cfg.A is set to TOR, writes to pmpaddr(i-1) are
+          ignored"
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "configure 2 PMP entries (the 2 first ones in incrementing order)
+          at least one with L=1 and one with L=0,\n  - write PMP entry (i) with L=0/1
+          in M-mode\n  - A is random, should also be tried with A=OFF when L=1 (to
+          cover feature above)\n  - check PMP entry (i) written value in M-mode\n\
+          \  - check for PMP entry (i) where L=0 that pmp(i)cfg and pmpaddr(i) are
+          writable in M mode (read back the written value in M mode)\n  - check for
+          PMP entry (i) where L=1 that pmp(i)cfg and pmpaddr(i) are effectively locked
+          (M-mode check only)\n  - also check for PMP entry (i) where L=1 and pmp(i)cfg.A=TOR
+          that pmpaddr(i-1) is effectively locked\n  - apply hart reset\n  - check
+          for PMP entry (i) reset value (read zero) by reading in M mode\n  - write
+          PMP entry (i) in M-mode\n  - check PMP entry (i) written value in M-mode\n\
+          \nREUSABILITY\n  - if possible, the PMP entry number (i) is a configurable
+          parameter\n  - if possible, (L) value is a configurable parameter\n  - so
+          the same sub-functions are reused with varying (i) and (L) parameters"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<< link to the old pmp_verif_plan.txt and pmp_verif_plan_features.txt
+          files (not up-to-date) : reading below not mandatory but may help for better
+          understanding >>\n\nTST03(group) => FTR08-a and FTR08-b\n  [check that HW
+          implemented PMP entries are not writable/readable in M-mode (L=1)]\n  [check
+          that no HW implemented PMP entry are writable/readable in S or U modes (L=1)]\n\
+          \    - before any configuration, check all pmp(i)cfg and pmpaddr(i) are
+          M-mode read zero\n    - configure PMP entry (i) with L=1 (or 0):  pmp(i)cfg
+          and pmpaddr(i) maybe random values\n    - execute following tests specific
+          checks\n    - check only hart reset unlocks all => FTR08-b\n    - check
+          reset values: all pmp(i)cfg and pmpaddr(i) are M-mode read zero\n\nTST03-3
+          (HIGH-PRIO) = 2 times reuse/call of TST02-1\n[configure 2 PMP entries ([FTR02-b1]:
+          maybe mandatorily the 2 first ones): one with L=1 and one with L=0,\n  -
+          check for PMP entry (i) where L=1 that pmp(i)cfg and pmpaddr(i) are effectively
+          locked whatever the SW mode => FTR08-a\n  - check for PMP entry (i) where
+          L=1 that pmp(i)cfg and pmpaddr(i) are not writable/readable in S or U modes\n\
+          \  - check locked PMP entry (i) has no effect on unlocked PMP entry (j)\n\
+          \  - check for PMP entry (i) where L=0 that pmp(i)cfg and pmpaddr(i) are
+          writable/readable in M-mode only\n  - check for PMP entry (i) where L=0
+          that pmp(i)cfg and pmpaddr(i) are not writable/readable in S or U modes]"
+- 003_configure_N_pmp_entries: !Subfeature
+    name: 003_configure_N_pmp_entries
+    tag: VP_PMP_F003_S004
+    next_elt_id: 1
+    display_order: 3
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F003_S004_I000
+        description: "{Page 60 Section \"Locking and Privilege Mode\" Volume II: RISC-V
+          Privileged Architectures V20211203}\n\nThe L bit indicates that the PMP
+          entry is locked, i.e., writes to the configuration register and associated
+          address registers are ignored\nIf PMP entry (i) is locked, writes to pmp(i)cfg
+          and pmpaddr(i) are ignored\nLocked PMP entries remain locked until the hart
+          is reset\n\n\n{Page 60 Section \"Locking and Privilege Mode\" Volume II:
+          RISC-V Privileged Architectures V20211203}\n\nSetting the L bit locks the
+          PMP entry even when the A field is set to OFF\n\nAdditionally, if PMP entry
+          (i) is locked and pmp(i)cfg.A is set to TOR, writes to pmpaddr(i-1) are
+          ignored"
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "configure N PMP entries (the N first ones in incrementing order)
+          at least one with L=1 and one with L=0,\n  - reuse of VP_PMP_F003_S003_I000
+          sequence"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<< link to the old pmp_verif_plan.txt and pmp_verif_plan_features.txt
+          files (not up-to-date) : reading below not mandatory but may help for better
+          understanding >>\n\nTST03(group) => FTR08-a and FTR08-b\n  [check that HW
+          implemented PMP entries are not writable/readable in M-mode (L=1)]\n  [check
+          that no HW implemented PMP entry are writable/readable in S or U modes (L=1)]\n\
+          \    - before any configuration, check all pmp(i)cfg and pmpaddr(i) are
+          M-mode read zero\n    - configure PMP entry (i) with L=1 (or 0):  pmp(i)cfg
+          and pmpaddr(i) maybe random values\n    - execute following tests specific
+          checks\n    - check only hart reset unlocks all => FTR08-b\n    - check
+          reset values: all pmp(i)cfg and pmpaddr(i) are M-mode read zero\n\nTST03-4
+          (LOW-PRIO) = N times reuse/call of TST02-1\n[configure N PMP entries ([FTR02-b1]:
+          maybe mandatorily the N first ones): at least one with L=1 and one with
+          L=0,\n  - check for PMP entry (i) where L=1 that pmp(i)cfg and pmpaddr(i)
+          are effectively locked whatever the SW mode => FTR08-a\n  - check for PMP
+          entry (i) where L=1 that pmp(i)cfg and pmpaddr(i) are not writable/readable
+          in S or U modes\n  - check locked PMP entry (i) has no effect on unlocked
+          PMP entry (j)\n  - check for PMP entry (i) where L=0 that pmp(i)cfg and
+          pmpaddr(i) are writable/readable in M-mode only\n  - check for PMP entry
+          (i) where L=0 that pmp(i)cfg and pmpaddr(i) are not writable/readable in
+          S or U modes]"
+- 004_configure_8_pmp_entries: !Subfeature
+    name: 004_configure_8_pmp_entries
+    tag: VP_PMP_F003_S005
+    next_elt_id: 1
+    display_order: 4
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F003_S005_I000
+        description: "{Page 60 Section \"Locking and Privilege Mode\" Volume II: RISC-V
+          Privileged Architectures V20211203}\n\nThe L bit indicates that the PMP
+          entry is locked, i.e., writes to the configuration register and associated
+          address registers are ignored\nIf PMP entry (i) is locked, writes to pmp(i)cfg
+          and pmpaddr(i) are ignored\nLocked PMP entries remain locked until the hart
+          is reset\n\n\n{Page 60 Section \"Locking and Privilege Mode\" Volume II:
+          RISC-V Privileged Architectures V20211203}\n\nSetting the L bit locks the
+          PMP entry even when the A field is set to OFF\n\nAdditionally, if PMP entry
+          (i) is locked and pmp(i)cfg.A is set to TOR, writes to pmpaddr(i-1) are
+          ignored"
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "configure all 8 PMP entries (in incrementing order) at least
+          one with L=1 and one with L=0,\n  - reuse of VP_PMP_F003_S003_I000 sequence"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<< link to the old pmp_verif_plan.txt and pmp_verif_plan_features.txt
+          files (not up-to-date) : reading below not mandatory but may help for better
+          understanding >>\n\nTST03(group) => FTR08-a and FTR08-b\n  [check that HW
+          implemented PMP entries are not writable/readable in M-mode (L=1)]\n  [check
+          that no HW implemented PMP entry are writable/readable in S or U modes (L=1)]\n\
+          \    - before any configuration, check all pmp(i)cfg and pmpaddr(i) are
+          M-mode read zero\n    - configure PMP entry (i) with L=1 (or 0):  pmp(i)cfg
+          and pmpaddr(i) maybe random values\n    - execute following tests specific
+          checks\n    - check only hart reset unlocks all => FTR08-b\n    - check
+          reset values: all pmp(i)cfg and pmpaddr(i) are M-mode read zero\n\nTST03-5
+          (HIGH-PRIO) = 8 times reuse/call of TST02-1\n[configure 8 PMP entries: at
+          least one with L=1 and one with L=0,\n  - check for PMP entry (i) where
+          L=1 that pmp(i)cfg and pmpaddr(i) are effectively locked whatever the SW
+          mode => FTR08-a\n  - check for PMP entry (i) where L=1 that pmp(i)cfg and
+          pmpaddr(i) are not writable/readable in S or U modes\n  - check locked PMP
+          entry (i) has no effect on unlocked PMP entry (j)\n  - check for PMP entry
+          (i) where L=0 that pmp(i)cfg and pmpaddr(i) are writable/readable in M-mode
+          only\n  - check for PMP entry (i) where L=0 that pmp(i)cfg and pmpaddr(i)
+          are not writable/readable in S or U modes]"
+vptool_gitrev: '$Id: a8b561f68549658061625891c533e7d45996bc9e $'
+io_fmt_gitrev: '$Id: 61ab4e53ca49e21d56c416f0af0fa04d148e8001 $'
+config_gitrev: '$Id: 5192fced2cfa10be5e18e827922e31e7489ed987 $'
+ymlcfg_gitrev: '$Id: ce5e73bd5e8e0099334cb657afb7a624a99afbda $'

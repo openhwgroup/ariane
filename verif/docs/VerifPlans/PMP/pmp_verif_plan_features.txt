@@ -10,7 +10,7 @@ FTR01-b
 [the standard PMP encoding supports regions as small as four bytes.]
 
 FTR01-c
-[Certain regions' privileges can be hardwired: so only ever be visible in machine mode but in no lower-privilege layers.]
+[Certain regions’ privileges can be hardwired: so only ever be visible in machine mode but in no lower-privilege layers.]
 FTR01-c-extended
 [PMP regions hardwired privileges can only be observed in M-mode]
 
@@ -46,14 +46,14 @@ FTR02-d
 [PMP CSRs are only accessible to M-mode]
 
 FTR02-e
-[2 CSRs, pmpcfg0-pmpcfg1, hold the configurations pmp0cfg-pmp7cfg for the 8 PMP entries]
+[2 CSRs, pmpcfg0–pmpcfg1, hold the configurations pmp0cfg–pmp7cfg for the 8 PMP entries]
 
 
 ////////////////////////////
 -23-FTR03
 
 FTR03-a
-[Each PMP address register encodes bits 33-2 of a 34-bit physical address]
+[Each PMP address register encodes bits 33–2 of a 34-bit physical address]
 
 FTR03-b (NOT TOTALLY UNDERSTOOD!!!)
 [Not all physical address bits may be implemented, and so the pmpaddr registers are WARL]
@@ -82,7 +82,7 @@ FTR04-e-assumption
 -27-FTR05
 
 FTR05-a
-[The A field in a PMP entry's configuration register encodes the address-matching mode of the associated PMP address register]
+[The A field in a PMP entry’s configuration register encodes the address-matching mode of the associated PMP address register]
 [When A=OFF, this PMP entry is disabled and matches no addresses]
 [When A=TOR, top boundary of an arbitrary range]
 [When A=NA4, naturally aligned four-byte regions]
@@ -93,13 +93,13 @@ FTR05-a
 -28-FTR06
 
 FTR06-a
-[If PMP entry i's A field is set to TOR, the entry matches any address y such that pmpaddr(i�1) � y < pmpaddr(i) (irrespective of the value of pmpcfg(i�1))]
+[If PMP entry i’s A field is set to TOR, the entry matches any address y such that pmpaddr(i−1) ≤ y < pmpaddr(i) (irrespective of the value of pmpcfg(i−1))]
 
 FTR06-b
-[If PMP entry 0's A field is set to TOR, zero is used for the lower bound, and so it matches any address y < pmpaddr(0)]
+[If PMP entry 0’s A field is set to TOR, zero is used for the lower bound, and so it matches any address y < pmpaddr(0)]
 
 FTR06-c
-[If pmpaddr(i�1) � pmpaddr(i) and pmpcfg(i).A=TOR, then PMP entry i matches no addresses]
+[If pmpaddr(i−1) ≥ pmpaddr(i) and pmpcfg(i).A=TOR, then PMP entry i matches no addresses]
 
 ////////////////////////////
 -30-FTR07
@@ -172,7 +172,7 @@ FTR09-f-question
 [what happens if no PMP entry is implemented ?]
 
 FTR09-g
-[If at least one PMP entry is implemented, but all PMP entries' A fields are set to OFF, then all S-mode and U-mode memory accesses will fail]
+[If at least one PMP entry is implemented, but all PMP entries’ A fields are set to OFF, then all S-mode and U-mode memory accesses will fail]
 FTR09-g-question (same as FTR09-f-question if 'memory access' is no different matter)
 [what happens if no PMP entry is implemented ?]
 
@@ -181,7 +181,7 @@ question are the pmpaddr(i) aligned to 4bytes ?
  - NAPOT: naturally aligned power-of-2 regions
  - TOR:
  These modes support four-byte granularity
- Each PMP address register encodes bits 33-2 of a 34-bit physical address for RV32
+ Each PMP address register encodes bits 33–2 of a 34-bit physical address for RV32
 
 ////////////////////////////
 -36-FTR10

@@ -1,0 +1,90 @@
+!Feature
+next_elt_id: 2
+name: CSRs Hardwired regions
+id: 5
+display_order: 5
+subfeatures: !!omap
+- 000_access with L=0: !Subfeature
+    name: 000_access with L=0
+    tag: VP_PMP_F005_S001
+    next_elt_id: 1
+    display_order: 0
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F005_S001_I000
+        description: "{Page 56 Volume II: RISC-V Privileged Architectures V20211203}\n
+          Certain regions’ privileges can be hardwired: so only ever be visible in
+          machine mode but in no lower-privilege layers.\n\n{Section 3.7.1 Page 57
+          Volume II: RISC-V Privileged Architectures V20211203}\nImplementations may
+          implement zero, 16, or 64 PMP CSRs\n\n{https://docs.openhwgroup.org/projects/cva6-user-manual/01_cva6_user/PMP.html}\n
+          A maximum of 16 PMP entries are supported.\nAll PMP CSRs are always implemented,
+          but CSRs (or bitfields of CSRs) related to PMP entries with number CVA6Cfg.NrPMPEntries
+          and above are hardwired to zero.\n\nTRISTAN\n8 PMP entries are implemented"
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "configure the first 8 PMP entries with L=0\n  - for each PMP
+          entry (i), check several times that pmp(i)cfg and pmpaddr(i) can be written
+          and can be read back exactly the same (in M-mode)\n\nfor the last 8 PMP
+          entries, check that pmp(i)cfg and pmpaddr(i) always read zero after being
+          written (in M-mode with L=0)"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<< link to the old pmp_verif_plan.txt and pmp_verif_plan_features.txt
+          files (not up-to-date) : reading below not mandatory but may help for better
+          understanding >>\n\nTST05 => FTR01-c and FTR01-c-extended\n  [check all
+          regions are configurable in M-mode to make sure none is hardwired]\n  [regions
+          hardwired privileges might only ever be visible in M-mode]\n\nTST05-1 (HIGH-PRIO)
+          extends TST02-4\n  - check the written pmp(i)cfg and pmpaddr(i) values can
+          be read exactly the same as written"
+- 001_access with L=1: !Subfeature
+    name: 001_access with L=1
+    tag: VP_PMP_F005_S002
+    next_elt_id: 1
+    display_order: 1
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F005_S002_I000
+        description: "{Page 56 Volume II: RISC-V Privileged Architectures V20211203}\n
+          Certain regions’ privileges can be hardwired: so only ever be visible in
+          machine mode but in no lower-privilege layers.\n\n{Section 3.7.1 Page 57
+          Volume II: RISC-V Privileged Architectures V20211203}\nImplementations may
+          implement zero, 16, or 64 PMP CSRs\n\n{https://docs.openhwgroup.org/projects/cva6-user-manual/01_cva6_user/PMP.html}\n
+          A maximum of 16 PMP entries are supported.\nAll PMP CSRs are always implemented,
+          but CSRs (or bitfields of CSRs) related to PMP entries with number CVA6Cfg.NrPMPEntries
+          and above are hardwired to zero.\n\nTRISTAN\n8 PMP entries are implemented"
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "configure the first 8 PMP entries with L=1\n  - for each PMP
+          entry (i), check once that pmp(i)cfg and pmpaddr(i) can be written and can
+          be read back exactly the same (in M-mode)\n  - apply hart reset\n  - for
+          each PMP entry (i), check once that pmp(i)cfg and pmpaddr(i) can be written
+          and can be read back exactly the same (in M-mode)\n\nfor the last 8 PMP
+          entries, check that pmp(i)cfg and pmpaddr(i) always read zero after being
+          written (in M-mode with L=1)"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<< link to the old pmp_verif_plan.txt and pmp_verif_plan_features.txt
+          files (not up-to-date) : reading below not mandatory but may help for better
+          understanding >>\n\nTST05 => FTR01-c and FTR01-c-extended\n  [check all
+          regions are configurable in M-mode to make sure none is hardwired]\n  [regions
+          hardwired privileges might only ever be visible in M-mode]\n\nTST05-2 (LOW-PRIO)
+          extends TST03-5\n  - check the written pmp(i)cfg and pmpaddr(i) values can
+          be read exactly the same as written (before hart reset)"
+vptool_gitrev: '$Id: a8b561f68549658061625891c533e7d45996bc9e $'
+io_fmt_gitrev: '$Id: 61ab4e53ca49e21d56c416f0af0fa04d148e8001 $'
+config_gitrev: '$Id: 5192fced2cfa10be5e18e827922e31e7489ed987 $'
+ymlcfg_gitrev: '$Id: ce5e73bd5e8e0099334cb657afb7a624a99afbda $'
