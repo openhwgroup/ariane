@@ -408,6 +408,7 @@ pmp_tests_cv32a65x:
     DASHBOARD_SORT_INDEX: 0
     DASHBOARD_JOB_CATEGORY: "Basic"
     DV_SIMULATORS: "vcs-uvm"
+    COLLECT_SIMU_LOGS: 1
     SPIKE_TANDEM: 1
   script: bash verif/regress/pmp_cv32a65x_tests.sh
   after_script: *simu_after_script
