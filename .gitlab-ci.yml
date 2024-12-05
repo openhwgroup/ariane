@@ -399,6 +399,19 @@ riscv-tests-p:
   script: source verif/regress/dv-riscv-tests.sh
   after_script: *simu_after_script
 
+pmp_tests_cv32a65x:
+  extends:
+    - .fe_smoke_test
+  variables:
+    DASHBOARD_JOB_TITLE: "[DEBUG! TO REMOVE FROM LIGHTS TESTS] PMP cv32a65x"
+    DASHBOARD_JOB_DESCRIPTION: "PMP regression tests"
+    DASHBOARD_SORT_INDEX: 0
+    DASHBOARD_JOB_CATEGORY: "Basic"
+    DV_SIMULATORS: "vcs-uvm"
+    SPIKE_TANDEM: 1
+  script: bash verif/regress/pmp_cv32a65x_tests.sh
+  after_script: *simu_after_script
+
 .verif_test:
   extends:
     - .regress_test
