@@ -22,49 +22,49 @@ main:
     csrw pmpaddr0, zero
 
     # Checking PMP ADDR 1
-    li t0, 0xFACADE01
+    li t0, 0xFACADE02
     csrw pmpaddr1, t0
     csrr t1, pmpaddr1
     bne t0, t1, fail
     csrw pmpaddr1, zero
 
     # Checking PMP ADDR 2
-    li t0, 0xFACADE02
+    li t0, 0xFACADE04
     csrw pmpaddr2, t0
     csrr t1, pmpaddr2
     bne t0, t1, fail
     csrw pmpaddr2, zero
 
     # Checking PMP ADDR 3
-    li t0, 0xFACADE03
+    li t0, 0xFACADE06
     csrw pmpaddr3, t0
     csrr t1, pmpaddr3
     bne t0, t1, fail
     csrw pmpaddr3, zero
 
     # Checking PMP ADDR 4
-    li t0, 0xFACADE04
+    li t0, 0xFACADE08
     csrw pmpaddr4, t0
     csrr t1, pmpaddr4
     bne t0, t1, fail
     csrw pmpaddr4, zero
 
     # Checking PMP ADDR 5
-    li t0, 0xFACADE05
+    li t0, 0xFACADE0A
     csrw pmpaddr5, t0
     csrr t1, pmpaddr5
     bne t0, t1, fail
     csrw pmpaddr5, zero
 
     # Checking PMP ADDR 6
-    li t0, 0xFACADE06
+    li t0, 0xFACADE0C
     csrw pmpaddr6, t0
     csrr t1, pmpaddr6
     bne t0, t1, fail
     csrw pmpaddr6, zero
 
     # Checking PMP ADDR 7
-    li t0, 0xFACADE07
+    li t0, 0xFACADE0E
     csrw pmpaddr7, t0
     csrr t1, pmpaddr7
     bne t0, t1, fail
