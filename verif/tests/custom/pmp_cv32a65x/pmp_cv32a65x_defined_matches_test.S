@@ -20,13 +20,13 @@ main:
     bne t2, t3, fail
 
     # Set up a PMP entry using NAPOT, from 0x8000_0000 to 0xA0000_0000, Read-Write-Execute. 
-    li t0, 0x23ffffff
-    csrw pmpaddr0, t0
-    csrr t1, pmpaddr0
-    bne t0, t1, fail
     li t0, 0x0000001f
     csrw pmpcfg0, t0
     csrr t1, pmpcfg0
+    bne t0, t1, fail
+    li t0, 0x23ffffff
+    csrw pmpaddr0, t0
+    csrr t1, pmpaddr0
     bne t0, t1, fail
 
     # Check a memory access succeeds if no PMP entry matches.

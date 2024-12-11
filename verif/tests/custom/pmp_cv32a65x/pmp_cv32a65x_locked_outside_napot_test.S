@@ -13,17 +13,19 @@
 main:
 
     # Set up PMP using NAPOT, from 0x8000_0000 to 0xB000_0000. 
-    li t0, 0x25ffffff
-    csrw pmpaddr0, t0
-    csrr t1, pmpaddr0
-    bne t0, t1, fail
+    li t2, 0x25ffffff
+    csrw pmpaddr0, t2
 
     # Configure it with LOCK ON, Read-Write-Execute.
     li t0, 0x0000009f
     csrw pmpcfg0, t0
     csrr t1, pmpcfg0
     bne t0, t1, fail
-    
+
+    # Check pmpaddr after switching to NAPOT (and lock)
+    csrr t0, pmpaddr0
+    bne t0, t2, fail
+
     # Check a memory access succeeds when outside the LOCKED entry.
     li t1, 0xB8000000
     li t2, 0xC0D1F1ED

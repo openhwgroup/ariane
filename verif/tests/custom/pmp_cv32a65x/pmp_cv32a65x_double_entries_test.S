@@ -13,23 +13,23 @@
 main:
 
     # Set up PMP using NAPOT, from 0xB000_0000 to 0xC000_0000, Read-Write.
-    li t0, 0x2dffffff
-    csrw pmpaddr6, t0
-    csrr t1, pmpaddr6
-    bne t0, t1, fail
     li t0, 0x001b0000
     csrw pmpcfg1, t0
     csrr t1, pmpcfg1
     bne t0, t1, fail
+    li t0, 0x2dffffff
+    csrw pmpaddr6, t0
+    csrr t1, pmpaddr6
+    bne t0, t1, fail
 
     # Set up PMP using NAPOT, from 0x8000_0000 to 0x9000_0000, Read-Write. 
-    li t0, 0x21ffffff
-    csrw pmpaddr2, t0
-    csrr t1, pmpaddr2
-    bne t0, t1, fail
     li t0, 0x001b0000
     csrw pmpcfg0, t0
     csrr t1, pmpcfg0
+    bne t0, t1, fail
+    li t0, 0x21ffffff
+    csrw pmpaddr2, t0
+    csrr t1, pmpaddr2
     bne t0, t1, fail
 
     # Read-Write check in 0xB800_0000.
