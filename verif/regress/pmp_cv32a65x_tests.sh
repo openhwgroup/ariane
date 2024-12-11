@@ -15,21 +15,13 @@ fi
 
 # Install the required tools
 source ./verif/regress/install-verilator.sh
-source ./verif/regress/install-spike.sh
 
 # Setup sim env
 source ./verif/sim/setup-env.sh
 
-echo "$SPIKE_INSTALL_DIR$"
 
 if ! [ -n "$DV_SIMULATORS" ]; then
-  # DV_SIMULATORS=vcs-testharness,spike
-  # DV_SIMULATORS=vcs-uvm,spike
-  # DV_SIMULATORS=xrun-uvm,spike
-  # DV_SIMULATORS=vcs-testharness
-  # DV_SIMULATORS=vcs-uvm
-    DV_SIMULATORS=xrun-uvm
-  # DV_SIMULATORS=spike
+  DV_SIMULATORS=vcs-uvm
 fi
 
 if ! [ -n "$UVM_VERBOSITY" ]; then
@@ -75,7 +67,6 @@ python3 cva6.py \
         --iss_yaml=cva6.yaml \
         --iss=$DV_SIMULATORS \
         --asm_tests ../tests/custom/pmp_cv32a65x/pmp_cv32a65x_granularity_test.S \
-        --uvm_test uvmt_cva6_pmp_test_c \
         --linker=../../config/gen_from_riscv_config/cv32a65x/linker/link.ld \
         --gcc_opts="-static -mcmodel=medany -fvisibility=hidden -nostdlib -nostartfiles \
                     -g ../tests/custom/common/syscalls.c ../tests/custom/common/crt.S -lgcc \
@@ -100,7 +91,6 @@ python3 cva6.py \
         --iss_yaml=cva6.yaml \
         --iss=$DV_SIMULATORS \
         --asm_tests ../tests/custom/pmp_cv32a65x/pmp_cv32a65x_exact_csrr_test.S \
-        --uvm_test uvmt_cva6_pmp_test_c \
         --linker=../../config/gen_from_riscv_config/cv32a65x/linker/link.ld \
         --gcc_opts="-static -mcmodel=medany -fvisibility=hidden -nostdlib -nostartfiles \
                     -g ../tests/custom/common/syscalls.c ../tests/custom/common/crt.S -lgcc \
@@ -124,7 +114,6 @@ python3 cva6.py \
         --iss_yaml=cva6.yaml \
         --iss=$DV_SIMULATORS \
         --asm_tests ../tests/custom/pmp_cv32a65x/pmp_cv32a65x_lsu_tor_test.S \
-        --uvm_test uvmt_cva6_pmp_test_c \
         --linker=../../config/gen_from_riscv_config/cv32a65x/linker/link.ld \
         --gcc_opts="-static -mcmodel=medany -fvisibility=hidden -nostdlib -nostartfiles \
                     -g ../tests/custom/common/syscalls.c ../tests/custom/common/crt.S -lgcc \
@@ -150,7 +139,6 @@ python3 cva6.py \
         --iss_yaml=cva6.yaml \
         --iss=$DV_SIMULATORS \
         --asm_tests ../tests/custom/pmp_cv32a65x/pmp_cv32a65x_lsu_napot_test.S \
-        --uvm_test uvmt_cva6_pmp_test_c \
         --linker=../../config/gen_from_riscv_config/cv32a65x/linker/link.ld \
         --gcc_opts="-static -mcmodel=medany -fvisibility=hidden -nostdlib -nostartfiles \
                     -g ../tests/custom/common/syscalls.c ../tests/custom/common/crt.S -lgcc \
@@ -176,7 +164,6 @@ python3 cva6.py \
         --iss_yaml=cva6.yaml \
         --iss=$DV_SIMULATORS \
         --asm_tests ../tests/custom/pmp_cv32a65x/pmp_cv32a65x_decreasing_entries_test.S \
-        --uvm_test uvmt_cva6_pmp_test_c \
         --linker=../../config/gen_from_riscv_config/cv32a65x/linker/link.ld \
         --gcc_opts="-static -mcmodel=medany -fvisibility=hidden -nostdlib -nostartfiles \
                     -g ../tests/custom/common/syscalls.c ../tests/custom/common/crt.S -lgcc \
@@ -200,7 +187,6 @@ python3 cva6.py \
         --iss_yaml=cva6.yaml \
         --iss=$DV_SIMULATORS \
         --asm_tests ../tests/custom/pmp_cv32a65x/pmp_cv32a65x_defined_matches_test.S \
-        --uvm_test uvmt_cva6_pmp_test_c \
         --linker=../../config/gen_from_riscv_config/cv32a65x/linker/link.ld \
         --gcc_opts="-static -mcmodel=medany -fvisibility=hidden -nostdlib -nostartfiles \
                     -g ../tests/custom/common/syscalls.c ../tests/custom/common/crt.S -lgcc \
@@ -226,7 +212,6 @@ python3 cva6.py \
         --iss_yaml=cva6.yaml \
         --iss=$DV_SIMULATORS \
         --asm_tests ../tests/custom/pmp_cv32a65x/pmp_cv32a65x_double_entries_test.S \
-        --uvm_test uvmt_cva6_pmp_test_c \
         --linker=../../config/gen_from_riscv_config/cv32a65x/linker/link.ld \
         --gcc_opts="-static -mcmodel=medany -fvisibility=hidden -nostdlib -nostartfiles \
                     -g ../tests/custom/common/syscalls.c ../tests/custom/common/crt.S -lgcc \
@@ -252,7 +237,6 @@ python3 cva6.py \
         --iss_yaml=cva6.yaml \
         --iss=$DV_SIMULATORS \
         --asm_tests ../tests/custom/pmp_cv32a65x/pmp_cv32a65x_locked_outside_napot_test.S \
-        --uvm_test uvmt_cva6_pmp_test_c \
         --linker=../../config/gen_from_riscv_config/cv32a65x/linker/link.ld \
         --gcc_opts="-static -mcmodel=medany -fvisibility=hidden -nostdlib -nostartfiles \
                     -g ../tests/custom/common/syscalls.c ../tests/custom/common/crt.S -lgcc \
@@ -276,7 +260,6 @@ python3 cva6.py \
         --iss_yaml=cva6.yaml \
         --iss=$DV_SIMULATORS \
         --asm_tests ../tests/custom/pmp_cv32a65x/pmp_cv32a65x_locked_outside_tor_test.S \
-        --uvm_test uvmt_cva6_pmp_test_c \
         --linker=../../config/gen_from_riscv_config/cv32a65x/linker/link.ld \
         --gcc_opts="-static -mcmodel=medany -fvisibility=hidden -nostdlib -nostartfiles \
                     -g ../tests/custom/common/syscalls.c ../tests/custom/common/crt.S -lgcc \

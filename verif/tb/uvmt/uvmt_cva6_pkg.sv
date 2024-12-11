@@ -64,9 +64,6 @@ package uvmt_cva6_pkg;
    // Compilance tests
    `include "uvmt_cva6_firmware_test.sv"
 
-   // PMP tests
-   `include "uvmt_cva6_pmp_test.sv"
-
 endpackage : uvmt_cva6_pkg
 
 // All Interfaces used by the CVA6 TB are here
