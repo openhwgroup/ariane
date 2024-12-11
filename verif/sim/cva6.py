@@ -749,8 +749,6 @@ def parse_args(cwd):
                       help="Directed assembly tests")
   parser.add_argument("--c_tests", type=str, default="",
                       help="Directed c tests")
-  parser.add_argument("--uvm_test", type=str, default="uvmt_cva6_firmware_test_c",
-                      help="UVM test running along the C test defined with --c_tests")
   parser.add_argument("--elf_tests", type=str, default="",
                       help="Directed elf tests")
   parser.add_argument("--log_suffix", type=str, default="",
@@ -851,11 +849,6 @@ def load_config(args, cwd):
       args.linker = cwd + f"/../../config/gen_from_riscv_config/{args.target}/linker/link.ld"
     else:
       args.linker = cwd + f"/../../config/gen_from_riscv_config/linker/link.ld"
-
-  if args.uvm_test == "" or args.uvm_test == "uvmt_cva6_firmware_test_c":
-    edit_Makefile(UVM_TESTNAME="uvmt_cva6_firmware_test_c")
-  else:
-    edit_Makefile(UVM_TESTNAME=args.uvm_test)
 
   # Keep the core_setting_dir option to be backward compatible, suggest to use
   # --custom_target
@@ -960,28 +953,6 @@ def load_config(args, cwd):
     isa_extension_list.append("zifencei")
 
   args.spike_params = get_full_spike_param_args(args.spike_params) if args.spike_params else ""
-
-def edit_Makefile(UVM_TESTNAME="uvmt_cva6_firmware_test_c"):
-  script_path = os.path.abspath(__file__)
-  script_dir = os.path.dirname(script_path)
-  file_name = "Makefile"
-  file_path = os.path.join(script_dir, file_name)
-  makefile_lines = []
-  modified_lines = []
-  with open(file_path, 'r') as makefile:
-    makefile_lines = makefile.readlines()
-  for line in makefile_lines:
-    if "+UVM_TESTNAME=" in line:
-      line_pieces = line.split()
-      for i, piece in enumerate(line_pieces):
-        if piece.startswith("+UVM_TESTNAME="):
-          line_pieces[i] = f"+UVM_TESTNAME={UVM_TESTNAME}"
-      modified_line = ' '.join(line_pieces)
-      modified_lines.append("\t" + modified_line + "\n")
-    else:
-      modified_lines.append(line)
-  with open(file_path, 'w') as makefile:
-    makefile.writelines(modified_lines)
 
 def incorrect_version_exit(tool, tool_version, required_version):
   if tool == "Spike":
