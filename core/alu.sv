@@ -51,6 +51,9 @@ module alu
   logic lz_tz_empty, lz_tz_wempty;
   logic [CVA6Cfg.XLEN-1:0] orcbw_result, rev8w_result;
 
+  logic [CVA6Cfg.XLEN-1:0] brev8_reversed;
+  logic [            31:0] unzip_gen;
+  logic [            31:0] zip_gen;
   // bit reverse operand_a for left shifts and bit counting
   generate
     genvar k;
@@ -263,6 +266,29 @@ module alu
     end
   end
 
+  // ZKN gen block
+  if (CVA6Cfg.ZKN && CVA6Cfg.RVB) begin : zkn_gen_block
+    genvar i, m, n;
+    // Generate brev8_reversed by reversing bits within each byte
+    for (i = 0; i < (CVA6Cfg.XLEN / 8); i++) begin : brev8_gen
+      for (m = 0; m < 8; m++) begin : reverse_bits
+        // Reversing the order of bits within a single byte
+        assign brev8_reversed[(i<<3)+m] = fu_data_i.operand_a[(i<<3)+(7-m)];
+      end
+    end
+    // Generate zip and unzip results
+    if (CVA6Cfg.IS_XLEN32) begin
+      for (n = 0; n < 16; n++) begin : zip_unzip_gen
+        // Assigning lower and upper half of operand into the even and odd positions of result
+        assign zip_gen[n<<1] = fu_data_i.operand_a[n];
+        assign zip_gen[(n<<1)+1] = fu_data_i.operand_a[n+16];
+        // Assigning even and odd bits of operand into lower and upper halves of result
+        assign unzip_gen[n] = fu_data_i.operand_a[n<<1];
+        assign unzip_gen[n+16] = fu_data_i.operand_a[(n<<1)+1];
+      end
+    end
+  end
+
   // -----------
   // Result MUX
   // -----------
@@ -357,6 +383,23 @@ module alu
         result_o = (|fu_data_i.operand_b) ? '0 : fu_data_i.operand_a; // move zero to rd if rs2 is nonzero else rs1
         default: ;  // default case to suppress unique warning
       endcase
+    end
+    // ZKN instructions
+    if (CVA6Cfg.ZKN && CVA6Cfg.RVB) begin
+      unique case (fu_data_i.operation)
+        PACK:
+        result_o = (CVA6Cfg.IS_XLEN32) ? ({fu_data_i.operand_b[15:0], fu_data_i.operand_a[15:0]}) : ({fu_data_i.operand_b[31:0], fu_data_i.operand_a[31:0]});
+        PACK_H:
+        result_o = (CVA6Cfg.IS_XLEN32) ? ({16'b0, fu_data_i.operand_b[7:0], fu_data_i.operand_a[7:0]}) : ({48'b0, fu_data_i.operand_b[7:0], fu_data_i.operand_a[7:0]});
+        BREV8: result_o = brev8_reversed;
+        default: ;
+      endcase
+      if (fu_data_i.operation == PACK_W && CVA6Cfg.IS_XLEN64)
+        result_o = {
+          {32{fu_data_i.operand_b[15]}}, {fu_data_i.operand_b[15:0]}, {fu_data_i.operand_a[15:0]}
+        };
+      if (fu_data_i.operation == UNZIP && CVA6Cfg.IS_XLEN32) result_o = unzip_gen;
+      if (fu_data_i.operation == ZIP && CVA6Cfg.IS_XLEN32) result_o = zip_gen;
     end
   end
 endmodule

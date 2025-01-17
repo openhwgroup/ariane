@@ -22,6 +22,7 @@
 |Zbc | RVZbc Carry-less multiplication | Carry-less multiplication is the multiplication in the polynomial ring over GF(2).clmul produces the lower half of the carry-less product and clmulh produces the upper half of the 2✕XLEN carry-less product.clmulr produces bits 2✕XLEN−2:XLEN-1 of the 2✕XLEN carry-less product.
 |Zbs | RVZbs Single bit Instructions | The single-bit instructions provide a mechanism to set, clear, invert, or extract a single bit in a register. The bit is specified by its index.
 |Zicntr | Zicntr | No info found yet for extension Zicntr
+|Zbkb | RVZbkb Bitmanip instructions for Cryptography | The Zbkb extension is a part of the RISC-V Bit-Manipulation (bitmanip) extensions, specifically targeting cryptographic applications. It introduces a set of instructions designed to facilitate operations commonly used in cryptographic algorithms, such as interleaving, packing, and reordering of bits.
 |===
 
 ==== RV32I Base Integer Instructions
@@ -220,4 +221,3 @@
 | BSET | bset rd, rs1, rs2 | X(rd) = X(rs1) \| (1 << (X(rs2) & (XLEN - 1))) | NONE | NONE | This instruction returns rs1 with a single bit set at the index specified in rs2. The index is read from the lower log2(XLEN) bits of rs2. | Single_bit_Operations 
 | BSETI | bseti rd, rs1, shamt | X(rd) = X(rs1) \| (1 << (shamt & (XLEN - 1))) | NONE | NONE | This instruction returns rs1 with a single bit set at the index specified in shamt. The index is read from the lower log2(XLEN) bits of shamt. For RV32, the encodings corresponding to shamt[5]=1 are reserved. | Single_bit_Operations 
 |===
-

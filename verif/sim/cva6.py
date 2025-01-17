@@ -877,9 +877,12 @@ def load_config(args, cwd):
     if base in ("cv64a6_imafdch_sv39", "cv64a6_imafdch_sv39_wb"):
       args.mabi = "lp64d"
       args.isa  = "rv64gch_zba_zbb_zbs_zbc"
-    elif base in ("cv64a6_imafdc_sv39", "cv64a6_imafdc_sv39_hpdcache", "cv64a6_imafdc_sv39_wb"):
+    elif base in ("cv64a6_imafdc_sv39_wb"):
       args.mabi = "lp64d"
       args.isa  = "rv64gc_zba_zbb_zbs_zbc"
+    elif base in ("cv64a6_imafdc_sv39", "cv64a6_imafdc_sv39_hpdcache", "cv64a6_imafdc_sv39_hpdcache_wb"):
+      args.mabi = "lp64d"
+      args.isa  = "rv64gc_zba_zbb_zbs_zbc_zbkb"
     elif base == "cv32a60x":
       args.mabi = "ilp32"
       args.isa  = "rv32imc_zba_zbb_zbs_zbc"
@@ -896,7 +899,7 @@ def load_config(args, cwd):
       args.isa  = "rv32imac"
     elif base == "cv32a6_imac_sv32":
       args.mabi = "ilp32"
-      args.isa  = "rv32imac"
+      args.isa  = "rv32imac_zbkb"
     elif base == "cv32a6_imafc_sv32":
       args.mabi = "ilp32f"
       args.isa  = "rv32imafc"

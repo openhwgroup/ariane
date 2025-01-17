@@ -48,7 +48,9 @@ int main()
     uint8_t uart_res = 0;
     uintptr_t start;
 
-    init_uart(CLOCK_FREQUENCY, UART_BITRATE);
+    #ifndef PLAT_AGILEX
+    init_uart(CLOCK_FREQUENCY, UART_BITRATE); //not needed in intel setup as UART IP is already configured via HW
+    #endif 
     print_uart("Hello World!\r\n");
 
     // See if we should enter update mode
@@ -70,9 +72,12 @@ int main()
         res = update((uint8_t *)0x80000000UL);
     } else {
         print_uart(" booting!\r\n");
-        res = gpt_find_boot_partition((uint8_t *)0x80000000UL, 2 * 16384);
+        #ifndef PLAT_AGILEX
+        res = gpt_find_boot_partition((uint8_t *)0x80000000UL, 2 * 16384); // linux boot not yet supported for altera
+        #endif 
     }
 
+    #ifndef PLAT_AGILEX // linux boot not yet supported for altera
     if (res == 0)
     {
         // jump to the address
@@ -81,6 +86,7 @@ int main()
             "la a1, _dtb;"
             "jr s0");
     }
+    #endif 
 
     while (1)
     {

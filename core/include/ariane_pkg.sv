@@ -31,8 +31,6 @@ package ariane_pkg;
   // TODO: Slowly move those parameters to the new system.
   localparam BITS_SATURATION_COUNTER = 2;
 
-  localparam ISSUE_WIDTH = 1;
-
   // depth of store-buffers, this needs to be a power of two
   localparam logic [2:0] DEPTH_SPEC = 'd4;
 
@@ -489,7 +487,16 @@ package ariane_pkg;
     ACCEL_OP_STORE,
     // Zicond instruction
     CZERO_EQZ,
-    CZERO_NEZ
+    CZERO_NEZ,
+    // Pack instructions
+    PACK,
+    PACK_H,
+    PACK_W,
+    // Brev8 instruction
+    BREV8,
+    // Zip instructions
+    UNZIP,
+    ZIP
   } fu_op;
 
   function automatic logic op_is_branch(input fu_op op);

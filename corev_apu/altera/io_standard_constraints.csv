@@ -1,0 +1,7 @@
+IO_STANDARD "1.2 V" -to cpu_resetn -entity cva6_altera
+IO_STANDARD "TRUE DIFFERENTIAL SIGNALING" -to pll_ref_clk_p -entity cva6_altera
+IO_STANDARD "TRUE DIFFERENTIAL SIGNALING" -to clk_ddr4_ch0_p -entity cva6_altera
+IO_STANDARD "1.2 V" -to led[3] -entity cva6_altera
+IO_STANDARD "1.2 V" -to led[2] -entity cva6_altera
+IO_STANDARD "1.2 V" -to led[1] -entity cva6_altera
+IO_STANDARD "1.2 V" -to led[0] -entity cva6_altera

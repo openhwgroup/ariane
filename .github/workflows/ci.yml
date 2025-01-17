@@ -63,11 +63,14 @@ jobs:
     strategy:
       matrix:
         testcase:  [ cv64a6_imafdc_tests ]
-        config:    [ cv64a6_imafdc_sv39_hpdcache, cv64a6_imafdc_sv39_wb, cv64a6_imafdc_sv39 ]
+        config:    [ cv64a6_imafdc_sv39_hpdcache, cv64a6_imafdc_sv39_hpdcache_wb, cv64a6_imafdc_sv39_wb, cv64a6_imafdc_sv39 ]
         simulator: [ veri-testharness ]
         include:
           - testcase: dv-riscv-arch-test
             config: cv64a6_imafdc_sv39_hpdcache
+            simulator: veri-testharness
+          - testcase: dv-riscv-arch-test
+            config: cv64a6_imafdc_sv39_hpdcache_wb
             simulator: veri-testharness
     needs:
       build-riscv-tests

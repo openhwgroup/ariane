@@ -28,12 +28,12 @@ covergroup cg_interrupt(
   option.name = name;
 
   cp_interrupt: coverpoint instr.rvfi.name_csrs["mcause"].wdata {
-    bins NO_INTERRUPT = {0} iff (!instr.trap);
+    bins NO_INTERRUPT = {0} iff (!instr.rvfi.intr);
 
     ignore_bins IGN_SOFTWARE_INTERRUPT   = {32'h80000003} iff (!sw_int_supported);
-    bins MACHINE_MODE_EXTERNAL_INTERRUPT = {32'h8000000b} iff (instr.trap);
-    bins MACHINE_MODE_SOFTWARE_INTERRUPT = {32'h80000003} iff (instr.trap);
-    bins MACHINE_MODE_TIMER_INTERRUPT    = {32'h80000007} iff (instr.trap);
+    bins MACHINE_MODE_EXTERNAL_INTERRUPT = {32'h8000000b} iff (instr.rvfi.intr);
+    bins MACHINE_MODE_SOFTWARE_INTERRUPT = {32'h80000003} iff (instr.rvfi.intr);
+    bins MACHINE_MODE_TIMER_INTERRUPT    = {32'h80000007} iff (instr.rvfi.intr);
 
    }
 

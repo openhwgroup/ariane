@@ -40,7 +40,10 @@ torture-logs   :=
 elf_file        ?= tmp/riscv-tests/build/benchmarks/dhrystone.riscv
 # board name for bitstream generation. Currently supported: kc705, genesys2, nexys_video
 BOARD          ?= genesys2
-
+ALTERA_BOARD		 ?= DK-DEV-AGF014E3ES
+ALTERA_FAMILY	 ?= "AGILEX"
+ALTERA_PART		 ?= AGFB014R24B2E2V
+PLATFORM			 = "PLAT_XILINX"
 # root path
 mkfile_path := $(abspath $(lastword $(MAKEFILE_LIST)))
 root-dir := $(dir $(mkfile_path))
@@ -166,17 +169,11 @@ src :=  $(if $(spike-tandem),verif/tb/core/uvma_core_cntrl_pkg.sv)              
         $(wildcard corev_apu/fpga/src/axi_slice/src/*.sv)                            \
         $(wildcard corev_apu/src/axi_riscv_atomics/src/*.sv)                         \
         $(wildcard corev_apu/axi_mem_if/src/*.sv)                                    \
+				$(wildcard corev_apu/riscv-dbg/src/*.sv)                                   \
         corev_apu/rv_plic/rtl/rv_plic_target.sv                                      \
         corev_apu/rv_plic/rtl/rv_plic_gateway.sv                                     \
         corev_apu/rv_plic/rtl/plic_regmap.sv                                         \
         corev_apu/rv_plic/rtl/plic_top.sv                                            \
-        corev_apu/riscv-dbg/src/dmi_cdc.sv                                           \
-        corev_apu/riscv-dbg/src/dmi_jtag.sv                                          \
-        corev_apu/riscv-dbg/src/dmi_jtag_tap.sv                                      \
-        corev_apu/riscv-dbg/src/dm_csrs.sv                                           \
-        corev_apu/riscv-dbg/src/dm_mem.sv                                            \
-        corev_apu/riscv-dbg/src/dm_sba.sv                                            \
-        corev_apu/riscv-dbg/src/dm_top.sv                                            \
         corev_apu/riscv-dbg/debug_rom/debug_rom.sv                                   \
         corev_apu/register_interface/src/apb_to_reg.sv                               \
         vendor/pulp-platform/axi/src/axi_multicut.sv                                 \
@@ -236,6 +233,52 @@ uart_src_sv:= corev_apu/fpga/src/apb_uart/src/slib_clock_div.sv     \
 uart_src_sv := $(addprefix $(root-dir), $(uart_src_sv))
 
 fpga_src :=  $(wildcard corev_apu/fpga/src/*.sv) $(wildcard corev_apu/fpga/src/ariane-ethernet/*.sv) common/local/util/tc_sram_fpga_wrapper.sv common/local/util/hpdcache_sram_1rw.sv common/local/util/hpdcache_sram_wbyteenable_1rw.sv vendor/pulp-platform/fpga-support/rtl/SyncSpRamBeNx64.sv vendor/pulp-platform/fpga-support/rtl/SyncSpRamBeNx32.sv vendor/pulp-platform/fpga-support/rtl/SyncSpRam.sv
+
+altera_src := $(shell find $(root-dir)/corev_apu/altera/src -type f \( -name "*.v" -o -name "*.sv" -o -name "*.svh" \) -print | sed 's|//|/|g')
+altera_src += $(src)
+altera_src += $(shell find $(root-dir)/corev_apu/fpga/src -type f \( -name "*.v" -o -name "*.sv" \) -print | sed 's|//|/|g')
+altera_src += $(shell find $(root-dir)core/cvfpu/src/common_cells/src/ -maxdepth 1 -type f \( -name "*.v" -o -name "*.sv" -o -name "*.vhd" -o -name "*.svh" \) -print)
+altera_axi_src := $(shell find $(root-dir)/vendor/pulp-platform/axi/src -type f \( -name "*.v" -o -name "*.sv" \) -print | sed 's|//|/|g')
+
+altera_src += $(root-dir)corev_apu/rv_plic/rtl/top_pkg.sv \
+							$(root-dir)corev_apu/rv_plic/rtl/tlul_pkg.sv \
+							$(root-dir)corev_apu/rv_plic/rtl/rv_plic_reg_top.sv \
+							$(root-dir)corev_apu/rv_plic/rtl/rv_plic_reg_pkg.sv \
+							$(root-dir)corev_apu/rv_plic/rtl/rv_plic.sv \
+							$(root-dir)corev_apu/rv_plic/rtl/prim_subreg_ext.sv \
+							$(root-dir)corev_apu/rv_plic/rtl/prim_subreg.sv \
+							$(root-dir)vendor/pulp-platform/common_cells/src/cdc_fifo_gray.sv \
+							$(root-dir)riscv-dbg/src/dm_obi_top.sv \
+							$(root-dir)core/include/instr_tracer_pkg.sv \
+							$(root-dir)core/cvfpu/src/fpu_div_sqrt_mvp/hdl/div_sqrt_mvp_wrapper.sv \
+							$(root-dir)core/cache_subsystem/amo_alu.sv
+
+altera_filter := corev_apu/tb/ariane_testharness.sv \
+								corev_apu/tb/ariane_peripherals.sv \
+								corev_apu/tb/rvfi_tracer.sv \
+								corev_apu/tb/common/uart.sv \
+								corev_apu/tb/common/SimDTM.sv \
+								corev_apu/tb/common/SimJTAG.sv \
+								corev_apu/fpga/src/apb/src/apb_test.sv \
+								corev_apu/fpga/src/ariane_xilinx.sv \
+								corev_apu/fpga/ariane_peripherals_xilinx.sv \
+								corev_apu/fpga/src/apb/test/tb_apb_cdc.sv \
+								corev_apu/fpga/src/apb/test/tb_apb_regs.sv \
+								corev_apu/fpga/src/apb/test/tb_apb_demux.sv \
+								corev_apu/fpga/src/gpio/test/tb_gpio.sv \
+								vendor/pulp-platform/axi/src/axi_test.sv \
+								corev_apu/riscv-dbg/src/dm_pkg.sv \
+								corev_apu/riscv-dbg/src/dmi_jtag_tap.sv \
+								corev_apu/riscv-dbg/src/dmi_jtag.sv \
+								corev_apu/fpga/src/apb_uart/src/reg_uart_wrap.sv
+								
+altera_filter := $(addprefix $(root-dir), $(altera_filter))
+xil_debug_filter = $(addprefix $(root-dir), corev_apu/riscv-dbg/src/dm_obi_top.sv)
+xil_debug_filter += $(addprefix $(root-dir), corev_apu/riscv-dbg/src/dm_pkg.sv)
+xil_debug_filter += $(addprefix $(root-dir), corev_apu/riscv-dbg/src/dmi_vjtag_tap.sv)
+xil_debug_filter += $(addprefix $(root-dir), corev_apu/riscv-dbg/src/dmi_vjtag.sv)						
+src := $(filter-out $(xil_debug_filter), $(src))
+
 fpga_src := $(addprefix $(root-dir), $(fpga_src)) src/bootrom/bootrom_$(XLEN).sv
 
 # look for testbenches
@@ -738,7 +781,7 @@ fpga_filter += $(addprefix $(root-dir), core/cache_subsystem/hpdcache/rtl/src/co
 fpga_filter += $(addprefix $(root-dir), core/cache_subsystem/hpdcache/rtl/src/common/macros/behav/hpdcache_sram_wmask_1rw.sv)
 
 src/bootrom/bootrom_$(XLEN).sv:
-	$(MAKE) -C corev_apu/fpga/src/bootrom BOARD=$(BOARD) XLEN=$(XLEN) bootrom_$(XLEN).sv
+	$(MAKE) -C corev_apu/fpga/src/bootrom BOARD=$(BOARD) XLEN=$(XLEN) PLATFORM=$(PLATFORM) bootrom_$(XLEN).sv
 
 fpga: $(ariane_pkg) $(src) $(fpga_src) $(uart_src) $(src_flist)
 	@echo "[FPGA] Generate sources"
@@ -749,6 +792,19 @@ fpga: $(ariane_pkg) $(src) $(fpga_src) $(uart_src) $(src_flist)
 	@echo read_verilog -sv {$(fpga_src)}   >> corev_apu/fpga/scripts/add_sources.tcl
 	@echo "[FPGA] Generate Bitstream"
 	$(MAKE) -C corev_apu/fpga BOARD=$(BOARD) XILINX_PART=$(XILINX_PART) XILINX_BOARD=$(XILINX_BOARD) CLK_PERIOD_NS=$(CLK_PERIOD_NS)
+
+altera: PLATFORM := "PLAT_AGILEX"
+
+altera: $(ariane_pkg) $(src) $(fpga_src) $(src_flist)
+	@echo "[FPGA] Generate sources"
+	@echo $(ariane_pkg) > corev_apu/altera/sourcelist.txt
+	@echo $(filter-out $(fpga_filter), $(src_flist))		>> corev_apu/altera/sourcelist.txt
+	@echo $(filter-out $(fpga_filter) $(altera_filter), $(src)) 	   >> corev_apu/altera/sourcelist.txt
+	@echo $(filter-out $(altera_filter), $(fpga_src))		 >> corev_apu/altera/sourcelist.txt
+	@echo $(filter-out $(fpga_filter) $(altera_filter) $(uart_src_sv), $(altera_src))   >> corev_apu/altera/sourcelist.txt
+	@echo $(filter-out $(fpga_filter) $(altera_filter), $(altera_axi_src))   >> corev_apu/altera/sourcelist.txt
+	@echo "[FPGA] Generate Bitstream"
+	$(MAKE) -C corev_apu/altera ALTERA_PART=$(ALTERA_PART) ALTERA_BOARD=$(ALTERA_BOARD) CLK_PERIOD_NS=$(CLK_PERIOD_NS)
 
 .PHONY: fpga
 
@@ -761,6 +817,9 @@ clean:
 	rm -f tmp/*.ucdb tmp/*.log *.wlf *vstf wlft* *.ucdb
 	$(MAKE) -C corev_apu/fpga clean
 	$(MAKE) -C corev_apu/fpga/src/bootrom BOARD=$(BOARD) XLEN=$(XLEN) clean
+
+clean-altera: clean
+	$(MAKE) -C corev_apu/altera clean
 
 .PHONY:
 	build sim sim-verilate clean                                              \

@@ -1,0 +1,9 @@
+./test_mm_ccb_0.ip
+./io_pll.ip
+./iobuf.ip
+./oddr_intel.ip
+./iddr_intel.ip
+./ed_synth_emif_fm_0.ip
+./emif_cal.ip
+./vJTAG.ip
+./cva6_intel_jtag_uart_0.ip

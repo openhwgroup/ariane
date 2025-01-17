@@ -9,6 +9,7 @@ divided between the "Zicntr" and "Zihpm" extensions.
 
 === "Zicntr" Extension for Base Counters and Timers
 
+ifeval::[{RVZicntr} == true]
 The Zicntr standard extension comprises the first three of these
 counters (CYCLE, TIME, and INSTRET), which have dedicated functions
 (cycle count, real-time clock, and instructions retired, respectively).
@@ -171,6 +172,11 @@ reading its upper and lower halves.
         rdcycle      x2
         rdcycleh     x4
         bne          x3, x4, again
+endif::[]
+
+ifeval::[{RVZicntr} == false]
+{ohg-config}: This extension is not supported.
+endif::[]
 
 
 === "Zihpm" Extension for Hardware Performance Counters

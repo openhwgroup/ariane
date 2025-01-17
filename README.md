@@ -205,29 +205,67 @@ python3 cva6.py --testlist=../tests/testlist_riscv-tests-cv64a6_imafdc_sv39-p.ya
 
 # COREV-APU FPGA Emulation
 
-We currently only provide support for the [Genesys 2 board](https://reference.digilentinc.com/reference/programmable-logic/genesys-2/reference-manual). We provide pre-build bitstream and memory configuration files for the Genesys 2 [here](https://github.com/openhwgroup/cva6/releases).
+We currently provide support for the [Genesys 2 board](https://reference.digilentinc.com/reference/programmable-logic/genesys-2/reference-manual) and the [Agilex 7 Development Kit](https://www.intel.la/content/www/xl/es/products/details/fpga/development-kits/agilex/agf014.html).
 
-Tested on Vivado 2018.2. The FPGA currently contains the following peripherals:
+- **Genesys 2**
+    
+    We provide pre-build bitstream and memory configuration files for the Genesys 2 [here](https://github.com/openhwgroup/cva6/releases).
 
-- DDR3 memory controller
-- SPI controller to conncet to an SDCard
-- Ethernet controller
-- JTAG port (see debugging section below)
-- Bootrom containing zero stage bootloader and device tree.
+    Tested on Vivado 2018.2. The FPGA currently contains the following peripherals:
+
+   - DDR3 memory controller
+   - SPI controller to conncet to an SDCard
+   - Ethernet controller
+   - JTAG port (see debugging section below)
+   - Bootrom containing zero stage bootloader and device tree.
+   - UART
+   - GPIOs connected to LEDs
 
 > The ethernet controller and the corresponding network connection is still work in progress and not functional at the moment. Expect some updates soon-ish.
 
+- **Agilex 7**
+  
+   Tested on Quartus Prime Version 24.1.0 Pro Edition. The FPGA currently contains the following peripherals:
+  
+   - DDR4 memory controller
+   - JTAG port (see debugging section below)
+   - Bootrom containing zero stage bootloader
+   - UART
+   - GPIOs connected to LEDs
 
-## Programming the Memory Configuration File
+> The ethernet controller and the corresponding network connection, as well as the SD Card connection and the capability to boot linux are still work in progress and not functional at the moment. Expect some updates soon-ish. 
 
-- Open Vivado
-- Open the hardware manager and open the target board (Genesys II - `xc7k325t`)
-- Tools - Add Configuration Memory Device
-- Select the following Spansion SPI flash `s25fl256xxxxxx0`
-- Add `ariane_xilinx.mcs`
-- Press Ok. Flashing will take a couple of minutes.
-- Right click on the FPGA device - Boot from Configuration Memory Device (or press the program button on the FPGA)
 
+## Programming the Memory Configuration File or bitstream
+
+- **Genesys 2**
+
+   - Open Vivado
+   - Open the hardware manager and open the target board (Genesys II - `xc7k325t`)
+   - Tools - Add Configuration Memory Device
+   - Select the following Spansion SPI flash `s25fl256xxxxxx0`
+   - Add `ariane_xilinx.mcs`
+   - Press Ok. Flashing will take a couple of minutes.
+   - Right click on the FPGA device - Boot from Configuration Memory Device (or press the program button on the FPGA)
+
+- **Agilex 7**
+
+   - Open Quartus programmer
+   - Configure HW Setup by selecting the AGF FPGA Development Kit
+   - Click Auto-Detect to scan the JTAG chain
+   - In the device list, right click over device AGFB014R24B and add file (.sof)
+   - Click on Start button to program the FPGA
+   - Right now only baremetal is supported, so right after programming you can connect to the UART and see your CVA6 alive on Agilex!
+   - For this you need to use the JTAG UART provided with Quartus installation
+
+```
+.$quartus_installation_path/qprogrammer/quartus/bin/juart-terminal 
+juart-terminal: connected to hardware target using JTAG UART on cable
+juart-terminal: "AGF FPGA Development Kit [1-3]", device 1, instance 0
+juart-terminal: (Use the IDE stop button or Ctrl-C to terminate)
+
+Hello World!
+```
 
 ## Preparing the SD Card
 
@@ -245,6 +283,8 @@ After you've inserted the SD Card and programmed the FPGA you can connect to the
 
 ## Generating a Bitstream
 
+- **Genesys 2**
+
 To generate the FPGA bitstream (and memory configuration) yourself for the Genesys II board run:
 
 ```
@@ -253,9 +293,27 @@ make fpga
 
 This will produce a bitstream file and memory configuration file (in `fpga/work-fpga`) which you can permanently flash by running the above commands.
 
+- **Agilex 7**
+
+To generate the FPGA bitstream yourself for the Agilex 7 board run:
+
+```
+make altera
+```
+
+We recommend to set the parameter FpgaAlteraEn (and also FpgaEn) to benefit from the FPGA optimizations.
+
+This will produce a bitstream file (in `altera/output_files`) which you can program following the previous instructions. **Note: Bear in mind that you need a Quartus Pro Licence to be able to generate this bitstream**
+
+To clean the project after generating the bitstream, use 
+
+```
+make clean-altera
+```
 
 ## Debugging
 
+- **Genesys 2**
 You can debug (and program) the FPGA using [OpenOCD](http://openocd.org/doc/html/Architecture-and-Core-Commands.html). We provide two example scripts for OpenOCD below.
 
 To get started, connect the micro USB port that is labeled with JTAG to your machine. This port is attached to the FTDI 2232 USB-to-serial chip on the Genesys 2 board, and is usually used to access the native JTAG interface of the Kintex-7 FPGA (e.g. to program the device using Vivado). However, the FTDI chip also exposes a second serial link that is routed to GPIO pins on the FPGA, and we leverage this to wire up the JTAG from the RISC-V debug module.
@@ -293,6 +351,54 @@ Info : Listening on port 6666 for tcl connections
 Info : Listening on port 4444 for telnet connections
 Info : accepting 'gdb' connection on tcp/3333
 ```
+- **Agilex 7**
+
+You can debug (and program) the FPGA using a modified version of OpenOCD included with Quartus installation ($quartus_installation_path/qprogrammer/quartus/bin/openocd). 
+
+To get started, connect the micro USB port that is labeled with J13 to your machine. It is the same port that is used for the UART. Both use the JTAG interface and connect to the System Level Debugging (SLD) Hub instantiated inside the FPGA. Then the debugger connection goes to the virtual JTAG IP (vJTAG) which can be accessed with the modified version of OpenOCD.
+
+You can start openocd with the `altera/cva6.cfg` configuration file:
+
+```
+./$quartus_installation_path/qprogrammer/quartus/bin/openocd -f altera/cva6.cfg 
+Open On-Chip Debugger 0.11.0-R22.4
+Licensed under GNU GPL v2
+For bug reports, read
+        http://openocd.org/doc/doxygen/bugs.html
+Info : only one transport option; autoselect 'jtag'
+Info : Application name is OpenOCD.20241016093010
+Info : No cable specified, so will be searching for cables
+
+Info : At present, The first hardware cable will be used [1 cable(s) detected]
+Info : Cable 1: device_name=(null), hw_name=AGF FPGA Development Kit, server=(null), port=1-3, chain_id=0x559319c8cde0, persistent_id=1, chain_type=1, features=34816, server_version_info=Version 24.1.0 Build 115 03/21/2024 SC Pro Edition
+Info : TAP position 0 (C341A0DD) has 3 SLD nodes
+Info :     node  0 idcode=00406E00 position_n=0
+Info :     node  1 idcode=30006E00 position_n=0
+Info :     node  2 idcode=0C006E00 position_n=0
+Info : TAP position 1 (20D10DD) has 1 SLD nodes
+Info :     node  0 idcode=0C206E00 position_n=0
+Info : Discovered 2 TAP devices
+Info : Detected device (tap_position=0) device_id=c341a0dd, instruction_length=10, features=12, device_name=AGFB014R24A(.|R1|R2)/..
+Info : Found an Intel device at tap_position 0.Currently assuming it is SLD Hub
+Info : Detected device (tap_position=1) device_id=020d10dd, instruction_length=10, features=4, device_name=VTAP10
+Info : Found an Intel device at tap_position 1.Currently assuming it is SLD Hub
+Info : This adapter doesn't support configurable speed
+Info : JTAG tap: agilex7.fpga.tap tap/device found: 0xc341a0dd (mfg: 0x06e (Altera), part: 0x341a, ver: 0xc)
+Info : JTAG tap: auto0.tap tap/device found: 0x020d10dd (mfg: 0x06e (Altera), part: 0x20d1, ver: 0x0)
+Info : JTAG tap: agilex7.fpga.tap Parent Tap found: 0xc341a0dd (mfg: 0x06e (Altera), part: 0x341a, ver: 0xc)
+Info : Virtual Tap/SLD node 0x00406E00 found at tap position 0 vtap position 0
+Warn : AUTO auto0.tap - use "jtag newtap auto0 tap -irlen 10 -expected-id 0x020d10dd"
+Info : datacount=2 progbufsize=8
+Info : Examined RISC-V core; found 1 harts
+Info :  hart 0: XLEN=32, misa=0x40141107
+Info : starting gdb server for agilex7.cva6.0 on 3333
+Info : Listening on port 3333 for gdb connections
+Ready for Remote Connections
+Info : Listening on port 6666 for tcl connections
+Info : Listening on port 4444 for telnet connections
+```
+
+- **Common for both boards**
 
 Then you will be able to either connect through `telnet` or with `gdb`:
 

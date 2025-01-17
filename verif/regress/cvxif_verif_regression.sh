@@ -40,10 +40,10 @@ export DV_OPTS="$DV_OPTS --issrun_opts=+debug_disable=1+UVM_VERBOSITY=$UVM_VERBO
 cd verif/sim/
 make -C ../.. clean
 make clean_all
-python3 cva6.py --testlist=../tests/testlist_cvxif.yaml --test cvxif_add_nop --iss_yaml cva6.yaml --target cv64a6_imafdc_sv39 --iss=$DV_SIMULATORS $DV_OPTS --linker=../../config/gen_from_riscv_config/linker/link.ld
+python3 cva6.py --testlist=../tests/testlist_cvxif.yaml --test cvxif_add_nop --iss_yaml cva6.yaml --target cv64a6_imafdc_sv39 --iss=vcs-testharness,spike $DV_OPTS --linker=../../config/gen_from_riscv_config/linker/link.ld
 make -C ../.. clean
 make clean_all
-python3 cva6.py --testlist=../tests/testlist_cvxif.yaml --test cvxif_add_nop --iss_yaml cva6.yaml --target cv32a65x --iss=$DV_SIMULATORS $DV_OPTS --linker=../../config/gen_from_riscv_config/cv32a65x/linker/link.ld
+python3 cva6.py --testlist=../tests/testlist_cvxif.yaml --test cvxif_add_nop --iss_yaml cva6.yaml --target cv32a65x --iss=vcs-uvm,spike --issrun_opts="+enabled_cvxif" --linker=../../config/gen_from_riscv_config/cv32a65x/linker/link.ld
 make -C ../.. clean
 make clean_all
 

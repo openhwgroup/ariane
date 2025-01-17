@@ -29,6 +29,8 @@
 ${CVA6_REPO_DIR}/vendor/pulp-platform/fpga-support/rtl/SyncDpRam.sv
 ${CVA6_REPO_DIR}/vendor/pulp-platform/fpga-support/rtl/AsyncDpRam.sv
 ${CVA6_REPO_DIR}/vendor/pulp-platform/fpga-support/rtl/AsyncThreePortRam.sv
+${CVA6_REPO_DIR}/vendor/pulp-platform/fpga-support/rtl/SyncThreePortRam.sv
+${CVA6_REPO_DIR}/vendor/pulp-platform/fpga-support/rtl/SyncDpRam_ind_r_w.sv
 
 +incdir+${CVA6_REPO_DIR}/core/include/
 +incdir+${CVA6_REPO_DIR}/vendor/pulp-platform/common_cells/include/

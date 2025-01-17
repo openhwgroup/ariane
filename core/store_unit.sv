@@ -59,7 +59,7 @@ module store_unit
     // Virtual address - TO_BE_COMPLETED
     output logic [CVA6Cfg.VLEN-1:0] vaddr_o,
     // RVFI information - RVFI
-    output [CVA6Cfg.PLEN-1:0] rvfi_mem_paddr_o,
+    output logic [CVA6Cfg.PLEN-1:0] rvfi_mem_paddr_o,
     // Transformed trap instruction out - TO_BE_COMPLETED
     output logic [31:0] tinst_o,
     // TO_BE_COMPLETED - TO_BE_COMPLETED

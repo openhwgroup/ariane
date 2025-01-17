@@ -131,8 +131,7 @@ class uvme_cva6_cfg_c extends uvma_core_cntrl_cfg_c;
       HPDCache_supported      == (RTLCVA6Cfg.DCacheType == 2);
 
       MmuPresent              == RTLCVA6Cfg.MmuPresent;
-      // TODO : add RTL paramater related to this field fix issue#2500
-      sw_int_supported        == 0;
+      sw_int_supported        == RTLCVA6Cfg.SoftwareInterruptEn;
    }
 
    constraint ext_const {

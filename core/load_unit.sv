@@ -546,7 +546,6 @@ module load_unit
   ///////////////////////////////////////////////////////
 
   //pragma translate_off
-`ifndef VERILATOR
   initial
     assert (CVA6Cfg.DcacheIdWidth >= REQ_ID_BITS)
     else $fatal(1, "DcacheIdWidth parameter is not wide enough to encode pending loads");
@@ -563,7 +562,6 @@ module load_unit
   assert property (@(posedge clk_i) disable iff (~rst_ni)
         ldbuf_w |->  (ldbuf_wdata.operation inside {ariane_pkg::LB, ariane_pkg::LBU}) |-> ldbuf_wdata.address_offset < 8)
   else $fatal(1, "invalid address offset used with {LB, LBU}");
-`endif
   //pragma translate_on
 
 endmodule

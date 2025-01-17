@@ -575,12 +575,4 @@ module frontend
       .fetch_entry_ready_i(fetch_entry_ready_i)    // to back-end
   );
 
-  // pragma translate_off
-`ifndef VERILATOR
-  initial begin
-    assert (CVA6Cfg.FETCH_WIDTH == 32 || CVA6Cfg.FETCH_WIDTH == 64)
-    else $fatal(1, "[frontend] fetch width != not supported");
-  end
-`endif
-  // pragma translate_on
 endmodule

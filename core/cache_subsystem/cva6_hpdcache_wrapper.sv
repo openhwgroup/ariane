@@ -155,7 +155,8 @@ module cva6_hpdcache_wrapper
           .hpdcache_rsp_t       (hpdcache_rsp_t),
           .dcache_req_i_t       (dcache_req_i_t),
           .dcache_req_o_t       (dcache_req_o_t),
-          .is_load_port         (1'b1)
+          .InvalidateOnFlush    (1'b0),
+          .IsLoadPort           (1'b1)
       ) i_cva6_hpdcache_load_if_adapter (
           .clk_i,
           .rst_ni,
@@ -166,6 +167,9 @@ module cva6_hpdcache_wrapper
           .cva6_req_o     (dcache_req_ports_o[r]),
           .cva6_amo_req_i ('0),
           .cva6_amo_resp_o(  /* unused */),
+
+          .cva6_dcache_flush_i    (1'b0),
+          .cva6_dcache_flush_ack_o(  /* unused */),
 
           .hpdcache_req_valid_o(dcache_req_valid[r]),
           .hpdcache_req_ready_i(dcache_req_ready[r]),
@@ -189,7 +193,8 @@ module cva6_hpdcache_wrapper
         .hpdcache_rsp_t       (hpdcache_rsp_t),
         .dcache_req_i_t       (dcache_req_i_t),
         .dcache_req_o_t       (dcache_req_o_t),
-        .is_load_port         (1'b0)
+        .InvalidateOnFlush    (CVA6Cfg.DcacheInvalidateOnFlush),
+        .IsLoadPort           (1'b0)
     ) i_cva6_hpdcache_store_if_adapter (
         .clk_i,
         .rst_ni,
@@ -200,6 +205,9 @@ module cva6_hpdcache_wrapper
         .cva6_req_o     (dcache_req_ports_o[NumPorts-1]),
         .cva6_amo_req_i (dcache_amo_req_i),
         .cva6_amo_resp_o(dcache_amo_resp_o),
+
+        .cva6_dcache_flush_i    (dcache_flush_i),
+        .cva6_dcache_flush_ack_o(dcache_flush_ack_o),
 
         .hpdcache_req_valid_o(dcache_req_valid[NumPorts-1]),
         .hpdcache_req_ready_i(dcache_req_ready[NumPorts-1]),
@@ -413,12 +421,6 @@ module cva6_hpdcache_wrapper
   );
 
   assign dcache_miss_o = dcache_read_miss, wbuffer_not_ni_o = wbuffer_empty_o;
-
-  always_ff @(posedge clk_i or negedge rst_ni) begin : dcache_flush_ff
-    if (!rst_ni) dcache_flush_ack_o <= 1'b0;
-    else dcache_flush_ack_o <= ~dcache_flush_ack_o & dcache_flush_i;
-  end
-
   //  }}}
 
 endmodule : cva6_hpdcache_wrapper

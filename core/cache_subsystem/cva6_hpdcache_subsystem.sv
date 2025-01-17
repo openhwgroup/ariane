@@ -189,43 +189,52 @@ module cva6_hpdcache_subsystem
   //    NumPorts + 1: Hardware Memory Prefetcher (hwpf)
   localparam int HPDCACHE_NREQUESTERS = NumPorts + 2;
 
-  localparam hpdcache_pkg::hpdcache_user_cfg_t HPDcacheUserCfg = '{
-      nRequesters: HPDCACHE_NREQUESTERS,
-      paWidth: CVA6Cfg.PLEN,
-      wordWidth: CVA6Cfg.XLEN,
-      sets: CVA6Cfg.DCACHE_NUM_WORDS,
-      ways: CVA6Cfg.DCACHE_SET_ASSOC,
-      clWords: CVA6Cfg.DCACHE_LINE_WIDTH / CVA6Cfg.XLEN,
-      reqWords: 1,
-      reqTransIdWidth: CVA6Cfg.DcacheIdWidth,
-      reqSrcIdWidth: 3,  // Up to 8 requesters
-      victimSel: hpdcache_pkg::HPDCACHE_VICTIM_RANDOM,
-      dataWaysPerRamWord: __minu(CVA6Cfg.DCACHE_SET_ASSOC, 128 / CVA6Cfg.XLEN),
-      dataSetsPerRam: CVA6Cfg.DCACHE_NUM_WORDS,
-      dataRamByteEnable: 1'b1,
-      accessWords: __maxu(CVA6Cfg.DCACHE_LINE_WIDTH / (2 * CVA6Cfg.XLEN), 1),
-      mshrSets: CVA6Cfg.NrLoadBufEntries < 16 ? 1 : CVA6Cfg.NrLoadBufEntries / 2,
-      mshrWays: CVA6Cfg.NrLoadBufEntries < 16 ? CVA6Cfg.NrLoadBufEntries : 2,
-      mshrWaysPerRamWord: CVA6Cfg.NrLoadBufEntries < 16 ? CVA6Cfg.NrLoadBufEntries : 2,
-      mshrSetsPerRam: CVA6Cfg.NrLoadBufEntries < 16 ? 1 : CVA6Cfg.NrLoadBufEntries / 2,
-      mshrRamByteEnable: 1'b1,
-      mshrUseRegbank: (CVA6Cfg.NrLoadBufEntries < 16),
-      refillCoreRspFeedthrough: 1'b1,
-      refillFifoDepth: 2,
-      wbufDirEntries: CVA6Cfg.WtDcacheWbufDepth,
-      wbufDataEntries: CVA6Cfg.WtDcacheWbufDepth,
-      wbufWords: 1,
-      wbufTimecntWidth: 3,
-      rtabEntries: 4,
-      flushEntries: 0,
-      flushFifoDepth: 0,
-      memAddrWidth: CVA6Cfg.AxiAddrWidth,
-      memIdWidth: CVA6Cfg.MEM_TID_WIDTH,
-      memDataWidth: CVA6Cfg.AxiDataWidth,
-      wtEn: 1'b1,
-      wbEn: 1'b0
-  };
+  function automatic hpdcache_pkg::hpdcache_user_cfg_t hpdcacheSetConfig();
+    hpdcache_pkg::hpdcache_user_cfg_t userCfg;
+    userCfg.nRequesters = HPDCACHE_NREQUESTERS;
+    userCfg.paWidth = CVA6Cfg.PLEN;
+    userCfg.wordWidth = CVA6Cfg.XLEN;
+    userCfg.sets = CVA6Cfg.DCACHE_NUM_WORDS;
+    userCfg.ways = CVA6Cfg.DCACHE_SET_ASSOC;
+    userCfg.clWords = CVA6Cfg.DCACHE_LINE_WIDTH / CVA6Cfg.XLEN;
+    userCfg.reqWords = 1;
+    userCfg.reqTransIdWidth = CVA6Cfg.DcacheIdWidth;
+    userCfg.reqSrcIdWidth = 3;  // Up to 8 requesters
+    userCfg.victimSel = hpdcache_pkg::HPDCACHE_VICTIM_RANDOM;
+    userCfg.dataWaysPerRamWord = __minu(CVA6Cfg.DCACHE_SET_ASSOC, 128 / CVA6Cfg.XLEN);
+    userCfg.dataSetsPerRam = CVA6Cfg.DCACHE_NUM_WORDS;
+    userCfg.dataRamByteEnable = 1'b1;
+    userCfg.accessWords = __maxu(CVA6Cfg.AxiDataWidth / CVA6Cfg.XLEN, 1  /*reqWords*/);
+    userCfg.mshrSets = CVA6Cfg.NrLoadBufEntries < 16 ? 1 : CVA6Cfg.NrLoadBufEntries / 2;
+    userCfg.mshrWays = CVA6Cfg.NrLoadBufEntries < 16 ? CVA6Cfg.NrLoadBufEntries : 2;
+    userCfg.mshrWaysPerRamWord = CVA6Cfg.NrLoadBufEntries < 16 ? CVA6Cfg.NrLoadBufEntries : 2;
+    userCfg.mshrSetsPerRam = CVA6Cfg.NrLoadBufEntries < 16 ? 1 : CVA6Cfg.NrLoadBufEntries / 2;
+    userCfg.mshrRamByteEnable = 1'b1;
+    userCfg.mshrUseRegbank = (CVA6Cfg.NrLoadBufEntries < 16);
+    userCfg.refillCoreRspFeedthrough = 1'b1;
+    userCfg.refillFifoDepth = 2;
+    userCfg.wbufDirEntries = CVA6Cfg.WtDcacheWbufDepth;
+    userCfg.wbufDataEntries = CVA6Cfg.WtDcacheWbufDepth;
+    userCfg.wbufWords = 1;
+    userCfg.wbufTimecntWidth = 3;
+    userCfg.rtabEntries = 4;
+    /*FIXME we should add additional CVA6 config parameters (flushEntries)*/
+    userCfg.flushEntries = CVA6Cfg.WtDcacheWbufDepth;
+    /*FIXME we should add additional CVA6 config parameters (flushFifoDepth)*/
+    userCfg.flushFifoDepth = CVA6Cfg.WtDcacheWbufDepth;
+    userCfg.memAddrWidth = CVA6Cfg.AxiAddrWidth;
+    userCfg.memIdWidth = CVA6Cfg.MEM_TID_WIDTH;
+    userCfg.memDataWidth = CVA6Cfg.AxiDataWidth;
+    userCfg.wtEn =
+        (CVA6Cfg.DCacheType == config_pkg::HPDCACHE_WT) ||
+        (CVA6Cfg.DCacheType == config_pkg::HPDCACHE_WT_WB);
+    userCfg.wbEn =
+        (CVA6Cfg.DCacheType == config_pkg::HPDCACHE_WB) ||
+        (CVA6Cfg.DCacheType == config_pkg::HPDCACHE_WT_WB);
+    return userCfg;
+  endfunction
 
+  localparam hpdcache_pkg::hpdcache_user_cfg_t HPDcacheUserCfg = hpdcacheSetConfig();
   localparam hpdcache_pkg::hpdcache_cfg_t HPDcacheCfg = hpdcache_pkg::hpdcacheBuildConfig(
       HPDcacheUserCfg
   );
@@ -407,7 +416,7 @@ module cva6_hpdcache_subsystem
   //  {{{
   //  pragma translate_off
   initial begin : initial_assertions
-    assert (HPDcacheCfg.u.reqSrcIdWidth >= $clog2(HPDCACHE_NREQUESTERS))
+    assert (HPDcacheCfg.u.reqSrcIdWidth >= $clog2(HPDcacheCfg.u.nRequesters))
     else $fatal(1, "HPDCACHE_REQ_SRC_ID_WIDTH is not wide enough");
     assert (CVA6Cfg.MEM_TID_WIDTH <= CVA6Cfg.AxiIdWidth)
     else $fatal(1, "MEM_TID_WIDTH shall be less or equal to the AxiIdWidth");

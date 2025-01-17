@@ -967,3 +967,23 @@ testlist:
     iterations: 1
     <<: *common_test_config
     asm_tests: <path_var>/riscv-arch-test/riscv-test-suite/rv64i_m/A/src/amoxor.w-01.S
+
+  - test: rv64im-pack-01
+    <<: *common_test_config
+    iterations: 1
+    asm_tests: <path_var>/riscv-arch-test/riscv-test-suite/rv64i_m/K/src/pack-01.S
+
+  - test: rv64im-packh-01
+    <<: *common_test_config
+    iterations: 1
+    asm_tests: <path_var>/riscv-arch-test/riscv-test-suite/rv64i_m/K/src/packh-01.S
+
+  - test: rv64im-packw-01
+    <<: *common_test_config
+    iterations: 1
+    asm_tests: <path_var>/riscv-arch-test/riscv-test-suite/rv64i_m/K/src/packw-01.S
+
+  - test: rv64im-brev8-01
+    <<: *common_test_config
+    iterations: 1
+    asm_tests: <path_var>/riscv-arch-test/riscv-test-suite/rv64i_m/K/src/brev8-01.S

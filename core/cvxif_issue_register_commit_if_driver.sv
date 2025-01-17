@@ -60,7 +60,7 @@ module cvxif_issue_register_commit_if_driver #(
 
   // Always do commit transaction with issue
   // If instruction goes to execute then it is not speculative
-  assign commit_valid_o       = issue_valid_o;
+  assign commit_valid_o       = issue_valid_o && issue_ready_i;
   assign commit_o.hartid      = issue_req_o.hartid;
   assign commit_o.id          = issue_req_o.id;
   assign commit_o.commit_kill = 1'b0;

@@ -65,6 +65,7 @@ package build_config_pkg;
     cfg.XF8 = CVA6Cfg.XF8;
     cfg.RVA = CVA6Cfg.RVA;
     cfg.RVB = CVA6Cfg.RVB;
+    cfg.ZKN = CVA6Cfg.ZKN;
     cfg.RVV = CVA6Cfg.RVV;
     cfg.RVC = CVA6Cfg.RVC;
     cfg.RVH = CVA6Cfg.RVH;
@@ -94,6 +95,7 @@ package build_config_pkg;
     cfg.MmuPresent = CVA6Cfg.MmuPresent;
     cfg.RVS = CVA6Cfg.RVS;
     cfg.RVU = CVA6Cfg.RVU;
+    cfg.SoftwareInterruptEn = CVA6Cfg.SoftwareInterruptEn;
 
     cfg.HaltAddress = CVA6Cfg.HaltAddress;
     cfg.ExceptionAddress = CVA6Cfg.ExceptionAddress;
@@ -107,6 +109,7 @@ package build_config_pkg;
     cfg.PMPCfgRstVal = CVA6Cfg.PMPCfgRstVal;
     cfg.PMPAddrRstVal = CVA6Cfg.PMPAddrRstVal;
     cfg.PMPEntryReadOnly = CVA6Cfg.PMPEntryReadOnly;
+    cfg.PMPNapotEn = CVA6Cfg.PMPNapotEn;
     cfg.NOCType = CVA6Cfg.NOCType;
     cfg.NrNonIdempotentRules = CVA6Cfg.NrNonIdempotentRules;
     cfg.NonIdempotentAddrBase = CVA6Cfg.NonIdempotentAddrBase;
@@ -123,7 +126,8 @@ package build_config_pkg;
     cfg.AxiBurstWriteEn = CVA6Cfg.AxiBurstWriteEn;
 
     cfg.ICACHE_SET_ASSOC = CVA6Cfg.IcacheSetAssoc;
-    cfg.ICACHE_SET_ASSOC_WIDTH = CVA6Cfg.IcacheSetAssoc > 1 ? $clog2(CVA6Cfg.IcacheSetAssoc) : CVA6Cfg.IcacheSetAssoc;
+    cfg.ICACHE_SET_ASSOC_WIDTH = CVA6Cfg.IcacheSetAssoc > 1 ? $clog2(CVA6Cfg.IcacheSetAssoc) :
+        CVA6Cfg.IcacheSetAssoc;
     cfg.ICACHE_INDEX_WIDTH = ICACHE_INDEX_WIDTH;
     cfg.ICACHE_TAG_WIDTH = cfg.PLEN - ICACHE_INDEX_WIDTH;
     cfg.ICACHE_LINE_WIDTH = CVA6Cfg.IcacheLineWidth;
@@ -131,7 +135,8 @@ package build_config_pkg;
     cfg.DCacheType = CVA6Cfg.DCacheType;
     cfg.DcacheIdWidth = CVA6Cfg.DcacheIdWidth;
     cfg.DCACHE_SET_ASSOC = CVA6Cfg.DcacheSetAssoc;
-    cfg.DCACHE_SET_ASSOC_WIDTH = CVA6Cfg.DcacheSetAssoc > 1 ? $clog2(CVA6Cfg.DcacheSetAssoc) : CVA6Cfg.DcacheSetAssoc;
+    cfg.DCACHE_SET_ASSOC_WIDTH = CVA6Cfg.DcacheSetAssoc > 1 ? $clog2(CVA6Cfg.DcacheSetAssoc) :
+        CVA6Cfg.DcacheSetAssoc;
     cfg.DCACHE_INDEX_WIDTH = DCACHE_INDEX_WIDTH;
     cfg.DCACHE_TAG_WIDTH = cfg.PLEN - DCACHE_INDEX_WIDTH;
     cfg.DCACHE_LINE_WIDTH = CVA6Cfg.DcacheLineWidth;
@@ -141,6 +146,9 @@ package build_config_pkg;
     cfg.DCACHE_NUM_WORDS = 2 ** (DCACHE_INDEX_WIDTH - DCACHE_OFFSET_WIDTH);
 
     cfg.DCACHE_MAX_TX = unsigned'(2 ** CVA6Cfg.MemTidWidth);
+
+    cfg.DcacheFlushOnFence = CVA6Cfg.DcacheFlushOnFence;
+    cfg.DcacheInvalidateOnFlush = CVA6Cfg.DcacheInvalidateOnFlush;
 
     cfg.DATA_USER_EN = CVA6Cfg.DataUserEn;
     cfg.WtDcacheWbufDepth = CVA6Cfg.WtDcacheWbufDepth;

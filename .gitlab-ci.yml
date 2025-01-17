@@ -56,7 +56,7 @@ variables:
   DV_TARGET: cv32a65x
 
 default:
-  tags: [$TAGS_RUNNER]
+  tags: [$TAGS_RUNNER_SIMU]
   artifacts:
     when: always
     paths:
@@ -72,6 +72,7 @@ stages:
 
 .setup_job:
   stage: setup
+  tags: [$TAGS_RUNNER]
   variables:
     GIT_SUBMODULE_STRATEGY: none
   rules: &on_dev
@@ -169,6 +170,7 @@ smoke-gen:
     SPIKE_TANDEM: 1
   script:
     - bash verif/regress/smoke-gen_tests.sh
+    - cp verif/sim/seedlist.yaml artifacts/logs/
     - !reference [.simu_after_script]
 
 smoke-bench:
@@ -249,12 +251,6 @@ cvxif-regression:
     DASHBOARD_SORT_INDEX: 5
     DASHBOARD_JOB_CATEGORY: "Basic"
     COLLECT_SIMU_LOGS: 1
-    SPIKE_TANDEM: 1
-  parallel:
-    matrix:
-      - DV_SIMULATORS:
-        - "veri-testharness,spike"
-        - "vcs-testharness"
   script:
     - bash verif/regress/cvxif_verif_regression.sh
     - if [[ $DV_SIMULATORS == *"spike"* ]]; then unset SPIKE_TANDEM; fi # dirty hack to do trace comparison between tandem execution and spike standalone
@@ -263,6 +259,7 @@ cvxif-regression:
 asic-synthesis:
   extends:
     - .synthesis_test
+  tags: [$TAGS_RUNNER_SYNTH]
   variables:
     DASHBOARD_JOB_TITLE: "ASIC Synthesis $DV_TARGET"
     DASHBOARD_JOB_DESCRIPTION: "Synthesis indicator with specific Techno"
@@ -583,7 +580,7 @@ simu-gate:
 fpga-boot:
   extends:
     - .backend_test
-  tags: [fpga,shell]
+  tags: [$TAGS_RUNNER_FPGA]
   needs:
     - build_tools
     - fpga-build
@@ -628,6 +625,7 @@ code_coverage-report:
 
 check gitlab jobs status:
   stage: find failures
+  tags: [$TAGS_RUNNER]
   rules:
     - if: $DASHBOARD_URL && $CI_KIND != "none"
       when: on_failure
@@ -644,6 +642,7 @@ check gitlab jobs status:
 
 merge reports:
   stage: report
+  tags: [$TAGS_RUNNER]
   variables:
     GIT_SUBMODULE_STRATEGY: none
   rules:

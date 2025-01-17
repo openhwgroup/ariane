@@ -400,7 +400,6 @@ for (
   //--------------
 
   //pragma translate_off
-`ifndef VERILATOR
 
   initial begin : p_assertions
     assert ((TLB_ENTRIES % 2 == 0) && (TLB_ENTRIES > 1))
@@ -435,7 +434,6 @@ for (
     $stop();
   end
 
-`endif
   //pragma translate_on
 
 endmodule

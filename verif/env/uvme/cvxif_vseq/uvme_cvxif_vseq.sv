@@ -409,11 +409,11 @@ task uvme_cvxif_vseq_c::do_instr_result();
       "CUS_ADD_RS3_RTYPE": begin
          if (req_item.register.rs_valid == 3'b111) begin
             resp_item.result.data = req_item.register.rs[0] + req_item.register.rs[1] + req_item.register.rs[2];
-            resp_item.result.rd   = 5'h10;
+            resp_item.result.rd   = 5'hA;
          end
          else if (req_item.register.rs_valid == 2'b11) begin
             resp_item.result.data = req_item.register.rs[0] + req_item.register.rs[1];
-            resp_item.result.rd   = 5'h10;
+            resp_item.result.rd   = 5'hA;
          end
       end
       "ILLEGAL": begin

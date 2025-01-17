@@ -209,7 +209,6 @@ module cva6_fifo_v3 #(
   end
 
   // pragma translate_off
-`ifndef VERILATOR
   initial begin
     assert (DEPTH > 0)
     else $error("DEPTH must be greater than 0.");
@@ -222,7 +221,6 @@ module cva6_fifo_v3 #(
   empty_read :
   assert property (@(posedge clk_i) disable iff (~rst_ni) (empty_o |-> ~pop_i))
   else $fatal(1, "Trying to pop data although the FIFO is empty.");
-`endif
   // pragma translate_on
 
 endmodule  // fifo_v3

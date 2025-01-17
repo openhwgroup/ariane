@@ -18,24 +18,24 @@ module pmp_entry #(
     parameter int unsigned PMP_LEN = 54
 ) (
     // Input
-    input logic [PLEN-1:0] addr_i,
+    input logic [CVA6Cfg.PLEN-1:0] addr_i,
 
     // Configuration
-    input logic [PMP_LEN-1:0] conf_addr_i,
-    input logic [PMP_LEN-1:0] conf_addr_prev_i,
+    input logic [CVA6Cfg.PLEN-3:0] conf_addr_i,
+    input logic [CVA6Cfg.PLEN-3:0] conf_addr_prev_i,
     input riscv::pmp_addr_mode_t conf_addr_mode_i,
 
     // Output
     output logic match_o
 );
-  logic [PLEN-1:0] conf_addr_n;
-  logic [$clog2(PLEN)-1:0] trail_ones;
-  logic [PLEN-1:0] base;
-  logic [PLEN-1:0] mask;
+  logic [CVA6Cfg.PLEN-1:0] conf_addr_n;
+  logic [$clog2(CVA6Cfg.PLEN)-1:0] trail_ones;
+  logic [CVA6Cfg.PLEN-1:0] base;
+  logic [CVA6Cfg.PLEN-1:0] mask;
   int unsigned size;
   assign conf_addr_n = {2'b11, ~conf_addr_i};
   lzc #(
-      .WIDTH(PLEN),
+      .WIDTH(CVA6Cfg.PLEN),
       .MODE (1'b0)
   ) i_lzc (
       .in_i   (conf_addr_n),
@@ -64,13 +64,10 @@ module pmp_entry #(
         // synthesis translate_on
 
       end
-      riscv::NA4, riscv::NAPOT: begin
+      riscv::NAPOT: begin
 
-        if (conf_addr_mode_i == riscv::NA4) size = 2;
-        else begin
-          // use the extracted trailing ones
-          size = {{(32 - $clog2(PLEN)) {1'b0}}, trail_ones} + 3;
-        end
+        // use the extracted trailing ones
+        size = {{(32 - $clog2(CVA6Cfg.PLEN)) {1'b0}}, trail_ones} + 3;
 
         mask = '1 << size;
         base = ({2'b0, conf_addr_i} << 2) & mask;
@@ -81,15 +78,15 @@ module pmp_entry #(
         assert (size >= 2);
         if (conf_addr_mode_i == riscv::NAPOT) begin
           assert (size > 2);
-          if (size < PMP_LEN) assert (conf_addr_i[size-3] == 0);
-          for (int i = 0; i < PMP_LEN; i++) begin
+          if (size < CVA6Cfg.PLEN - 2) assert (conf_addr_i[size-3] == 0);
+          for (int i = 0; i < CVA6Cfg.PLEN - 2; i++) begin
             if (size > 3 && i <= size - 4) begin
               assert (conf_addr_i[i] == 1);  // check that all the rest are ones
             end
           end
         end
 
-        if (size < PLEN - 1) begin
+        if (size < CVA6Cfg.PLEN - 1) begin
           if (base + 2 ** size > base) begin  // check for overflow
             if (match_o == 0) begin
               assert (addr_i >= base + 2 ** size || addr_i < base);

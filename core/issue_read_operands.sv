@@ -679,7 +679,7 @@ module issue_read_operands
           stall_rs3[0]   = 1'b0;
         end
       end
-      stall_raw[0] = stall_rs1[0] || stall_rs2[0] || stall_rs3[0];
+      stall_raw[0] = x_transaction_rejected ? 1'b0 : stall_rs1[0] || stall_rs2[0] || stall_rs3[0];
     end
 
     if (CVA6Cfg.SuperscalarEn) begin
@@ -932,15 +932,15 @@ module issue_read_operands
       end
     end
 
-    if (CVA6Cfg.SuperscalarEn) begin
-      if (!issue_ack[0]) begin
-        issue_ack[1] = 1'b0;
-      end
-    end
     issue_ack_o = issue_ack;
     // Do not acknoledge the issued instruction if transaction is not completed.
     if (issue_instr_i[0].fu == CVXIF && !(x_transaction_accepted_o || x_transaction_rejected)) begin
       issue_ack_o[0] = issue_instr_i[0].ex.valid && issue_instr_valid_i[0];
+    end
+    if (CVA6Cfg.SuperscalarEn) begin
+      if (!issue_ack_o[0]) begin
+        issue_ack_o[1] = 1'b0;
+      end
     end
   end
 

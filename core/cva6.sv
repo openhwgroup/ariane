@@ -560,8 +560,8 @@ module cva6
   logic acc_cons_en_csr;
   logic debug_mode;
   logic single_step_csr_commit;
-  riscv::pmpcfg_t [CVA6Cfg.NrPMPEntries-1:0] pmpcfg;
-  logic [CVA6Cfg.NrPMPEntries-1:0][CVA6Cfg.PLEN-3:0] pmpaddr;
+  riscv::pmpcfg_t [(CVA6Cfg.NrPMPEntries > 0 ? CVA6Cfg.NrPMPEntries-1 : 0):0] pmpcfg;
+  logic [(CVA6Cfg.NrPMPEntries > 0 ? CVA6Cfg.NrPMPEntries-1 : 0):0][CVA6Cfg.PLEN-3:0] pmpaddr;
   logic [31:0] mcountinhibit_csr_perf;
   // ----------------------------
   // Performance Counters <-> *
@@ -1088,7 +1088,7 @@ module cva6
       .time_irq_i,
       .flush_o                 (flush_csr_ctrl),
       .halt_csr_o              (halt_csr_ctrl),
-      .commit_instr_i          (commit_instr_id_commit),
+      .commit_instr_i          (commit_instr_id_commit[0]),
       .commit_ack_i            (commit_ack),
       .boot_addr_i             (boot_addr_i[CVA6Cfg.VLEN-1:0]),
       .hart_id_i               (hart_id_i[CVA6Cfg.XLEN-1:0]),
@@ -1326,7 +1326,11 @@ module cva6
         .inval_valid_i     (inval_valid),
         .inval_ready_o     (inval_ready)
     );
-  end else if (CVA6Cfg.DCacheType == config_pkg::HPDCACHE) begin : gen_cache_hpd
+  end else if (CVA6Cfg.DCacheType inside {
+      config_pkg::HPDCACHE_WT,
+      config_pkg::HPDCACHE_WB,
+      config_pkg::HPDCACHE_WT_WB})
+  begin : gen_cache_hpd
     cva6_hpdcache_subsystem #(
         .CVA6Cfg   (CVA6Cfg),
         .icache_areq_t(icache_areq_t),
@@ -1533,9 +1537,7 @@ module cva6
   // Parameter Check
   // -------------------
   // pragma translate_off
-`ifndef VERILATOR
   initial config_pkg::check_cfg(CVA6Cfg);
-`endif
   // pragma translate_on
 
   // -------------------
