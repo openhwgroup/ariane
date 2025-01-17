@@ -82,7 +82,7 @@ main:
     # Do the EXEC "RET" test.    
     
     # Exec test 1, at 0x0000_0800.
-    li t0, 0x00000800
+    li t0, 0xA0000800
     li t1, 0x8082
     sw t1, 0(t0)
     lw t2, 0(t0)
@@ -90,7 +90,7 @@ main:
     jalr t0
 
     # Exec test 2, at 0x0001_8000.
-    li t0, 0x00018000
+    li t0, 0xB0018000
     li t1, 0x8082
     sw t1, 0(t0)
     lw t2, 0(t0)
