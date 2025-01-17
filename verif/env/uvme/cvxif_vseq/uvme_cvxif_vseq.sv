@@ -378,31 +378,31 @@ task uvme_cvxif_vseq_c::do_instr_result();
       end
       "CUS_ADD_RS3_MSUB": begin
          if (req_item.register.rs_valid == 3'b111) begin
-            resp_item.result.data = req_item.register.rs[0] + req_item.register.rs[1] + req_item.register.rs[2];
+            resp_item.result.data = req_item.register.rs[0] - req_item.register.rs[1] - req_item.register.rs[2];
             resp_item.result.rd   = req_item.issue_req.instr[11:7];
          end
          else if (req_item.register.rs_valid == 2'b11) begin
-            resp_item.result.data = req_item.register.rs[0] + req_item.register.rs[1];
+            resp_item.result.data = req_item.register.rs[0] - req_item.register.rs[1];
             resp_item.result.rd   = req_item.issue_req.instr[11:7];
          end
       end
       "CUS_ADD_RS3_NMADD": begin
          if (req_item.register.rs_valid == 3'b111) begin
-            resp_item.result.data = req_item.register.rs[0] + req_item.register.rs[1] + req_item.register.rs[2];
+            resp_item.result.data = ~(req_item.register.rs[0] + req_item.register.rs[1] + req_item.register.rs[2]);
             resp_item.result.rd   = req_item.issue_req.instr[11:7];
          end
          else if (req_item.register.rs_valid == 2'b11) begin
-            resp_item.result.data = req_item.register.rs[0] + req_item.register.rs[1];
+            resp_item.result.data = ~(req_item.register.rs[0] + req_item.register.rs[1]);
             resp_item.result.rd   = req_item.issue_req.instr[11:7];
          end
       end
       "CUS_ADD_RS3_NMSUB": begin
          if (req_item.register.rs_valid == 3'b111) begin
-            resp_item.result.data = req_item.register.rs[0] + req_item.register.rs[1] + req_item.register.rs[2];
+            resp_item.result.data = ~(req_item.register.rs[0] - req_item.register.rs[1] - req_item.register.rs[2]);
             resp_item.result.rd   = req_item.issue_req.instr[11:7];
          end
          else if (req_item.register.rs_valid == 2'b11) begin
-            resp_item.result.data = req_item.register.rs[0] + req_item.register.rs[1];
+            resp_item.result.data = ~(req_item.register.rs[0] - req_item.register.rs[1]);
             resp_item.result.rd   = req_item.issue_req.instr[11:7];
          end
       end

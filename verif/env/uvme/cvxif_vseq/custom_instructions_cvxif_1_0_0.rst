@@ -70,25 +70,25 @@ Except for 4 of them using opcode `MADD, MSUB, NMADD, NMSUB`
 
     **Format**: addi rd, rs1, rs2, rs3 -> |rs3|00|rs2|rs1|000|rd|100_0111|
 
-    **Description**: add register rs1, rs2 to rs3, and store the result in rd.
+    **Description**: subtract register rs2 and rs3 from rs1 and store the result in rd.
 
-    **Pseudocode**: x[rd] = x[rs1] + x[rs2] + x[rs3]
+    **Pseudocode**: x[rd] = x[rs1] - x[rs2] - x[rs3]
 
 - **CUS_ADD_RS3_NMADD**: Custom Add with RS3 opcode == NMADD
 
     **Format**: addi rd, rs1, rs2, rs3 -> |rs3|00|rs2|rs1|000|rd|100_1111|
 
-    **Description**: add register rs1, rs2 to rs3, and store the result in rd.
+    **Description**: add register rs1, rs2 to rs3, negate the sum, and store the result in rd.
 
-    **Pseudocode**: x[rd] = x[rs1] + x[rs2] + x[rs3]
+    **Pseudocode**: x[rd] = ¬(x[rs1] + x[rs2] + x[rs3])
 
 - **CUS_ADD_RS3_NMSUB**: Custom Add with RS3 opcode == NMSUB
 
     **Format**: addi rd, rs1, rs2, rs3 -> |rs3|00|rs2|rs1|000|rd|100_1011|
 
-    **Description**: add register rs1, rs2 to rs3, and store the result in rd.
+    **Description**: subtract register rs2 and rs3 from rs1, negate the difference, and store the result in rd.
 
-    **Pseudocode**: x[rd] = x[rs1] + x[rs2] + x[rs3]
+    **Pseudocode**: x[rd] = ¬(x[rs1] - x[rs2] - x[rs3])
 
 - **CUS_ADD_RS3_RTYPE**: Custom Add with RS3, rd is x10 (a0)
 

@@ -18,8 +18,11 @@ package cvxif_instr_pkg;
     DOUBLE_RS1 = 4'b0011,
     DOUBLE_RS2 = 4'b0100,
     ADD_MULTI = 4'b0101,
-    ADD_RS3_R4 = 4'b0110,
-    ADD_RS3_R = 4'b0111
+    MADD_RS3_R4 = 4'b0110,
+    MSUB_RS3_R4 = 4'b0111,
+    NMADD_RS3_R4 = 4'b1000,
+    NMSUB_RS3_R4 = 4'b1001,
+    ADD_RS3_R = 4'b1111
   } opcode_t;
 
 
@@ -105,7 +108,7 @@ package cvxif_instr_pkg;
           32'b00000_00_00000_00000_0_00_00000_1000011,  // MADD opcode
           mask: 32'b00000_11_00000_00000_1_11_00000_1111111,
           resp : '{accept : 1'b1, writeback : 1'b1, register_read : {1'b1, 1'b1, 1'b1}},
-          opcode : ADD_RS3_R4
+          opcode : MADD_RS3_R4
       },
       '{
           // Custom Add Multi rs1 : cus_add rd, rs1, rs1
@@ -113,7 +116,7 @@ package cvxif_instr_pkg;
           32'b00000_00_00000_00000_0_00_00000_1000111,  // MSUB opcode
           mask: 32'b00000_11_00000_00000_1_11_00000_1111111,
           resp : '{accept : 1'b1, writeback : 1'b1, register_read : {1'b1, 1'b1, 1'b1}},
-          opcode : ADD_RS3_R4
+          opcode : MSUB_RS3_R4
       },
       '{
           // Custom Add Multi rs1 : cus_add rd, rs1, rs1
@@ -121,7 +124,7 @@ package cvxif_instr_pkg;
           32'b00000_00_00000_00000_0_00_00000_1001011,  // NMSUB opcode
           mask: 32'b00000_11_00000_00000_1_11_00000_1111111,
           resp : '{accept : 1'b1, writeback : 1'b1, register_read : {1'b1, 1'b1, 1'b1}},
-          opcode : ADD_RS3_R4
+          opcode : NMSUB_RS3_R4
       },
       '{
           // Custom Add Multi rs1 : cus_add rd, rs1, rs1
@@ -129,7 +132,7 @@ package cvxif_instr_pkg;
           32'b00000_00_00000_00000_0_00_00000_1001111,  // NMADD opcode
           mask: 32'b00000_11_00000_00000_1_11_00000_1111111,
           resp : '{accept : 1'b1, writeback : 1'b1, register_read : {1'b1, 1'b1, 1'b1}},
-          opcode : ADD_RS3_R4
+          opcode : NMADD_RS3_R4
       }
   };
 

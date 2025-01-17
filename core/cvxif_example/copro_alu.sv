@@ -88,8 +88,32 @@ module copro_alu
         rd_n     = rd_i;
         we_n     = 1'b1;
       end
-      cvxif_instr_pkg::ADD_RS3_R4: begin
-        result_n = NrRgprPorts == 3 ? registers_i[2] + registers_i[1] + registers_i[0] : registers_i[1] + registers_i[0];
+      cvxif_instr_pkg::MADD_RS3_R4: begin
+        result_n = NrRgprPorts == 3 ? (registers_i[0] + registers_i[1] + registers_i[2]) : (registers_i[0] + registers_i[1]);
+        hartid_n = hartid_i;
+        id_n = id_i;
+        valid_n = 1'b1;
+        rd_n = rd_i;
+        we_n = 1'b1;
+      end
+      cvxif_instr_pkg::MSUB_RS3_R4: begin
+        result_n = NrRgprPorts == 3 ? (registers_i[0] - registers_i[1] - registers_i[2]) : (registers_i[0] - registers_i[1]);
+        hartid_n = hartid_i;
+        id_n = id_i;
+        valid_n = 1'b1;
+        rd_n = rd_i;
+        we_n = 1'b1;
+      end
+      cvxif_instr_pkg::NMADD_RS3_R4: begin
+        result_n = NrRgprPorts == 3 ? ~(registers_i[0] + registers_i[1] + registers_i[2]) : ~(registers_i[0] + registers_i[1]);
+        hartid_n = hartid_i;
+        id_n = id_i;
+        valid_n = 1'b1;
+        rd_n = rd_i;
+        we_n = 1'b1;
+      end
+      cvxif_instr_pkg::NMSUB_RS3_R4: begin
+        result_n = NrRgprPorts == 3 ? ~(registers_i[0] - registers_i[1] - registers_i[2]) : ~(registers_i[0] - registers_i[1]);
         hartid_n = hartid_i;
         id_n = id_i;
         valid_n = 1'b1;
