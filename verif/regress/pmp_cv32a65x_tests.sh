@@ -129,28 +129,28 @@ make clean_all
 
 
 
-# ------------------------------------------------------------------------------
-#4# pmp_cv32a65x_lsu_napot_test.S on cv32a65x
-
-echo "running #4# pmp_cv32a65x_lsu_napot_test.S on cv32a65x with $DV_SIMULATORS"
-
-python3 cva6.py \
-        --target cv32a65x \
-        --iss_yaml=cva6.yaml \
-        --iss=$DV_SIMULATORS \
-        --asm_tests ../tests/custom/pmp_cv32a65x/pmp_cv32a65x_lsu_napot_test.S \
-        --linker=../../config/gen_from_riscv_config/cv32a65x/linker/link.ld \
-        --gcc_opts="-static -mcmodel=medany -fvisibility=hidden -nostdlib -nostartfiles \
-                    -g ../tests/custom/common/syscalls.c ../tests/custom/common/crt.S -lgcc \
-                    -I../tests/custom/env -I../tests/custom/common" \
-        $DV_OPTS \
-        --debug="$DEBUG_FILE" \
-        --spike_params="$SPIKE_PARAMS" \
-        --issrun_opts="$ISSRUN_OPTS" \
-        --isscomp_opts="$ISSCOMP_OPTS"
-
-make -C ../.. clean
-make clean_all
+## ------------------------------------------------------------------------------
+##4# pmp_cv32a65x_lsu_napot_test.S not supported on cv32a65x config
+#
+#echo "running #4# pmp_cv32a65x_lsu_napot_test.S on cv32a65x with $DV_SIMULATORS"
+#
+#python3 cva6.py \
+#        --target cv32a65x \
+#        --iss_yaml=cva6.yaml \
+#        --iss=$DV_SIMULATORS \
+#        --asm_tests ../tests/custom/pmp_cv32a65x/pmp_cv32a65x_lsu_napot_test.S \
+#        --linker=../../config/gen_from_riscv_config/cv32a65x/linker/link.ld \
+#        --gcc_opts="-static -mcmodel=medany -fvisibility=hidden -nostdlib -nostartfiles \
+#                    -g ../tests/custom/common/syscalls.c ../tests/custom/common/crt.S -lgcc \
+#                    -I../tests/custom/env -I../tests/custom/common" \
+#        $DV_OPTS \
+#        --debug="$DEBUG_FILE" \
+#        --spike_params="$SPIKE_PARAMS" \
+#        --issrun_opts="$ISSRUN_OPTS" \
+#        --isscomp_opts="$ISSCOMP_OPTS"
+#
+#make -C ../.. clean
+#make clean_all
 
 
 
@@ -178,77 +178,77 @@ make -C ../.. clean
 make clean_all
 
 # ------------------------------------------------------------------------------
-#6# pmp_cv32a65x_defined_matches_test.S on cv32a65x
+#6# pmp_cv32a65x_defined_matches_test.S is not supported on cv32a65x
+#
+#echo "running #6# pmp_cv32a65x_defined_matches_test.S on cv32a65x with $DV_SIMULATORS"
+#
+#python3 cva6.py \
+#        --target cv32a65x \
+#        --iss_yaml=cva6.yaml \
+#        --iss=$DV_SIMULATORS \
+#        --asm_tests ../tests/custom/pmp_cv32a65x/pmp_cv32a65x_defined_matches_test.S \
+#        --linker=../../config/gen_from_riscv_config/cv32a65x/linker/link.ld \
+#        --gcc_opts="-static -mcmodel=medany -fvisibility=hidden -nostdlib -nostartfiles \
+#                    -g ../tests/custom/common/syscalls.c ../tests/custom/common/crt.S -lgcc \
+#                    -I../tests/custom/env -I../tests/custom/common" \
+#        $DV_OPTS \
+#        --debug="$DEBUG_FILE" \
+#        --spike_params="$SPIKE_PARAMS" \
+#        --issrun_opts="$ISSRUN_OPTS" \
+#        --isscomp_opts="$ISSCOMP_OPTS" 
+#
+#make -C ../.. clean
+#make clean_all
 
-echo "running #6# pmp_cv32a65x_defined_matches_test.S on cv32a65x with $DV_SIMULATORS"
 
-python3 cva6.py \
-        --target cv32a65x \
-        --iss_yaml=cva6.yaml \
-        --iss=$DV_SIMULATORS \
-        --asm_tests ../tests/custom/pmp_cv32a65x/pmp_cv32a65x_defined_matches_test.S \
-        --linker=../../config/gen_from_riscv_config/cv32a65x/linker/link.ld \
-        --gcc_opts="-static -mcmodel=medany -fvisibility=hidden -nostdlib -nostartfiles \
-                    -g ../tests/custom/common/syscalls.c ../tests/custom/common/crt.S -lgcc \
-                    -I../tests/custom/env -I../tests/custom/common" \
-        $DV_OPTS \
-        --debug="$DEBUG_FILE" \
-        --spike_params="$SPIKE_PARAMS" \
-        --issrun_opts="$ISSRUN_OPTS" \
-        --isscomp_opts="$ISSCOMP_OPTS" 
 
-make -C ../.. clean
-make clean_all
+## ------------------------------------------------------------------------------
+##7# pmp_cv32a65x_double_entries_test.S is not supported cv32a65x (uses NAPOT)
+#
+#echo "running #7# pmp_cv32a65x_double_entries_test.S on cv32a65x with $DV_SIMULATORS"
+#
+#python3 cva6.py \
+#        --target cv32a65x \
+#        --iss_yaml=cva6.yaml \
+#        --iss=$DV_SIMULATORS \
+#        --asm_tests ../tests/custom/pmp_cv32a65x/pmp_cv32a65x_double_entries_test.S \
+#        --linker=../../config/gen_from_riscv_config/cv32a65x/linker/link.ld \
+#        --gcc_opts="-static -mcmodel=medany -fvisibility=hidden -nostdlib -nostartfiles \
+#                    -g ../tests/custom/common/syscalls.c ../tests/custom/common/crt.S -lgcc \
+#                    -I../tests/custom/env -I../tests/custom/common" \
+#        $DV_OPTS \
+#        --debug="$DEBUG_FILE" \
+#        --spike_params="$SPIKE_PARAMS" \
+#        --issrun_opts="$ISSRUN_OPTS" \
+#        --isscomp_opts="$ISSCOMP_OPTS" 
+#
+#make -C ../.. clean
+#make clean_all
 
 
 
 # ------------------------------------------------------------------------------
-#7# pmp_cv32a65x_double_entries_test.S on cv32a65x
-
-echo "running #7# pmp_cv32a65x_double_entries_test.S on cv32a65x with $DV_SIMULATORS"
-
-python3 cva6.py \
-        --target cv32a65x \
-        --iss_yaml=cva6.yaml \
-        --iss=$DV_SIMULATORS \
-        --asm_tests ../tests/custom/pmp_cv32a65x/pmp_cv32a65x_double_entries_test.S \
-        --linker=../../config/gen_from_riscv_config/cv32a65x/linker/link.ld \
-        --gcc_opts="-static -mcmodel=medany -fvisibility=hidden -nostdlib -nostartfiles \
-                    -g ../tests/custom/common/syscalls.c ../tests/custom/common/crt.S -lgcc \
-                    -I../tests/custom/env -I../tests/custom/common" \
-        $DV_OPTS \
-        --debug="$DEBUG_FILE" \
-        --spike_params="$SPIKE_PARAMS" \
-        --issrun_opts="$ISSRUN_OPTS" \
-        --isscomp_opts="$ISSCOMP_OPTS" 
-
-make -C ../.. clean
-make clean_all
-
-
-
-# ------------------------------------------------------------------------------
-#8# pmp_cv32a65x_locked_outside_napot_test.S on cv32a65x
-
-echo "running #8# pmp_cv32a65x_locked_outside_napot_test.S on cv32a65x with $DV_SIMULATORS"
-
-python3 cva6.py \
-        --target cv32a65x \
-        --iss_yaml=cva6.yaml \
-        --iss=$DV_SIMULATORS \
-        --asm_tests ../tests/custom/pmp_cv32a65x/pmp_cv32a65x_locked_outside_napot_test.S \
-        --linker=../../config/gen_from_riscv_config/cv32a65x/linker/link.ld \
-        --gcc_opts="-static -mcmodel=medany -fvisibility=hidden -nostdlib -nostartfiles \
-                    -g ../tests/custom/common/syscalls.c ../tests/custom/common/crt.S -lgcc \
-                    -I../tests/custom/env -I../tests/custom/common" \
-        $DV_OPTS \
-        --debug="$DEBUG_FILE" \
-        --spike_params="$SPIKE_PARAMS" \
-        --issrun_opts="$ISSRUN_OPTS" \
-        --isscomp_opts="$ISSCOMP_OPTS" 
-
-make -C ../.. clean
-make clean_all
+##8# pmp_cv32a65x_locked_outside_napot_test.S not supported on cv32a65x
+#
+#echo "running #8# pmp_cv32a65x_locked_outside_napot_test.S on cv32a65x with $DV_SIMULATORS"
+#
+#python3 cva6.py \
+#        --target cv32a65x \
+#        --iss_yaml=cva6.yaml \
+#        --iss=$DV_SIMULATORS \
+#        --asm_tests ../tests/custom/pmp_cv32a65x/pmp_cv32a65x_locked_outside_napot_test.S \
+#        --linker=../../config/gen_from_riscv_config/cv32a65x/linker/link.ld \
+#        --gcc_opts="-static -mcmodel=medany -fvisibility=hidden -nostdlib -nostartfiles \
+#                    -g ../tests/custom/common/syscalls.c ../tests/custom/common/crt.S -lgcc \
+#                    -I../tests/custom/env -I../tests/custom/common" \
+#        $DV_OPTS \
+#        --debug="$DEBUG_FILE" \
+#        --spike_params="$SPIKE_PARAMS" \
+#        --issrun_opts="$ISSRUN_OPTS" \
+#        --isscomp_opts="$ISSCOMP_OPTS" 
+#
+#make -C ../.. clean
+#make clean_all
 
 # ------------------------------------------------------------------------------
 #9# pmp_cv32a65x_locked_outside_tor_test.S on cv32a65x
