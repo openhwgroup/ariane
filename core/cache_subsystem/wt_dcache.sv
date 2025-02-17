@@ -188,10 +188,10 @@ module wt_dcache
   // read controllers (LD unit and PTW/MMU)
   ///////////////////////////////////////////////////////
 
-  // 0 is used by MMU, 1 by READ access requests
+  // 0 is used by MMU or implicit read by zcmt, 1 by READ access requests
   for (genvar k = 0; k < NumPorts - 1; k++) begin : gen_rd_ports
     // set these to high prio ports
-    if ((k == 0 && CVA6Cfg.MmuPresent) || (k == 1) || (k == 2 && CVA6Cfg.EnableAccelerator)) begin
+    if ((k == 0 && (CVA6Cfg.MmuPresent || CVA6Cfg.RVZCMT )) || (k == 1) || (k == 2 && CVA6Cfg.EnableAccelerator)) begin
       assign rd_prio[k] = 1'b1;
       wt_dcache_ctrl #(
           .CVA6Cfg(CVA6Cfg),

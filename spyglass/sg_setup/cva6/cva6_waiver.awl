@@ -6,9 +6,13 @@
 ## Modified by : Asmaa Kassimi (asmaa.kassimi@external.thalesgroup.com) - Thales
 #######################################################################################################
 
-waive -file_line {$CVA6_REPO_DIR/common/local/util/sram_cache.sv}  {55}  -severity {  {ERROR}  }  -rule {  {ErrorAnalyzeBBox}  } 
-waive -file_line {$CVA6_REPO_DIR/common/local/util/sram_cache.sv}  {85}  -severity {  {ERROR}  }  -rule {  {ErrorAnalyzeBBox}  } 
-waive -file {  {$CVA6_REPO_DIR/vendor/pulp-platform/tech_cells_generic/src/rtl/tc_sram.sv}  }  -severity {  {ERROR}  }  -rule {  {ErrorAnalyzeBBox}  } 
-waive -file {  {$CVA6_REPO_DIR/vendor/pulp-platform/tech_cells_generic/src/rtl/tc_sram.sv}  }  -severity {  {ERROR}  }  -rule {  {SYNTH_5251}  } 
+waive -file_line {$CVA6_REPO_DIR/common/local/util/sram_cache.sv}  {55}  -severity {  {ERROR}  }  -rule {  {ErrorAnalyzeBBox}  }
+waive -file_line {$CVA6_REPO_DIR/common/local/util/sram_cache.sv}  {85}  -severity {  {ERROR}  }  -rule {  {ErrorAnalyzeBBox}  }
+waive -file {  {$CVA6_REPO_DIR/vendor/pulp-platform/tech_cells_generic/src/rtl/tc_sram.sv}  }  -severity {  {ERROR}  }  -rule {  {ErrorAnalyzeBBox}  }
+waive -file {  {$CVA6_REPO_DIR/vendor/pulp-platform/tech_cells_generic/src/rtl/tc_sram.sv}  }  -severity {  {ERROR}  }  -rule {  {SYNTH_5251}  }
 waive -file {  {$CVA6_REPO_DIR/common/local/util/tc_sram_wrapper_cache_techno.sv}  }  -du {  {tc_sram_wrapper_cache_techno}  }  -severity {  {ERROR}  }  -rule {  {ErrorAnalyzeBBox}  }
-waive -rule {  {W240}  }  -comment {Created by akassimi on 26-Jul-2024 18:36:59} 
+
+waive -file {$CVA6_REPO_DIR/core/cache_subsystem/*} -regexp
+
+waive -rule {  {W240}  }  -comment {Created by akassimi on 26-Jul-2024 18:36:59}
+waive -rule {  {W528}  }  -comment {Remove Set but not read warning as it happens very often for disable features such as PMP, Accelerator, ...}

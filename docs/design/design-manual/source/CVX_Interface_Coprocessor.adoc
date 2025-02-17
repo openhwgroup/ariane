@@ -61,57 +61,71 @@ Supported Parameters
 
 The following table presents CVXIF parameters supported by CVA6.
 
-[cols=",,",options="header",]
+[cols=",a,a",options="header",]
 |=============================================
 |Signal |Value |Description
-|*X_NUM_RS* |int: 2 or 3 (configurable) a|
+|*X_NUM_RS* |
+int: 2 or 3 (configurable) +
+
+* CV32A60X: 2
+* CV32A65X: 2
+|
 [verse]
 --
 Number of register file read ports that can
 be used by the eXtension interface
 --
 
- |
-|*X_ID_WIDTH* |int: 3 a|
+|*X_ID_WIDTH* |
+int: 1 to 32 +
+
+* CV32A60X: 2
+* CV32A65X: 3
+|
 [verse]
 --
 Identification width for the eXtension
 interface
 --
 
- |
-|*X_MEM_WIDTH* |n/a (feature not supported) a|
+|*X_MEM_WIDTH* |n/a (feature not supported) |
 [verse]
 --
 Memory access width for loads/stores via the
 eXtension interface
 --
 
- |
-|*X_RFR_WIDTH* |int: `XLEN` (32 or 64) a|
+|*X_RFR_WIDTH* |
+int: `XLEN` (32 or 64) +
+
+* CV32A60X: 32
+* CV32A65X: 32
+|
 [verse]
 --
 Register file read access width for the
 eXtension interface
 --
 
- |
-|*X_RFW_WIDTH* |int: `XLEN` (32 or 64) a|
+|*X_RFW_WIDTH* |
+int: `XLEN` (32 or 64) +
+
+* CV32A60X: 32
+* CV32A65X: 32
+|
 [verse]
 --
 Register file write access width for the
 eXtension interface
 --
 
- |
-|*X_MISA* |logic[31:0]: 0x0000_0000 a|
+|*X_MISA* |logic[31:0]: 0x0000_0000 |
 [verse]
 --
 MISA extensions implemented on the eXtension
 interface
 --
 
- |
 |=============================================
 
 [[cv-x-if-enabling]]

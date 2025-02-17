@@ -167,8 +167,13 @@ To generate VCD waveforms of the `smoke-tests` regression suite using Verilator,
 ```sh
 export DV_SIMULATORS=veri-testharness,spike
 export TRACE_FAST=1
-bash verif/regress/smoke-tests.sh
+bash verif/regress/smoke-tests-<cpu_version>.sh
 ```
+
+Where `<cpu_version>` is one of the following, depending on the CPU variant you want to use.
+- `cv32a65x`.
+- `cv32a6_imac_sv32`.
+- `cv64a6_imafdc_sv39`.
 
 After each simulation run involving Verilator or VCS, the generated waveforms
 will be copied  to the directory containing the log files (see above,) with

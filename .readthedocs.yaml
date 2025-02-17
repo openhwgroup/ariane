@@ -7,6 +7,7 @@ version: 2
 submodules:
   include:
     - docs/riscv-isa/riscv-isa-manual
+  recursive: true
 
 build:
   os: "ubuntu-20.04"
@@ -26,7 +27,7 @@ build:
       - npm install docs/riscv-isa/riscv-isa-manual/dependencies
       - gem install -g docs/riscv-isa/riscv-isa-manual/dependencies/Gemfile
     pre_build:
-      - make -C docs prepare
+      - PATH=$PWD/node_modules/.bin:$PATH make -C docs prepare
 
 # Build from the docs directory with Sphinx
 sphinx:

@@ -3,3 +3,9 @@ sphinx-rtd-theme
 recommonmark
 sphinxcontrib-svg2pdfconverter
 sphinx_github_changelog
+
+# for gen_from_riscv_config
+mako
+mdutils
+pyyaml
+rstcloth

@@ -67,8 +67,7 @@ module mult
       .result_o       (mul_result),
       .mult_valid_i   (mul_valid_op),
       .mult_valid_o   (mul_valid),
-      .mult_trans_id_o(mul_trans_id),
-      .mult_ready_o   ()                      // this unit is unconditionally ready
+      .mult_trans_id_o(mul_trans_id)
   );
 
   // ---------------------

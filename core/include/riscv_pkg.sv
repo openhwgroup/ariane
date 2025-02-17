@@ -385,6 +385,8 @@ package riscv;
     CSR_FFLAGS           = 12'h001,
     CSR_FRM              = 12'h002,
     CSR_FCSR             = 12'h003,
+    //jvt
+    CSR_JVT              = 12'h017,
     CSR_FTRAN            = 12'h800,
     // Vector CSRs
     CSR_VSTART           = 12'h008,
@@ -724,6 +726,8 @@ package riscv;
   localparam logic [63:0] SSTATUS_MXR = 'h00080000;
   localparam logic [63:0] SSTATUS_UPIE = 'h00000010;
   localparam logic [63:0] SSTATUS_UXL = 64'h0000000300000000;
+  // CSR Bit Implementation Masks
+
   function automatic logic [63:0] sstatus_sd(logic IS_XLEN64);
     return {IS_XLEN64, 31'h00000000, ~IS_XLEN64, 31'h00000000};
   endfunction

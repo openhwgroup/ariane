@@ -69,5 +69,6 @@ python3 cva6.py \
         --iss="$DV_SIMULATORS" \
         --iss_yaml=cva6.yaml \
         --c_tests "$src0" \
+        --sv_seed 1 \
         --gcc_opts "${srcA[*]} ${cflags[*]}" \
         $DV_OPTS

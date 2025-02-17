@@ -25,32 +25,32 @@ module instr_tracer #(
   parameter type exception_t = logic,
   parameter interrupts_t INTERRUPTS = '0
 )(
-    input logic                    pck,
-  input logic                    rstn,
-  input logic                    flush_unissued,
-  input logic                    flush_all,
-  input logic [31:0]             instruction,
-  input logic                    fetch_valid,
-  input logic                    fetch_ack,
-  input logic                    issue_ack, // issue acknowledged
-  input scoreboard_entry_t       issue_sbe, // issue scoreboard entry
-  input logic [1:0][4:0]         waddr, // WB stage
-  input logic [1:0][63:0]        wdata,
-  input logic [1:0]              we_gpr,
-  input logic [1:0]              we_fpr,
-  input scoreboard_entry_t [1:0] commit_instr, // commit instruction
-  input logic [1:0]              commit_ack,
-  input logic                    st_valid,   // stores - address translation
-  input logic [CVA6Cfg.PLEN-1:0] st_paddr,
-  input logic                    ld_valid, // loads
-  input logic                    ld_kill,
-  input logic [CVA6Cfg.PLEN-1:0] ld_paddr,
-  input bp_resolve_t             resolve_branch, // misprediction
-  input exception_t              commit_exception,
-  input riscv::priv_lvl_t        priv_lvl, // current privilege level
-  input logic                    debug_mode,
+  input logic                                          pck,
+  input logic                                          rstn,
+  input logic                                          flush_unissued,
+  input logic                                          flush_all,
+  input logic [31:0]                                   instruction,
+  input logic                                          fetch_valid,
+  input logic                                          fetch_ack,
+  input logic                                          issue_ack, // issue acknowledged
+  input scoreboard_entry_t                             issue_sbe, // issue scoreboard entry
+  input logic [CVA6Cfg.NrCommitPorts-1:0][4:0]         waddr, // WB stage
+  input logic [CVA6Cfg.NrCommitPorts-1:0][63:0]        wdata,
+  input logic [CVA6Cfg.NrCommitPorts-1:0]              we_gpr,
+  input logic [CVA6Cfg.NrCommitPorts-1:0]              we_fpr,
+  input scoreboard_entry_t [CVA6Cfg.NrCommitPorts-1:0] commit_instr, // commit instruction
+  input logic [CVA6Cfg.NrCommitPorts-1:0]              commit_ack,
+  input logic                                          st_valid,   // stores - address translation
+  input logic [CVA6Cfg.PLEN-1:0]                       st_paddr,
+  input logic                                          ld_valid, // loads
+  input logic                                          ld_kill,
+  input logic [CVA6Cfg.PLEN-1:0]                       ld_paddr,
+  input bp_resolve_t                                   resolve_branch, // misprediction
+  input exception_t                                    commit_exception,
+  input riscv::priv_lvl_t                              priv_lvl, // current privilege level
+  input logic                                          debug_mode,
 
-  input logic[CVA6Cfg.XLEN-1:0] hart_id_i
+  input logic[CVA6Cfg.XLEN-1:0]                        hart_id_i
 );
 
   // keep the decoded instructions in a queue

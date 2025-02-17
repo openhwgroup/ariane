@@ -272,9 +272,9 @@ module macro_decoder #(
 
     unique case (state_q)
       IDLE: begin
-        if (is_macro_instr_i && issue_ack_i) begin
+        if (is_macro_instr_i) begin
           reg_numbers_d = reg_numbers - 1'b1;
-          state_d = INIT;
+          state_d = issue_ack_i ? INIT : IDLE;
           case (macro_instr_type)
             PUSH: begin
               offset_d = 12'hFFC + 12'hFFC;
@@ -423,7 +423,7 @@ module macro_decoder #(
         end
       end
       INIT: begin
-        fetch_stall_o = 1'b1;  // stall inst fetch
+        fetch_stall_o = is_macro_instr_i;  // stall inst fetch
         if (issue_ack_i && is_macro_instr_i && macro_instr_type == PUSH) begin
           if (reg_numbers_q == 4'b0001) begin
             if (CVA6Cfg.XLEN == 64) begin

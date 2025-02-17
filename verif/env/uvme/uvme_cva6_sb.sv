@@ -241,7 +241,7 @@ function void uvme_cva6_sb_c::check_pc_trap(uvma_isacov_instr_c instr,
      if (instr_prev.trap) begin
         if (mtvec_change) begin
            if(cfg.xlen == 32) begin
-              if (instr.rvfi.pc_rdata[31:2] == mtvec_value[31:2]) begin
+              if (instr.rvfi.pc_rdata[RTLCVA6Cfg.VLEN-1:2] == mtvec_value[RTLCVA6Cfg.VLEN-1:2]) begin
                  //we only support MTVEC Direct mode
                  `uvm_info(get_type_name(), $sformatf("After a trap, PC matches MTVEC value"), UVM_DEBUG)
               end

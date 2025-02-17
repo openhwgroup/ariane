@@ -64,8 +64,8 @@ module cva6_rvfi
   logic [CVA6Cfg.NrIssuePorts-1:0] decoded_instr_valid;
   logic [CVA6Cfg.NrIssuePorts-1:0] decoded_instr_ack;
 
-  logic [CVA6Cfg.NrIssuePorts-1:0][CVA6Cfg.XLEN-1:0] rs1_forwarding;
-  logic [CVA6Cfg.NrIssuePorts-1:0][CVA6Cfg.XLEN-1:0] rs2_forwarding;
+  logic [CVA6Cfg.NrIssuePorts-1:0][CVA6Cfg.XLEN-1:0] rs1;
+  logic [CVA6Cfg.NrIssuePorts-1:0][CVA6Cfg.XLEN-1:0] rs2;
 
   logic [CVA6Cfg.NrCommitPorts-1:0][CVA6Cfg.XLEN-1:0] rvfi_intr;
 
@@ -132,8 +132,8 @@ module cva6_rvfi
   assign decoded_instr_valid = instr.decoded_instr_valid;
   assign decoded_instr_ack = instr.decoded_instr_ack;
 
-  assign rs1_forwarding = instr.rs1_forwarding;
-  assign rs2_forwarding = instr.rs2_forwarding;
+  assign rs1 = instr.rs1;
+  assign rs2 = instr.rs2;
 
   assign commit_instr_pc = instr.commit_instr_pc;
   assign commit_instr_op = instr.commit_instr_op;
@@ -240,8 +240,8 @@ module cva6_rvfi
     for (int unsigned i = 0; i < CVA6Cfg.NrIssuePorts; i++) begin
       if (decoded_instr_valid[i] && decoded_instr_ack[i] && !flush_unissued_instr) begin
         mem_n[issue_pointer[i]] = '{
-            rs1_rdata: rs1_forwarding[i],
-            rs2_rdata: rs2_forwarding[i],
+            rs1_rdata: rs1[i],
+            rs2_rdata: rs2[i],
             lsu_addr: '0,
             lsu_rmask: '0,
             lsu_wmask: '0,
@@ -418,7 +418,7 @@ module cva6_rvfi
   `CONNECT_RVFI_SAME(1'b1, icache)
 
   `CONNECT_RVFI_SAME(CVA6Cfg.EnableAccelerator, acc_cons)
-
+  `CONNECT_RVFI_SAME(CVA6Cfg.RVZCMT, jvt)
   `CONNECT_RVFI_FULL(1'b1, pmpcfg0, csr.pmpcfg_q[CVA6Cfg.XLEN/8-1:0])
   `CONNECT_RVFI_FULL(CVA6Cfg.XLEN == 32, pmpcfg1, csr.pmpcfg_q[7:4])
 

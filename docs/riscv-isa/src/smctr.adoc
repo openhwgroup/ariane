@@ -1,0 +1,7 @@
+[[smctr]]
+
+== "Smctr" Control Transfer Records Extension, Version 1.0
+
+ifeval::[{RVZsmctr} == false]
+{ohg-config}: This extension is not supported.
+endif::[]

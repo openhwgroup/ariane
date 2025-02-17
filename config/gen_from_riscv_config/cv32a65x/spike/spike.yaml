@@ -52,6 +52,7 @@ spike_param_tree:
       pmpaddr5_write_mask: 0xFFFFFFFE
       pmpaddr6_write_mask: 0xFFFFFFFE
       pmpaddr7_write_mask: 0xFFFFFFFE
+      mtvec_write_mask: 0xFFFFFFFE
       mhartid: 0
       mvendorid_override_mask : 0xFFFFFFFF
       mvendorid_override_value: 1538

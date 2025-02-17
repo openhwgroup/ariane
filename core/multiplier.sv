@@ -38,8 +38,6 @@ module multiplier
     output logic [         CVA6Cfg.XLEN-1:0] result_o,
     // Mutliplier result is valid - Mult
     output logic                             mult_valid_o,
-    // Multiplier FU is ready - Mult
-    output logic                             mult_ready_o,
     // Multiplier transaction ID - Mult
     output logic [CVA6Cfg.TRANS_ID_BITS-1:0] mult_trans_id_o
 );
@@ -90,7 +88,6 @@ module multiplier
   // control signals
   assign mult_valid_o = mult_valid_q;
   assign mult_trans_id_o = trans_id_q;
-  assign mult_ready_o = 1'b1;
 
   assign mult_valid      = mult_valid_i && (operation_i inside {MUL, MULH, MULHU, MULHSU, MULW, CLMUL, CLMULH, CLMULR});
 

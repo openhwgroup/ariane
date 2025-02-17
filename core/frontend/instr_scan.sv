@@ -30,7 +30,7 @@ module instr_scan #(
     output logic rvi_jalr_o,
     // Unconditional jump instruction - FRONTEND
     output logic rvi_jump_o,
-    // Instruction immediat - FRONTEND
+    // Instruction immediate - FRONTEND
     output logic [CVA6Cfg.VLEN-1:0] rvi_imm_o,
     // Branch compressed instruction - FRONTEND
     output logic rvc_branch_o,
@@ -44,7 +44,7 @@ module instr_scan #(
     output logic rvc_jalr_o,
     // JAL compressed instruction - FRONTEND
     output logic rvc_call_o,
-    // Instruction compressed immediat - FRONTEND
+    // Instruction compressed immediate - FRONTEND
     output logic [CVA6Cfg.VLEN-1:0] rvc_imm_o
 );
 
@@ -69,11 +69,8 @@ module instr_scan #(
     };
   endfunction
 
-  logic is_rvc;
-  assign is_rvc = (instr_i[1:0] != 2'b11);
-
   logic rv32_rvc_jal;
-  assign rv32_rvc_jal = (CVA6Cfg.XLEN == 32) & ((instr_i[15:13] == riscv::OpcodeC1Jal) & is_rvc & (instr_i[1:0] == riscv::OpcodeC1));
+  assign rv32_rvc_jal = (CVA6Cfg.XLEN == 32) & ((instr_i[15:13] == riscv::OpcodeC1Jal) & (instr_i[1:0] == riscv::OpcodeC1));
 
   logic is_xret;
   assign is_xret = logic'(instr_i[31:30] == 2'b00) & logic'(instr_i[28:0] == 29'b10000001000000000000001110011);
@@ -90,22 +87,20 @@ module instr_scan #(
   assign rvi_jump_o = logic'(instr_i[6:0] == riscv::OpcodeJal) | is_xret;
 
   // opcode JAL
-  assign rvc_jump_o   = ((instr_i[15:13] == riscv::OpcodeC1J) & is_rvc & (instr_i[1:0] == riscv::OpcodeC1)) | rv32_rvc_jal;
+  assign rvc_jump_o   = ((instr_i[15:13] == riscv::OpcodeC1J) & (instr_i[1:0] == riscv::OpcodeC1)) | rv32_rvc_jal;
 
   // always links to register 0
   logic is_jal_r;
   assign is_jal_r     = (instr_i[15:13] == riscv::OpcodeC2JalrMvAdd)
                         & (instr_i[6:2] == 5'b00000)
-                        & (instr_i[1:0] == riscv::OpcodeC2)
-                        & is_rvc;
+                        & (instr_i[1:0] == riscv::OpcodeC2);
   assign rvc_jr_o = is_jal_r & ~instr_i[12];
   // always links to register 1 e.g.: it is a jump
   assign rvc_jalr_o = is_jal_r & instr_i[12];
   assign rvc_call_o = rvc_jalr_o | rv32_rvc_jal;
 
   assign rvc_branch_o = ((instr_i[15:13] == riscv::OpcodeC1Beqz) | (instr_i[15:13] == riscv::OpcodeC1Bnez))
-                        & (instr_i[1:0] == riscv::OpcodeC1)
-                        & is_rvc;
+                        & (instr_i[1:0] == riscv::OpcodeC1);
   // check that rs1 is x1 or x5
   assign rvc_return_o = ((instr_i[11:7] == 5'd1) | (instr_i[11:7] == 5'd5)) & rvc_jr_o;
 

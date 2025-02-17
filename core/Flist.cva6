@@ -112,6 +112,7 @@ ${CVA6_REPO_DIR}/core/branch_unit.sv
 ${CVA6_REPO_DIR}/core/compressed_decoder.sv
 ${CVA6_REPO_DIR}/core/macro_decoder.sv
 ${CVA6_REPO_DIR}/core/controller.sv
+${CVA6_REPO_DIR}/core/zcmt_decoder.sv
 ${CVA6_REPO_DIR}/core/csr_buffer.sv
 ${CVA6_REPO_DIR}/core/csr_regfile.sv
 ${CVA6_REPO_DIR}/core/decoder.sv

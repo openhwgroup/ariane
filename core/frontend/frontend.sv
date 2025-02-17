@@ -240,7 +240,7 @@ module frontend
         4'b0001: begin
           ras_pop  = 1'b0;
           ras_push = 1'b0;
-          if (CVA6Cfg.BTBEntries && btb_prediction_shifted[i].valid) begin
+          if (CVA6Cfg.BTBEntries != 0 && btb_prediction_shifted[i].valid) begin
             predict_address = btb_prediction_shifted[i].target_address;
             cf_type[i] = ariane_pkg::JumpR;
           end

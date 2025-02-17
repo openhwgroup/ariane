@@ -85,7 +85,6 @@ module store_buffer
     speculative_status_cnt      = speculative_status_cnt_q;
 
     // default assignments
-    speculative_status_cnt_n    = speculative_status_cnt_q;
     speculative_read_pointer_n  = speculative_read_pointer_q;
     speculative_write_pointer_n = speculative_write_pointer_q;
     speculative_queue_n         = speculative_queue_q;
@@ -147,6 +146,7 @@ module store_buffer
                                                                                     CVA6Cfg.DCACHE_INDEX_WIDTH-1 :
                                                                                     CVA6Cfg.DCACHE_INDEX_WIDTH];
   assign req_port_o.data_wdata = commit_queue_q[commit_read_pointer_q].data;
+  assign req_port_o.data_wuser = '0;
   assign req_port_o.data_be = commit_queue_q[commit_read_pointer_q].be;
   assign req_port_o.data_size = commit_queue_q[commit_read_pointer_q].data_size;
 

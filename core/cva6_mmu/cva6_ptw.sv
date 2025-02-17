@@ -16,7 +16,7 @@
 // Date: 26/02/2024
 // Description: Hardware-PTW (Page-Table-Walker) for CVA6 supporting sv32, sv39 and sv39x4.
 //              This module is an merge of the PTW Sv39 developed by Florian Zaruba,
-//              the PTW Sv32 developed by Sebastien Jacq and the PTW Sv39x4 by Bruno Sá.  
+//              the PTW Sv32 developed by Sebastien Jacq and the PTW Sv39x4 by Bruno Sá.
 
 /* verilator lint_off WIDTH */
 
@@ -83,8 +83,8 @@ module cva6_ptw
     output logic shared_tlb_miss_o,
 
     // PMP
-    input riscv::pmpcfg_t [(CVA6Cfg.NrPMPEntries > 0 ? CVA6Cfg.NrPMPEntries-1 : 0):0] pmpcfg_i,
-    input logic [(CVA6Cfg.NrPMPEntries > 0 ? CVA6Cfg.NrPMPEntries-1 : 0):0][CVA6Cfg.PLEN-3:0] pmpaddr_i,
+    input riscv::pmpcfg_t [avoid_neg(CVA6Cfg.NrPMPEntries-1):0] pmpcfg_i,
+    input logic [avoid_neg(CVA6Cfg.NrPMPEntries-1):0][CVA6Cfg.PLEN-3:0] pmpaddr_i,
     output logic [CVA6Cfg.PLEN-1:0] bad_paddr_o,
     output logic [CVA6Cfg.GPLEN-1:0] bad_gpaddr_o
 );
@@ -258,8 +258,8 @@ module cva6_ptw
   //    PAGESIZE=2^12 and LEVELS=3.)
   // 2. Let pte be the value of the PTE at address a+va.vpn[i]×PTESIZE. (For
   //    Sv32, PTESIZE=4.)
-  // 3. If pte.v = 0, or if pte.r = 0 and pte.w = 1, or if any bits or encodings 
-  //    that are reserved for future standard use are set within pte, stop and raise 
+  // 3. If pte.v = 0, or if pte.r = 0 and pte.w = 1, or if any bits or encodings
+  //    that are reserved for future standard use are set within pte, stop and raise
   //    a page-fault exception corresponding to the original access type.
   // 4. Otherwise, the PTE is valid. If pte.r = 1 or pte.x = 1, go to step 5.
   //    Otherwise, this PTE is a pointer to the next level of the page table.

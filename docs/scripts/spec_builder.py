@@ -58,6 +58,7 @@ DEFAULT_PARAMS = {
     'RVZicbo': False,
     'RVZicfilp': False,
     'RVZpm': False,
+    'RVZsmctr': False,
     'RVZsmepmp': False,
     'RVZsmmpm': False,
     'RVZsmrnmi': False,

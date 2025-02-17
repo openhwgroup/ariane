@@ -171,6 +171,7 @@ smoke-gen:
   script:
     - bash verif/regress/smoke-gen_tests.sh
     - cp verif/sim/seedlist.yaml artifacts/logs/
+    - cp verif/sim/uvm_seed.log artifacts/logs/
     - !reference [.simu_after_script]
 
 smoke-bench:
@@ -466,6 +467,7 @@ generated_tests:
     - source verif/regress/dv-generated-tests.sh
     - mv verif/sim/vcs_results/default/vcs.d/simv.vdb artifacts/coverage
     - mv verif/sim/seedlist.yaml artifacts/coverage
+    - mv verif/sim/uvm_seed.log artifacts/coverage
     - python3 .gitlab-ci/scripts/report_pass.py
 
 .generated_xif_tests:
@@ -486,6 +488,7 @@ generated_tests:
     - source verif/regress/dv-generated-xif-tests.sh
     - mv verif/sim/vcs_results/default/vcs.d/simv.vdb artifacts/coverage
     - mv verif/sim/seedlist.yaml artifacts/coverage
+    - mv verif/sim/uvm_seed.log artifacts/coverage
     - python3 .gitlab-ci/scripts/report_pass.py
 
 directed_isacov-tests:
@@ -505,6 +508,7 @@ directed_isacov-tests:
     - mkdir -p artifacts/coverage
     - source verif/regress/dv-generated-tests.sh
     - mv verif/sim/vcs_results/default/vcs.d/simv.vdb artifacts/coverage
+    - mv verif/sim/uvm_seed.log artifacts/coverage
     - python3 .gitlab-ci/scripts/report_pass.py
 
 csr_embedded_tests:
@@ -521,6 +525,7 @@ csr_embedded_tests:
     - mkdir -p artifacts/coverage
     - source verif/regress/dv-csr-embedded-tests.sh
     - mv verif/sim/vcs_results/default/vcs.d/simv.vdb artifacts/coverage
+    - mv verif/sim/uvm_seed.log artifacts/coverage
     - python3 .gitlab-ci/scripts/report_tandem.py verif/sim/out*/"$DV_SIMULATORS"_sim
 
 .backend_test:
@@ -619,6 +624,7 @@ code_coverage-report:
     - mkdir -p verif/sim/vcs_results/default/vcs.d
     - mv artifacts/coverage/simv.vdb verif/sim/vcs_results/default/vcs.d/
     - mv artifacts/coverage/seedlist.yaml verif/sim/seedlist.yaml
+    - mv artifacts/coverage/uvm_seed.log verif/sim/uvm_seed.log
     - make -C verif/sim generate_cov_dash
     - mv verif/sim/urgReport artifacts/cov_reports/
     - python3 .gitlab-ci/scripts/report_coverage.py artifacts/cov_reports/urgReport/hierarchy.txt artifacts/cov_reports/urgReport/"feature.CVA6 Verification Master Plan1.7.-1268999905.txt"

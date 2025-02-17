@@ -39,6 +39,7 @@
   rvfi_csr_elmt_t fflags; \
   rvfi_csr_elmt_t frm; \
   rvfi_csr_elmt_t fcsr; \
+  rvfi_csr_elmt_t jvt; \
   rvfi_csr_elmt_t ftran; \
   rvfi_csr_elmt_t dcsr; \
   rvfi_csr_elmt_t dpc; \
@@ -103,8 +104,8 @@
   logic [Cfg.NrIssuePorts-1:0] fetch_entry_valid; \
   logic [Cfg.NrIssuePorts-1:0][31:0] instruction; \
   logic [Cfg.NrIssuePorts-1:0] is_compressed; \
-  logic [Cfg.NrIssuePorts-1:0][Cfg.VLEN-1:0] rs1_forwarding; \
-  logic [Cfg.NrIssuePorts-1:0][Cfg.VLEN-1:0] rs2_forwarding; \
+  logic [Cfg.NrIssuePorts-1:0][Cfg.XLEN-1:0] rs1; \
+  logic [Cfg.NrIssuePorts-1:0][Cfg.XLEN-1:0] rs2; \
   logic [Cfg.NrCommitPorts-1:0][Cfg.VLEN-1:0] commit_instr_pc; \
   ariane_pkg::fu_op [Cfg.NrCommitPorts-1:0] commit_instr_op; \
   logic [Cfg.NrCommitPorts-1:0][ariane_pkg::REG_ADDR_SIZE-1:0] commit_instr_rs1; \
@@ -130,6 +131,7 @@
 `define RVFI_PROBES_CSR_T(Cfg) struct packed { \
   riscv::fcsr_t fcsr_q; \
   riscv::dcsr_t dcsr_q; \
+  logic [Cfg.XLEN-1:0] jvt_q; \
   logic [Cfg.XLEN-1:0] dpc_q; \
   logic [Cfg.XLEN-1:0] dscratch0_q; \
   logic [Cfg.XLEN-1:0] dscratch1_q; \

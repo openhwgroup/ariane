@@ -60,6 +60,8 @@ module issue_stage
     output fu_data_t [CVA6Cfg.NrIssuePorts-1:0] fu_data_o,
     // Program Counter - EX_STAGE
     output logic [CVA6Cfg.VLEN-1:0] pc_o,
+    // Is zcmt instruction - EX_STAGE
+    output logic is_zcmt_o,
     // Is compressed instruction - EX_STAGE
     output logic is_compressed_instr_o,
     // Transformed trap instruction - EX_STAGE
@@ -157,7 +159,11 @@ module issue_stage
     // Information dedicated to RVFI - RVFI
     output logic [CVA6Cfg.NrIssuePorts-1:0][CVA6Cfg.TRANS_ID_BITS-1:0] rvfi_issue_pointer_o,
     // Information dedicated to RVFI - RVFI
-    output logic [CVA6Cfg.NrCommitPorts-1:0][CVA6Cfg.TRANS_ID_BITS-1:0] rvfi_commit_pointer_o
+    output logic [CVA6Cfg.NrCommitPorts-1:0][CVA6Cfg.TRANS_ID_BITS-1:0] rvfi_commit_pointer_o,
+    // Information dedicated to RVFI - RVFI
+    output logic [CVA6Cfg.NrIssuePorts-1:0][CVA6Cfg.XLEN-1:0] rvfi_rs1_o,
+    // Information dedicated to RVFI - RVFI
+    output logic [CVA6Cfg.NrIssuePorts-1:0][CVA6Cfg.XLEN-1:0] rvfi_rs2_o
 );
   // ---------------------------------------------------
   // Scoreboard (SB) <-> Issue and Read Operands (IRO)
@@ -170,19 +176,11 @@ module issue_stage
     scoreboard_entry_t [CVA6Cfg.NR_SB_ENTRIES-1:0] sbe;
   } forwarding_t;
 
-  forwarding_t                                                    fwd;
-  scoreboard_entry_t [CVA6Cfg.NrIssuePorts-1:0]                   issue_instr_sb_iro;
-  logic              [CVA6Cfg.NrIssuePorts-1:0][            31:0] orig_instr_sb_iro;
-  logic              [CVA6Cfg.NrIssuePorts-1:0]                   issue_instr_valid_sb_iro;
-  logic              [CVA6Cfg.NrIssuePorts-1:0]                   issue_ack_iro_sb;
-
-  logic              [CVA6Cfg.NrIssuePorts-1:0][CVA6Cfg.XLEN-1:0] rs1_forwarding_xlen;
-  logic              [CVA6Cfg.NrIssuePorts-1:0][CVA6Cfg.XLEN-1:0] rs2_forwarding_xlen;
-
-  for (genvar i = 0; i < CVA6Cfg.NrIssuePorts; i++) begin
-    assign rs1_forwarding_o[i] = rs1_forwarding_xlen[i][CVA6Cfg.VLEN-1:0];
-    assign rs2_forwarding_o[i] = rs2_forwarding_xlen[i][CVA6Cfg.VLEN-1:0];
-  end
+  forwarding_t                                        fwd;
+  scoreboard_entry_t [CVA6Cfg.NrIssuePorts-1:0]       issue_instr_sb_iro;
+  logic              [CVA6Cfg.NrIssuePorts-1:0][31:0] orig_instr_sb_iro;
+  logic              [CVA6Cfg.NrIssuePorts-1:0]       issue_instr_valid_sb_iro;
+  logic              [CVA6Cfg.NrIssuePorts-1:0]       issue_ack_iro_sb;
 
   assign issue_instr_o    = issue_instr_sb_iro[0];
   assign issue_instr_hs_o = issue_instr_valid_sb_iro[0] & issue_ack_iro_sb[0];
@@ -260,9 +258,10 @@ module issue_stage
       .issue_ack_o             (issue_ack_iro_sb),
       .fwd_i                   (fwd),
       .fu_data_o               (fu_data_o),
-      .rs1_forwarding_o        (rs1_forwarding_xlen),
-      .rs2_forwarding_o        (rs2_forwarding_xlen),
+      .rs1_forwarding_o        (rs1_forwarding_o),
+      .rs2_forwarding_o        (rs2_forwarding_o),
       .pc_o,
+      .is_zcmt_o,
       .is_compressed_instr_o,
       .flu_ready_i             (flu_ready_i),
       .alu_valid_o             (alu_valid_o),
@@ -299,7 +298,9 @@ module issue_stage
       .wdata_i,
       .we_gpr_i,
       .we_fpr_i,
-      .stall_issue_o
+      .stall_issue_o,
+      .rvfi_rs1_o              (rvfi_rs1_o),
+      .rvfi_rs2_o              (rvfi_rs2_o)
   );
 
 endmodule

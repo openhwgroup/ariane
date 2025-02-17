@@ -23,36 +23,12 @@ module acc_dispatcher
     parameter type exception_t = logic,
     parameter type fu_data_t = logic,
     parameter type scoreboard_entry_t = logic,
-    localparam type accelerator_req_t = struct packed {
-      logic                             req_valid;
-      logic                             resp_ready;
-      riscv::instruction_t              insn;
-      logic [CVA6Cfg.XLEN-1:0]          rs1;
-      logic [CVA6Cfg.XLEN-1:0]          rs2;
-      fpnew_pkg::roundmode_e            frm;
-      logic [CVA6Cfg.TRANS_ID_BITS-1:0] trans_id;
-      logic                             store_pending;
-      // Invalidation interface
-      logic                             acc_cons_en;
-      logic                             inval_ready;
-    },
-    parameter type acc_req_t = accelerator_req_t,
-    parameter type acc_resp_t = struct packed {
-      logic                             req_ready;
-      logic                             resp_valid;
-      logic [CVA6Cfg.XLEN-1:0]          result;
-      logic [CVA6Cfg.TRANS_ID_BITS-1:0] trans_id;
-      exception_t                       exception;
-      // Metadata
-      logic                             store_pending;
-      logic                             store_complete;
-      logic                             load_complete;
-      logic [4:0]                       fflags;
-      logic                             fflags_valid;
-      // Invalidation interface
-      logic                             inval_valid;
-      logic [63:0]                      inval_addr;
-    },
+    parameter type acc_req_t = logic,
+    parameter type acc_resp_t = logic,
+    parameter type accelerator_req_t = logic,
+    parameter type accelerator_resp_t = logic,
+    parameter type acc_mmu_req_t = logic,
+    parameter type acc_mmu_resp_t = logic,
     parameter type acc_cfg_t = logic,
     parameter acc_cfg_t AccCfg = '0
 ) (
@@ -65,10 +41,11 @@ module acc_dispatcher
     // Interface with the CSRs
     input priv_lvl_t ld_st_priv_lvl_i,
     input logic sum_i,
-    input pmpcfg_t [CVA6Cfg.NrPMPEntries-1:0] pmpcfg_i,
-    input logic [CVA6Cfg.NrPMPEntries-1:0][CVA6Cfg.PLEN-3:0] pmpaddr_i,
+    input pmpcfg_t [avoid_neg(CVA6Cfg.NrPMPEntries-1):0] pmpcfg_i,
+    input logic [avoid_neg(CVA6Cfg.NrPMPEntries-1):0][CVA6Cfg.PLEN-3:0] pmpaddr_i,
     input logic [2:0] fcsr_frm_i,
     output logic dirty_v_state_o,
+    input logic acc_mmu_en_i,
     // Interface with the issue stage
     input scoreboard_entry_t issue_instr_i,
     input logic issue_instr_hs_i,
@@ -88,6 +65,9 @@ module acc_dispatcher
     output logic acc_stall_st_pending_o,
     input logic acc_no_st_pending_i,
     input dcache_req_i_t [2:0] dcache_req_ports_i,
+    // Interface with the MMU
+    output acc_mmu_req_t acc_mmu_req_o,
+    input acc_mmu_resp_t acc_mmu_resp_i,
     // Interface with the controller
     output logic ctrl_halt_o,
     input logic [11:0] csr_addr_i,
@@ -219,7 +199,7 @@ module acc_dispatcher
     end
 
     // An accelerator instruction was issued.
-    if (acc_req_o.req_valid) insn_ready_d[acc_req_o.trans_id] = 1'b0;
+    if (acc_req_o.acc_req.req_valid) insn_ready_d[acc_req_o.acc_req.trans_id] = 1'b0;
   end : p_non_speculative_ff
 
   /*************************
@@ -231,29 +211,31 @@ module acc_dispatcher
   logic             acc_req_ready;
 
   accelerator_req_t acc_req_int;
-  fall_through_register #(
+  spill_register #(
       .T(accelerator_req_t)
   ) i_accelerator_req_register (
-      .clk_i     (clk_i),
-      .rst_ni    (rst_ni),
-      .clr_i     (1'b0),
-      .testmode_i(1'b0),
-      .data_i    (acc_req),
-      .valid_i   (acc_req_valid),
-      .ready_o   (acc_req_ready),
-      .data_o    (acc_req_int),
-      .valid_o   (acc_req_o.req_valid),
-      .ready_i   (acc_resp_i.req_ready)
+      .clk_i  (clk_i),
+      .rst_ni (rst_ni),
+      .data_i (acc_req),
+      .valid_i(acc_req_valid),
+      .ready_o(acc_req_ready),
+      .data_o (acc_req_int),
+      .valid_o(acc_req_o.acc_req.req_valid),
+      .ready_i(acc_resp_i.acc_resp.req_ready)
   );
 
-  assign acc_req_o.insn          = acc_req_int.insn;
-  assign acc_req_o.rs1           = acc_req_int.rs1;
-  assign acc_req_o.rs2           = acc_req_int.rs2;
-  assign acc_req_o.frm           = acc_req_int.frm;
-  assign acc_req_o.trans_id      = acc_req_int.trans_id;
-  assign acc_req_o.store_pending = !acc_no_st_pending_i && acc_cons_en_i;
-  assign acc_req_o.acc_cons_en   = acc_cons_en_i;
-  assign acc_req_o.inval_ready   = inval_ready_i;
+  assign acc_req_o.acc_req.insn          = acc_req_int.insn;
+  assign acc_req_o.acc_req.rs1           = acc_req_int.rs1;
+  assign acc_req_o.acc_req.rs2           = acc_req_int.rs2;
+  assign acc_req_o.acc_req.frm           = acc_req_int.frm;
+  assign acc_req_o.acc_req.trans_id      = acc_req_int.trans_id;
+  assign acc_req_o.acc_req.store_pending = !acc_no_st_pending_i && acc_cons_en_i;
+  assign acc_req_o.acc_req.acc_cons_en   = acc_cons_en_i;
+  assign acc_req_o.acc_req.inval_ready   = inval_ready_i;
+
+  // MMU interface
+  assign acc_req_o.acc_mmu_resp          = acc_mmu_resp_i;
+  assign acc_req_o.acc_mmu_en            = acc_mmu_en_i;
 
   always_comb begin : accelerator_req_dispatcher
     // Do not fetch from the instruction queue
@@ -263,7 +245,7 @@ module acc_dispatcher
     acc_req            = '0;
     acc_req_valid      = 1'b0;
 
-    // Unpack fu_data_t into accelerator_req_t
+    // Unpack fu_data_t into acc_req_t
     if (!acc_insn_queue_empty) begin
       acc_req = '{
           // Instruction is forwarded from the decoder as an immediate
@@ -297,23 +279,27 @@ module acc_dispatcher
   logic acc_ld_disp;
   logic acc_st_disp;
 
-  assign acc_trans_id_o       = acc_resp_i.trans_id;
-  assign acc_result_o         = acc_resp_i.result;
-  assign acc_valid_o          = acc_resp_i.resp_valid;
-  assign acc_exception_o      = acc_resp_i.exception;
+  assign acc_trans_id_o = acc_resp_i.acc_resp.trans_id;
+  assign acc_result_o = acc_resp_i.acc_resp.result;
+  assign acc_valid_o = acc_resp_i.acc_resp.resp_valid;
+  assign acc_exception_o = acc_resp_i.acc_resp.exception;
   // Unpack the accelerator response
-  assign acc_fflags_valid_o   = acc_resp_i.fflags_valid;
-  assign acc_fflags_o         = acc_resp_i.fflags;
+  assign acc_fflags_valid_o = acc_resp_i.acc_resp.fflags_valid;
+  assign acc_fflags_o = acc_resp_i.acc_resp.fflags;
+
+  // MMU interface
+  assign acc_mmu_req_o = acc_resp_i.acc_mmu_req;
+
   // Always ready to receive responses
-  assign acc_req_o.resp_ready = 1'b1;
+  assign acc_req_o.acc_req.resp_ready = 1'b1;
 
   // Signal dispatched load/store to issue stage
-  assign acc_ld_disp          = acc_req_valid && (acc_insn_queue_o.operation == ACCEL_OP_LOAD);
-  assign acc_st_disp          = acc_req_valid && (acc_insn_queue_o.operation == ACCEL_OP_STORE);
+  assign acc_ld_disp = acc_req_valid && (acc_insn_queue_o.operation == ACCEL_OP_LOAD);
+  assign acc_st_disp = acc_req_valid && (acc_insn_queue_o.operation == ACCEL_OP_STORE);
 
   // Cache invalidation
-  assign inval_valid_o        = acc_resp_i.inval_valid;
-  assign inval_addr_o         = acc_resp_i.inval_addr;
+  assign inval_valid_o = acc_resp_i.acc_resp.inval_valid;
+  assign inval_addr_o = acc_resp_i.acc_resp.inval_addr;
 
   /**************************
    *  Accelerator commit    *
@@ -351,8 +337,8 @@ module acc_dispatcher
   `FF(wait_acc_store_q, wait_acc_store_d, '0)
 
   // Set on store barrier. Clear when no store is pending.
-  assign wait_acc_store_d = (wait_acc_store_q | commit_st_barrier_i) & acc_resp_i.store_pending;
-  assign ctrl_halt_o      = wait_acc_store_q;
+  assign wait_acc_store_d = (wait_acc_store_q | commit_st_barrier_i) & acc_resp_i.acc_resp.store_pending;
+  assign ctrl_halt_o = wait_acc_store_q;
 
   /**************************
    *  Load/Store tracking   *
@@ -390,9 +376,9 @@ module acc_dispatcher
       .clk_i     (clk_i),
       .rst_ni    (rst_ni),
       .clear_i   (1'b0),
-      .en_i      (acc_ld_disp ^ acc_resp_i.load_complete),
+      .en_i      (acc_ld_disp ^ acc_resp_i.acc_resp.load_complete),
       .load_i    (1'b0),
-      .down_i    (acc_resp_i.load_complete),
+      .down_i    (acc_resp_i.acc_resp.load_complete),
       .d_i       ('0),
       .q_o       (acc_disp_loads_pending),
       .overflow_o(acc_disp_loads_overflow)
@@ -435,9 +421,9 @@ module acc_dispatcher
       .clk_i     (clk_i),
       .rst_ni    (rst_ni),
       .clear_i   (1'b0),
-      .en_i      (acc_st_disp ^ acc_resp_i.store_complete),
+      .en_i      (acc_st_disp ^ acc_resp_i.acc_resp.store_complete),
       .load_i    (1'b0),
-      .down_i    (acc_resp_i.store_complete),
+      .down_i    (acc_resp_i.acc_resp.store_complete),
       .d_i       ('0),
       .q_o       (acc_disp_stores_pending),
       .overflow_o(acc_disp_stores_overflow)

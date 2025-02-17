@@ -45,7 +45,7 @@ supervisor-level CSR descriptions.
 endif::[]
 
 [[sstatus]]
-==== Supervisor Status (`sstatus`) Register 
+==== Supervisor Status (`sstatus`) Register
 
 ifdef::archi-default[]
 The `sstatus` register is an SXLEN-bit read/write register formatted as
@@ -360,7 +360,7 @@ ifndef::archi-default,RVZssdbltrp-true[]
 SDT field is read-only 0.
 endif::[]
 
-==== Supervisor Trap Vector Base Address (`stvec`)  Register 
+==== Supervisor Trap Vector Base Address (`stvec`)  Register
 
 The `stvec` register is an SXLEN-bit read/write register that holds trap
 vector configuration, consisting of a vector base address (BASE) and a
@@ -382,7 +382,7 @@ field.
 |Value |Name |Description
 |0 +
 1 +
-&#8805;2 
+&#8805;2
 |Direct +
 Vectored
 |All exceptions set `pc` to BASE. +
@@ -401,7 +401,7 @@ supervisor-mode timer interrupt (see <<scauses>>)
 causes the `pc` to be set to BASE+`0x14`. Setting MODE=Vectored may
 impose a stricter alignment constraint on BASE.
 
-==== Supervisor Interrupt (`sip` and `sie`) Registers 
+==== Supervisor Interrupt (`sip` and `sie`) Registers
 
 The `sip` register is an SXLEN-bit read/write register containing
 information on pending interrupts, while `sie` is the corresponding
@@ -528,7 +528,7 @@ the counter values.
 The implementation must provide a facility for scheduling timer
 interrupts in terms of the real-time counter, `time`.
 
-==== Counter-Enable (`scounteren`) Register 
+==== Counter-Enable (`scounteren`) Register
 
 .Counter-enable (`scounteren`) register
 include::images/bytefield/scounteren.edn[]
@@ -560,13 +560,15 @@ access a counter if the corresponding bits in `scounteren` and
 ====
 endif::[]
 
-==== Supervisor Scratch (`sscratch`) Register 
+==== Supervisor Scratch (`sscratch`) Register
 
 The `sscratch` CSR is an SXLEN-bit read/write register, dedicated
 for use by the supervisor. Typically, `sscratch` is used to hold a
 pointer to the hart-local supervisor context while the hart is executing
-user code. At the beginning of a trap handler, `sscratch` is swapped
-with a user register to provide an initial working register.
+user code.
+At the beginning of a trap handler, software normally uses a CSRRW
+instruction to swap `sscratch` with an integer register to obtain an
+initial working register.
 
 .Supervisor Scratch Register
 include::images/bytefield/sscratch.edn[]
@@ -600,7 +602,7 @@ though it may be explicitly written by software.
 include::images/bytefield/epcreg.edn[]
 
 [[scause]]
-==== Supervisor Cause (`scause`) Register 
+==== Supervisor Cause (`scause`) Register
 
 The `scause` CSR is an SXLEN-bit read-write register formatted as
 shown in <<scausereg>>. When a trap is taken into
@@ -654,7 +656,7 @@ Supervisor external interrupt +
 _Reserved_ +
 Counter-overflow interrupt +
 _Reserved_ +
-_Designated for platform use_ 
+_Designated for platform use_
 
 |0 +
 0 +
@@ -721,7 +723,7 @@ _Reserved_ +
 _Designated for custom use_ +
 _Reserved_ +
 _Designated for custom use_ +
-_Reserved_ 
+_Reserved_
 |===
 
 ==== Supervisor Trap Value (`stval`) Register
@@ -795,7 +797,7 @@ ifndef::archi-default,MTvalEn-true[]
 endif::[]
 
 [[sec:senvcfg]]
-==== Supervisor Environment Configuration (`senvcfg`) Register 
+==== Supervisor Environment Configuration (`senvcfg`) Register
 
 The `senvcfg` CSR is an SXLEN-bit read/write register, formatted as
 shown in <<senvcfg>>, that controls certain
@@ -1736,14 +1738,24 @@ A virtual address _va_ is translated into a physical address _pa_ as follows:
 
 . Let _a_ be ``satp``.__ppn__×PAGESIZE, and let __i__=LEVELS-1. (For Sv32, PAGESIZE=2^12^ and LEVELS=2.) The `satp` register must be
 _active_, i.e., the effective privilege mode must be S-mode or U-mode.
+
 . Let _pte_ be the value of the PTE at address __a__+__va__.__vpn__[__i__]×PTESIZE. (For Sv32, PTESIZE=4.)  If accessing _pte_ violates a PMA or PMP check, raise an access-fault exception corresponding to the original access type.
+
 . If _pte_._v_=0, or if _pte_._r_=0 and _pte_._w_=1, or if any bits or encodings that are reserved for future standard use are set within _pte_, stop and raise a page-fault exception corresponding to the original access type.
+
 . Otherwise, the PTE is valid. If __pte__.__r__=1 or __pte__.__x__=1, go to step 5. Otherwise, this PTE is a pointer to the next level of the page table. Let __i=i__-1. If __i__<0, stop and raise a page-fault exception corresponding to the original access type. Otherwise, let
 __a__=__pte__.__ppn__×PAGESIZE and go to step 2.
-. A leaf PTE has been found. Determine if the requested memory access is
-allowed by the _pte_._r_, _pte_._w_, _pte_._x_, and _pte_._u_ bits, given the current privilege mode and the value of the SUM and MXR fields of the `mstatus` register. If not, stop and raise a page-fault exception corresponding to the original access type.
-. If _i>0_ and _pte_._ppn_[__i__-1:0] ≠ 0, this is a misaligned superpage; stop and raise a page-fault exception corresponding to the original access type.
+
+. A leaf PTE has been reached. If _i>0_ and _pte_._ppn_[__i__-1:0] ≠ 0, this is a misaligned superpage; stop and raise a page-fault exception corresponding to the original access type.
+
+. Determine if the requested memory access is allowed by the _pte_._u_ bit, given the current privilege mode and the value of the SUM and MXR fields of the *mstatus* register. If not, stop and raise a page-fault exception corresponding to the original access type.
+
+. Determine if the requested memory access is allowed by the _pte_._r_, _pte_._w_, and _pte_._x_ bits, given the Shadow Stack Memory Protection rules. If not, stop and raise an access-fault exception.
+
+. Determine if the requested memory access is allowed by the _pte_._r_, _pte_._w_, and _pte_._x_ bits. If not, stop and raise a page-fault exception corresponding to the original access type.
+
 . If _pte_._a_=0, or if the original memory access is a store and _pte_._d_=0:
+
 * If the Svade extension is implemented, stop and raise a page-fault exception corresponding to the original access type.
 * If a store to _pte_ would violate a PMA or PMP check,
 raise an access-fault exception corresponding to the original access
@@ -1753,6 +1765,7 @@ type.
 ** If the values match, set _pte_._a_ to 1 and, if the
 original memory access is a store, also set _pte_._d_ to 1.
 ** If the comparison fails, return to step 2.
+
 . The translation is successful. The translated physical address is
 given as follows:
 * _pa.pgoff_ = _va.pgoff_.
@@ -2224,7 +2237,7 @@ __vpn__[__i__][__pte__.__napot_bits__-1:0]. If the encoding in _pte_ is reserved
 <<ptenapot>>, then a page-fault exception must be raised.
 * Implicit reads of NAPOT page table entries may create
 address-translation cache entries mapping
-_a_ + _j_×PTESIZE to a copy of _pte_ in which _pte_._ppn_[_i_][_pte_.__napot_bits__-1:0] 
+_a_ + _j_×PTESIZE to a copy of _pte_ in which _pte_._ppn_[_i_][_pte_.__napot_bits__-1:0]
 is replaced by _vpn[i][pte.napot_bits_-1:0], for any or all _j_ such that
 __j__ >> __napot_bits__ = __vpn__[__i__] >> __napot_bits__, all for the address space identified in _satp_ as loaded by step 1.
 endif::[]
@@ -2322,7 +2335,7 @@ __
 1 +
 2 +
 ...
-|=== 
+|===
 
 In such a case, an implementation may or may not support all options.
 The discoverability mechanism for this extension would be extended to
@@ -2625,8 +2638,7 @@ coherent with store instructions that modify PTEs.
 ====
 endif::[]
 
-////
-[[sec:ssqosid]]
+[[ssqosid]]
 == "Ssqosid" Extension for Quality-of-Service (QoS) Identifiers, Version 1.0
 
 Quality of Service (QoS) is defined as the minimal end-to-end performance
@@ -2708,11 +2720,11 @@ modes of software execution on that hart by default, but this behavior may be
 overridden by future extensions.
 
 If extension Smstateen is implemented together with Ssqosid, then Ssqosid also
-requires the bit 55 in `mstateen0` introduced by Priv 1.14 to be implemented. If
-bit 55 of `mstateen0` is 0, attempts to access `srmcfg` in privilege modes less
-privileged than M-mode raise an illegal-instruction exception. If bit 55 of
-`mstateen0` is 1 or if extension Smstateen is not implemented, attempts to
-access `srmcfg` when `V=1` raise a virtual-instruction exception.
+requires the P1P14 bit in `mstateen0` to be implemented.
+If P1P14 of `mstateen0` is 0, attempts to access `srmcfg` in privilege modes
+less privileged than M-mode raise an illegal-instruction exception.
+If P1P14 bit of `mstateen0` is 1 or if extension Smstateen is not implemented,
+attempts to access `srmcfg` when `V=1` raise a virtual-instruction exception.
 
 [NOTE]
 ====
@@ -2748,6 +2760,4 @@ the new context, it switches to the new VM's `srmcfg`. The supervisor can also
 use a separate configuration for execution not to be attributed to either
 contexts.
 ====
-////
-
 endif::[]

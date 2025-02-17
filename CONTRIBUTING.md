@@ -22,8 +22,8 @@ Therefore here are guidelines to help the CVA6 team accept new contributions:
     * If you do not know how to contact us already, get in touch through info@openhwgroup.org or open an issue in GitHub.
 
 - Specific recommendations:
-    * Always consider using the CV-X-IF interface if your contribution is an instruction-set extension.
-        - and talk to the team if it's not possible.
+    * For instruction set extensions, talk to the team to assess the relevance of including it into the core or as a coprocessor on the CV-X-IF interface.
+        -  If the extension is custom (not a RISC-V specified extension), a coprocessor on CV-X-IF is definitely its place.
     * Your contribution shall be optional and fully disabled by default.
         - so that projects already using CVA6 are not impacted (no functionality change, no extra silicon...).
     * To configure your contribution, System Verilog top-level parameters are preferred.
@@ -34,6 +34,12 @@ Therefore here are guidelines to help the CVA6 team accept new contributions:
     * Your complete contribution shall be identifiable with parameters (or `directives / templating if together we decide to go this way).
         - If at some point we need to revert it, e.g. if there is no-one maintaining nor using it and it has become a burden to the project.
         - We call this the "parachute" rule: The CVA6 team does not want to use it but is far more comfortable getting one.
+        - Also, this allows not to lose code coverage in verification when your contribution is not enabled (with some tweaks in the coverage tool).
+        - This rule also applies to CSRs which are specific to your contribution.
+    * To ease maintenance, all common code lines shall exist only once.
+        - Counter-example: CVA6 used to have two different MMU modules (Sv32 and Sv39) for CV32A6 and CV64A6.
+        - It took time to refactor both in a joint design to ease maintenance.
+        - Related reading for reference: [DRY principle](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself)
     * Your contribution shall pass the Continuous Integration (CI) flow
         - When the contribution is disabled: in all cases, to ensure you have not broken the design.
         - When the contribution is disabled: the line and condition code coverage shall not be impacted.

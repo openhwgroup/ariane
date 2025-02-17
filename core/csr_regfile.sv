@@ -18,6 +18,7 @@ module csr_regfile
 #(
     parameter config_pkg::cva6_cfg_t CVA6Cfg            = config_pkg::cva6_cfg_empty,
     parameter type                   exception_t        = logic,
+    parameter type                   jvt_t              = logic,
     parameter type                   irq_ctrl_t         = logic,
     parameter type                   scoreboard_entry_t = logic,
     parameter type                   rvfi_probes_csr_t  = logic,
@@ -161,13 +162,15 @@ module csr_regfile
     // TO_BE_COMPLETED - PERF_COUNTERS
     output logic perf_we_o,
     // PMP configuration containing pmpcfg for max 64 PMPs - ACC_DISPATCHER
-    output riscv::pmpcfg_t [(CVA6Cfg.NrPMPEntries > 0 ? CVA6Cfg.NrPMPEntries-1 : 0):0] pmpcfg_o,
+    output riscv::pmpcfg_t [avoid_neg(CVA6Cfg.NrPMPEntries-1):0] pmpcfg_o,
     // PMP addresses - ACC_DISPATCHER
-    output logic [(CVA6Cfg.NrPMPEntries > 0 ? CVA6Cfg.NrPMPEntries-1 : 0):0][CVA6Cfg.PLEN-3:0] pmpaddr_o,
+    output logic [avoid_neg(CVA6Cfg.NrPMPEntries-1):0][CVA6Cfg.PLEN-3:0] pmpaddr_o,
     // TO_BE_COMPLETED - PERF_COUNTERS
     output logic [31:0] mcountinhibit_o,
     // RVFI
-    output rvfi_probes_csr_t rvfi_csr_o
+    output rvfi_probes_csr_t rvfi_csr_o,
+    //jvt output
+    output jvt_t jvt_o
 );
 
   localparam logic [63:0] SMODE_STATUS_READ_MASK = ariane_pkg::smode_status_read_mask(CVA6Cfg);
@@ -295,6 +298,7 @@ module csr_regfile
   assign pmpaddr_o = pmpaddr_q[(CVA6Cfg.NrPMPEntries>0?CVA6Cfg.NrPMPEntries-1 : 0):0];
 
   riscv::fcsr_t fcsr_q, fcsr_d;
+  jvt_t jvt_q, jvt_d;
   // ----------------
   // Assignments
   // ----------------
@@ -346,6 +350,13 @@ module csr_regfile
         riscv::CSR_FCSR: begin
           if (CVA6Cfg.FpPresent && !(mstatus_q.fs == riscv::Off || (CVA6Cfg.RVH && v_q && vsstatus_q.fs == riscv::Off))) begin
             csr_rdata = {{CVA6Cfg.XLEN - 8{1'b0}}, fcsr_q.frm, fcsr_q.fflags};
+          end else begin
+            read_access_exception = 1'b1;
+          end
+        end
+        riscv::CSR_JVT: begin
+          if (CVA6Cfg.RVZCMT) begin
+            csr_rdata = {jvt_q.base, jvt_q.mode};
           end else begin
             read_access_exception = 1'b1;
           end
@@ -773,11 +784,13 @@ module csr_regfile
                 riscv::CSR_PMPCFG14,
                 riscv::CSR_PMPCFG15: begin
           // index is calculated using PMPCFG0 as the offset
-          automatic logic [11:0] index = csr_addr.address[11:0] - riscv::CSR_PMPCFG0;
+          automatic logic [3:0] index = csr_addr.address[11:0] - riscv::CSR_PMPCFG0;
 
           // if index is not even and XLEN==64, raise exception
           if (CVA6Cfg.XLEN == 64 && index[0] == 1'b1) read_access_exception = 1'b1;
           else begin
+            // The following line has no effect. It's here just to prevent the synthesizer from crashing
+            if (CVA6Cfg.XLEN == 64) index = (index >> 1) << 1;
             csr_rdata = pmpcfg_q[index*4+:CVA6Cfg.XLEN/8];
           end
         end
@@ -886,7 +899,7 @@ module csr_regfile
     // --------------------
     cycle_d         = cycle_q;
     instret_d       = instret_q;
-    if (!debug_mode_q) begin
+    if (!(CVA6Cfg.DebugEn && debug_mode_q)) begin
       // increase instruction retired counter
       for (int i = 0; i < CVA6Cfg.NrCommitPorts; i++) begin
         if (commit_ack_i[i] && !ex_i.valid && (!CVA6Cfg.PerfCounterEn || (CVA6Cfg.PerfCounterEn && !mcountinhibit_q[2])))
@@ -908,12 +921,14 @@ module csr_regfile
 
     perf_we_o                       = 1'b0;
     perf_data_o                     = 'b0;
+    if (CVA6Cfg.RVZCMT) begin
+      jvt_d = jvt_q;
+    end
+    fcsr_d       = fcsr_q;
 
-    fcsr_d                          = fcsr_q;
-
-    priv_lvl_d                      = priv_lvl_q;
-    v_d                             = v_q;
-    debug_mode_d                    = debug_mode_q;
+    priv_lvl_d   = priv_lvl_q;
+    v_d          = v_q;
+    debug_mode_d = debug_mode_q;
 
     if (CVA6Cfg.DebugEn) begin
       dcsr_d      = dcsr_q;
@@ -949,7 +964,7 @@ module csr_regfile
     mcause_d     = mcause_q;
     mcounteren_d = mcounteren_q;
     mscratch_d   = mscratch_q;
-    mtval_d      = mtval_q;
+    if (CVA6Cfg.TvalEn) mtval_d = mtval_q;
     if (CVA6Cfg.RVH) begin
       mtinst_d = mtinst_q;
       mtval2_d = mtval2_q;
@@ -1060,6 +1075,14 @@ module csr_regfile
         riscv::CSR_DSCRATCH1:
         if (CVA6Cfg.DebugEn) dscratch1_d = csr_wdata;
         else update_access_exception = 1'b1;
+        riscv::CSR_JVT: begin
+          if (CVA6Cfg.RVZCMT) begin
+            jvt_d.base = csr_wdata[CVA6Cfg.XLEN-1:6];
+            jvt_d.mode = 6'b000000;
+          end else begin
+            update_access_exception = 1'b1;
+          end
+        end
         // trigger module CSRs
         riscv::CSR_TSELECT: update_access_exception = 1'b1;  // not implemented
         riscv::CSR_TDATA1: update_access_exception = 1'b1;  // not implemented
@@ -1720,9 +1743,10 @@ module csr_regfile
         default: update_access_exception = 1'b1;
       endcase
     end
-
-    mstatus_d.sxl = riscv::XLEN_64;
-    mstatus_d.uxl = riscv::XLEN_64;
+    if (CVA6Cfg.IS_XLEN64) begin
+      mstatus_d.sxl = riscv::XLEN_64;
+      mstatus_d.uxl = riscv::XLEN_64;
+    end
     if (!CVA6Cfg.RVU) begin
       mstatus_d.mpp = riscv::PRIV_LVL_M;
     end
@@ -1936,14 +1960,14 @@ module csr_regfile
     // 3: The debugger requested entry to Debug Mode. (priority 2)
     // 4: The hart single stepped because step was set. (priority 1)
     // we are currently not in debug mode and could potentially enter
-    if (!debug_mode_q) begin
+    if (CVA6Cfg.DebugEn && !debug_mode_q) begin
       dcsr_d.prv = priv_lvl_o;
       // save virtualization mode bit
       dcsr_d.v   = (!CVA6Cfg.RVH) ? 1'b0 : v_q;
       // trigger module fired
 
       // caused by a breakpoint
-      if (CVA6Cfg.DebugEn && ex_i.valid && ex_i.cause == riscv::BREAKPOINT) begin
+      if (ex_i.valid && ex_i.cause == riscv::BREAKPOINT) begin
         dcsr_d.prv = priv_lvl_o;
         // save virtualization mode bit
         dcsr_d.v   = (!CVA6Cfg.RVH) ? 1'b0 : v_q;
@@ -1973,7 +1997,7 @@ module csr_regfile
       end
 
       // we've got a debug request
-      if (CVA6Cfg.DebugEn && ex_i.valid && ex_i.cause == riscv::DEBUG_REQUEST) begin
+      if (ex_i.valid && ex_i.cause == riscv::DEBUG_REQUEST) begin
         dcsr_d.prv = priv_lvl_o;
         dcsr_d.v = (!CVA6Cfg.RVH) ? 1'b0 : v_q;
         // save the PC
@@ -1987,7 +2011,7 @@ module csr_regfile
       end
 
       // single step enable and we just retired an instruction
-      if (CVA6Cfg.DebugEn && dcsr_q.step && commit_ack_i[0]) begin
+      if (dcsr_q.step && commit_ack_i[0]) begin
         dcsr_d.prv = priv_lvl_o;
         dcsr_d.v   = (!CVA6Cfg.RVH) ? 1'b0 : v_q;
         // valid CTRL flow change
@@ -2424,7 +2448,7 @@ module csr_regfile
 
     unique case (conv_csr_addr.address)
       riscv::CSR_MIP:
-      csr_rdata_o = csr_rdata | ({{CVA6Cfg.XLEN - 1{1'b0}}, irq_i[1]} << riscv::IRQ_S_EXT);
+      csr_rdata_o = csr_rdata | ({{CVA6Cfg.XLEN - 1{1'b0}}, CVA6Cfg.RVS && irq_i[1]} << riscv::IRQ_S_EXT);
       // in supervisor mode we also need to check whether we delegated this bit
       riscv::CSR_SIP: begin
         if (CVA6Cfg.RVS) begin
@@ -2443,8 +2467,16 @@ module csr_regfile
   assign fflags_o = fcsr_q.fflags;
   assign frm_o = fcsr_q.frm;
   assign fprec_o = fcsr_q.fprec;
+  //JVT outputs
+  if (CVA6Cfg.RVZCMT) begin
+    assign jvt_o.base = jvt_q.base;
+    assign jvt_o.mode = jvt_q.mode;
+  end else begin
+    assign jvt_o.base = '0;
+    assign jvt_o.mode = '0;
+  end
   // MMU outputs
-  assign satp_ppn_o = CVA6Cfg.RVS ? satp_q.ppn : '0;
+  assign satp_ppn_o  = CVA6Cfg.RVS ? satp_q.ppn : '0;
   assign vsatp_ppn_o = CVA6Cfg.RVH ? vsatp_q.ppn : '0;
   assign hgatp_ppn_o = CVA6Cfg.RVH ? hgatp_q.ppn : '0;
   if (CVA6Cfg.RVS) begin
@@ -2506,18 +2538,19 @@ module csr_regfile
   // sequential process
   always_ff @(posedge clk_i or negedge rst_ni) begin
     if (~rst_ni) begin
-      priv_lvl_q   <= riscv::PRIV_LVL_M;
+      priv_lvl_q <= riscv::PRIV_LVL_M;
       // floating-point registers
-      fcsr_q       <= '0;
+      fcsr_q     <= '0;
+      if (CVA6Cfg.RVZCMT) begin
+        jvt_q <= '0;
+      end
       // debug signals
-      debug_mode_q <= 1'b0;
       if (CVA6Cfg.DebugEn) begin
-        dcsr_q           <= '0;
-        dcsr_q.prv       <= riscv::PRIV_LVL_M;
-        dcsr_q.xdebugver <= 4'h4;
-        dpc_q            <= '0;
-        dscratch0_q      <= {CVA6Cfg.XLEN{1'b0}};
-        dscratch1_q      <= {CVA6Cfg.XLEN{1'b0}};
+        debug_mode_q <= 1'b0;
+        dcsr_q       <= '{xdebugver: 4'h4, prv: riscv::PRIV_LVL_M, default: '0};
+        dpc_q        <= '0;
+        dscratch0_q  <= {CVA6Cfg.XLEN{1'b0}};
+        dscratch1_q  <= {CVA6Cfg.XLEN{1'b0}};
       end
       // machine mode registers
       mstatus_q        <= 64'b0;
@@ -2530,12 +2563,12 @@ module csr_regfile
       mcause_q         <= {CVA6Cfg.XLEN{1'b0}};
       mcounteren_q     <= {CVA6Cfg.XLEN{1'b0}};
       mscratch_q       <= {CVA6Cfg.XLEN{1'b0}};
-      mtval_q          <= {CVA6Cfg.XLEN{1'b0}};
-      fiom_q           <= '0;
-      dcache_q         <= {{CVA6Cfg.XLEN - 1{1'b0}}, 1'b1};
-      icache_q         <= {{CVA6Cfg.XLEN - 1{1'b0}}, 1'b1};
-      mcountinhibit_q  <= '0;
-      acc_cons_q       <= {{CVA6Cfg.XLEN - 1{1'b0}}, CVA6Cfg.EnableAccelerator};
+      if (CVA6Cfg.TvalEn) mtval_q <= {CVA6Cfg.XLEN{1'b0}};
+      fiom_q          <= '0;
+      dcache_q        <= {{CVA6Cfg.XLEN - 1{1'b0}}, 1'b1};
+      icache_q        <= {{CVA6Cfg.XLEN - 1{1'b0}}, 1'b1};
+      mcountinhibit_q <= '0;
+      acc_cons_q      <= {{CVA6Cfg.XLEN - 1{1'b0}}, CVA6Cfg.EnableAccelerator};
       // supervisor mode registers
       if (CVA6Cfg.RVS) begin
         medeleg_q    <= {CVA6Cfg.XLEN{1'b0}};
@@ -2592,6 +2625,9 @@ module csr_regfile
       priv_lvl_q <= priv_lvl_d;
       // floating-point registers
       fcsr_q     <= fcsr_d;
+      if (CVA6Cfg.RVZCMT) begin
+        jvt_q <= jvt_d;
+      end
       // debug signals
       if (CVA6Cfg.DebugEn) begin
         debug_mode_q <= debug_mode_d;
@@ -2713,6 +2749,7 @@ module csr_regfile
   // RVFI
   //-------------
   assign rvfi_csr_o.fcsr_q = CVA6Cfg.FpPresent ? fcsr_q : '0;
+  assign rvfi_csr_o.jvt_q = CVA6Cfg.RVZCMT ? jvt_q : '0;
   assign rvfi_csr_o.dcsr_q = CVA6Cfg.DebugEn ? dcsr_q : '0;
   assign rvfi_csr_o.dpc_q = CVA6Cfg.DebugEn ? dpc_q : '0;
   assign rvfi_csr_o.dscratch0_q = CVA6Cfg.DebugEn ? dscratch0_q : '0;
@@ -2734,7 +2771,7 @@ module csr_regfile
   assign rvfi_csr_o.mscratch_q = mscratch_q;
   assign rvfi_csr_o.mepc_q = mepc_q;
   assign rvfi_csr_o.mcause_q = mcause_q;
-  assign rvfi_csr_o.mtval_q = mtval_q;
+  assign rvfi_csr_o.mtval_q = CVA6Cfg.TvalEn ? mtval_q : '0;
   assign rvfi_csr_o.fiom_q = fiom_q;
   assign rvfi_csr_o.mcountinhibit_q = mcountinhibit_q;
   assign rvfi_csr_o.cycle_q = cycle_q;

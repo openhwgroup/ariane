@@ -48,6 +48,10 @@ module decoder
     input logic is_last_macro_instr_i,
     // Is mvsa01/mva01s macro instruction - macro_decoder
     input logic is_double_rd_macro_instr_i,
+    // Zcmt instruction - FRONTEND
+    input logic is_zcmt_i,
+    // Jump address - zcmt_decoder
+    input logic [CVA6Cfg.XLEN-1:0] jump_address_i,
     // Is a branch predict instruction - FRONTEND
     input branchpredict_sbe_t branch_predict_i,
     // If an exception occured in fetch stage - FRONTEND
@@ -178,6 +182,7 @@ module decoder
     instruction_o.use_zimm                 = 1'b0;
     instruction_o.bp                       = branch_predict_i;
     instruction_o.vfp                      = 1'b0;
+    instruction_o.is_zcmt                  = is_zcmt_i;
     ecall                                  = 1'b0;
     ebreak                                 = 1'b0;
     check_fprm                             = 1'b0;
@@ -812,10 +817,11 @@ module decoder
             unique case ({
               CVA6Cfg.RVB, CVA6Cfg.RVZiCond
             })
-              2'b00: illegal_instr = illegal_instr_non_bm;
-              2'b01: illegal_instr = illegal_instr_non_bm & illegal_instr_zic;
-              2'b10: illegal_instr = illegal_instr_non_bm & illegal_instr_bm;
-              2'b11: illegal_instr = illegal_instr_non_bm & illegal_instr_bm & illegal_instr_zic;
+              2'b00:   illegal_instr = illegal_instr_non_bm;
+              2'b01:   illegal_instr = illegal_instr_non_bm & illegal_instr_zic;
+              2'b10:   illegal_instr = illegal_instr_non_bm & illegal_instr_bm;
+              2'b11:   illegal_instr = illegal_instr_non_bm & illegal_instr_bm & illegal_instr_zic;
+              default: ;  // TODO: Check that default case is not synthesized.
             endcase
           end
         end
@@ -916,9 +922,18 @@ module decoder
                   else if (instr.instr[24:20] == 5'b00000) instruction_o.op = ariane_pkg::CLZ;
                   else if (instr.instr[24:20] == 5'b00001) instruction_o.op = ariane_pkg::CTZ;
                   else illegal_instr_bm = 1'b1;
-                end else if (instr.instr[31:26] == 6'b010010) instruction_o.op = ariane_pkg::BCLRI;
-                else if (instr.instr[31:26] == 6'b011010) instruction_o.op = ariane_pkg::BINVI;
-                else if (instr.instr[31:26] == 6'b001010) instruction_o.op = ariane_pkg::BSETI;
+                end else if (CVA6Cfg.IS_XLEN64 && instr.instr[31:26] == 6'b010010)
+                  instruction_o.op = ariane_pkg::BCLRI;
+                else if (CVA6Cfg.IS_XLEN32 && instr.instr[31:25] == 7'b0100100)
+                  instruction_o.op = ariane_pkg::BCLRI;
+                else if (CVA6Cfg.IS_XLEN64 && instr.instr[31:26] == 6'b011010)
+                  instruction_o.op = ariane_pkg::BINVI;
+                else if (CVA6Cfg.IS_XLEN32 && instr.instr[31:25] == 7'b0110100)
+                  instruction_o.op = ariane_pkg::BINVI;
+                else if (CVA6Cfg.IS_XLEN64 && instr.instr[31:26] == 6'b001010)
+                  instruction_o.op = ariane_pkg::BSETI;
+                else if (CVA6Cfg.IS_XLEN32 && instr.instr[31:25] == 7'b0010100)
+                  instruction_o.op = ariane_pkg::BSETI;
                 else if (CVA6Cfg.ZKN && instr.instr[31:20] == 12'b000010001111)
                   instruction_o.op = ariane_pkg::ZIP;
                 else illegal_instr_bm = 1'b1;
@@ -929,8 +944,14 @@ module decoder
                   instruction_o.op = ariane_pkg::REV8;
                 else if (instr.instr[31:20] == 12'b011010011000)
                   instruction_o.op = ariane_pkg::REV8;
-                else if (instr.instr[31:26] == 6'b010_010) instruction_o.op = ariane_pkg::BEXTI;
-                else if (instr.instr[31:26] == 6'b011_000) instruction_o.op = ariane_pkg::RORI;
+                else if (CVA6Cfg.IS_XLEN64 && instr.instr[31:26] == 6'b010_010)
+                  instruction_o.op = ariane_pkg::BEXTI;
+                else if (CVA6Cfg.IS_XLEN32 && instr.instr[31:25] == 7'b010_0100)
+                  instruction_o.op = ariane_pkg::BEXTI;
+                else if (CVA6Cfg.IS_XLEN64 && instr.instr[31:26] == 6'b011_000)
+                  instruction_o.op = ariane_pkg::RORI;
+                else if (CVA6Cfg.IS_XLEN32 && instr.instr[31:25] == 7'b011_0000)
+                  instruction_o.op = ariane_pkg::RORI;
                 else if (CVA6Cfg.ZKN && instr.instr[31:20] == 12'b011010000111)
                   instruction_o.op = ariane_pkg::BREV8;
                 else if (CVA6Cfg.ZKN && instr.instr[31:20] == 12'b000010001111)
@@ -1484,13 +1505,18 @@ module decoder
     imm_u_type = {
       {CVA6Cfg.XLEN - 32{instruction_i[31]}}, instruction_i[31:12], 12'b0
     };  // JAL, AUIPC, sign extended to 64 bit
-    imm_uj_type = {
-      {CVA6Cfg.XLEN - 20{instruction_i[31]}},
-      instruction_i[19:12],
-      instruction_i[20],
-      instruction_i[30:21],
-      1'b0
-    };
+    //  if zcmt then xlen jump address assign to immidiate
+    if (CVA6Cfg.RVZCMT && is_zcmt_i) begin
+      imm_uj_type = {{CVA6Cfg.XLEN - 32{jump_address_i[31]}}, jump_address_i[31:0]};
+    end else begin
+      imm_uj_type = {
+        {CVA6Cfg.XLEN - 20{instruction_i[31]}},
+        instruction_i[19:12],
+        instruction_i[20],
+        instruction_i[30:21],
+        1'b0
+      };
+    end
 
     // NOIMM, IIMM, SIMM, SBIMM, UIMM, JIMM, RS3
     // select immediate
@@ -1641,9 +1667,11 @@ module decoder
       if (irq_ctrl_i.mip[riscv::IRQ_M_TIMER] && irq_ctrl_i.mie[riscv::IRQ_M_TIMER]) begin
         interrupt_cause = INTERRUPTS.M_TIMER;
       end
-      // Machine Mode Software Interrupt
-      if (irq_ctrl_i.mip[riscv::IRQ_M_SOFT] && irq_ctrl_i.mie[riscv::IRQ_M_SOFT]) begin
-        interrupt_cause = INTERRUPTS.M_SW;
+      if (CVA6Cfg.SoftwareInterruptEn) begin
+        // Machine Mode Software Interrupt
+        if (irq_ctrl_i.mip[riscv::IRQ_M_SOFT] && irq_ctrl_i.mie[riscv::IRQ_M_SOFT]) begin
+          interrupt_cause = INTERRUPTS.M_SW;
+        end
       end
       // Machine Mode External Interrupt
       if (irq_ctrl_i.mip[riscv::IRQ_M_EXT] && irq_ctrl_i.mie[riscv::IRQ_M_EXT]) begin

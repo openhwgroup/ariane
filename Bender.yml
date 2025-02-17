@@ -1,5 +1,5 @@
 package:
-  name: ariane
+  name: cva6
   authors:
     - "Florian Zaruba <zarubaf@iis.ee.ethz.ch>"
     - "Michael Schaffner <schaffner@iis.ee.ethz.ch>"
@@ -68,6 +68,7 @@ sources:
       - target: any(cv64a6_imafdcv_sv39, cv64a6_imafdc_sv39, cv64a6_imafdc_sv39_wb, cv64a6_imafdch_sv39, cv64a6_imafdch_sv39_wb, cv32a6_imac_sv0, cv32a6_imac_sv32, cv32a6_imafc_sv32)
         files:
           - core/cva6_mmu/cva6_tlb.sv
+          - core/cva6_mmu/cva6_shared_tlb.sv
           - core/cva6_mmu/cva6_mmu.sv
           - core/cva6_mmu/cva6_ptw.sv
 
@@ -78,6 +79,8 @@ sources:
       # Extension Interface
       - core/cvxif_example/include/cvxif_instr_pkg.sv
       - core/cvxif_fu.sv
+      - core/cvxif_issue_register_commit_if_driver.sv
+      - core/cvxif_compressed_if_driver.sv
       - core/cvxif_example/cvxif_example_coprocessor.sv
       - core/cvxif_example/instr_decoder.sv
 
@@ -95,6 +98,7 @@ sources:
       - core/csr_regfile.sv
       - core/decoder.sv
       - core/ex_stage.sv
+      - core/acc_dispatcher.sv
       - core/instr_realign.sv
       - core/id_stage.sv
       - core/issue_read_operands.sv
@@ -142,6 +146,7 @@ sources:
       # Physical Memory Protection
       - core/pmp/src/pmp.sv
       - core/pmp/src/pmp_entry.sv
+      - core/pmp/src/pmp_data_if.sv
 
       - include_dirs:
         - common/local/util
@@ -153,12 +158,15 @@ sources:
           - common/local/util
         files:
           - common/local/util/tc_sram_wrapper.sv
+          - common/local/util/sram_cache.sv
 
       - target: all(fpga, xilinx)
         include_dirs:
           - common/local/util
         files:
+          - common/local/util/sram_cache.sv
           - common/local/util/tc_sram_fpga_wrapper.sv
+          - vendor/pulp-platform/fpga-support/rtl/SyncSpRamBeNx64.sv
 
       - target: not(synthesis)
         include_dirs:

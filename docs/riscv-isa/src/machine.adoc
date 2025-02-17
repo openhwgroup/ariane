@@ -226,9 +226,16 @@ supervisor modes respectively.
 
 The "X" bit will be set if there are any non-standard extensions.
 
-When "B" bit is 1, the implementation supports the instructions provided by the
-Zba, Zbb, and Zbs extensions. When "B" bit is 0, it indicates that the
+When the "B" bit is 1, the implementation supports the instructions provided by the
+Zba, Zbb, and Zbs extensions. When the "B" bit is 0, it indicates that the
 implementation may not support one or more of the Zba, Zbb, or Zbs extensions.
+
+When the "M" bit is 1, the implementation supports all multiply and
+division instructions defined by the M extension. When the "M" bit
+is 0, it indicates that the implementation may not support those
+instructions. However if the Zmmul extension is supported then
+the multiply instructions it specifies are supported irrespective
+of the value of the "M" bit.
 
 ifeval::[{note} == true]
 [NOTE]
@@ -1554,7 +1561,7 @@ additional microarchitectural bits might be maintained in the extension
 to further reduce context save and restore overhead.
 
 The SD bit is read-only and is set when either the FS, VS, or XS bits
-encode a Dirty state (i.e., SD=((FS==11) OR (XS==11) OR (VS==11))). This
+encode a Dirty state (i.e., `SD=(FS==0b11 OR XS==0b11 OR VS==0b11)`). This
 allows privileged code to quickly determine when no additional context
 save is required beyond the integer register set and `pc`.
 
@@ -3865,7 +3872,9 @@ and I/O regions may be accessed with either _relaxed_ or _strong_
 ordering. Accesses to an I/O region with relaxed ordering are generally
 observed by other harts and bus mastering devices in a manner similar to
 the ordering of accesses to an RVWMO memory region, as discussed in
-Section A.4.2 in Volume I of this specification. By contrast, accesses
+the I/O Ordering section in the RVWMO Explanatory Material appendix
+of Volume I of this specification.
+By contrast, accesses
 to an I/O region with strong ordering are generally observed by other
 harts and bus mastering devices in program order.
 

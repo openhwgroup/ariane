@@ -51,11 +51,13 @@ module issue_read_operands
     // FU data useful to execute instruction - EX_STAGE
     output fu_data_t [CVA6Cfg.NrIssuePorts-1:0] fu_data_o,
     // Unregistered version of fu_data_o.operanda - EX_STAGE
-    output logic [CVA6Cfg.NrIssuePorts-1:0][CVA6Cfg.XLEN-1:0] rs1_forwarding_o,
+    output logic [CVA6Cfg.NrIssuePorts-1:0][CVA6Cfg.VLEN-1:0] rs1_forwarding_o,
     // Unregistered version of fu_data_o.operandb - EX_STAGE
-    output logic [CVA6Cfg.NrIssuePorts-1:0][CVA6Cfg.XLEN-1:0] rs2_forwarding_o,
+    output logic [CVA6Cfg.NrIssuePorts-1:0][CVA6Cfg.VLEN-1:0] rs2_forwarding_o,
     // Program Counter - EX_STAGE
     output logic [CVA6Cfg.VLEN-1:0] pc_o,
+    // Is zcmt - EX_STAGE
+    output logic is_zcmt_o,
     // Is compressed instruction - EX_STAGE
     output logic is_compressed_instr_o,
     // Fixed Latency Unit is ready - EX_STAGE
@@ -119,9 +121,13 @@ module issue_read_operands
     input logic [CVA6Cfg.NrCommitPorts-1:0] we_gpr_i,
     // FPR write enable - COMMIT_STAGE
     input logic [CVA6Cfg.NrCommitPorts-1:0] we_fpr_i,
-
     // Issue stall - PERF_COUNTERS
-    output logic stall_issue_o
+    output logic stall_issue_o,
+    // Information dedicated to RVFI - RVFI
+    output logic [CVA6Cfg.NrIssuePorts-1:0][CVA6Cfg.XLEN-1:0] rvfi_rs1_o,
+    // Information dedicated to RVFI - RVFI
+    output logic [CVA6Cfg.NrIssuePorts-1:0][CVA6Cfg.XLEN-1:0] rvfi_rs2_o
+
 );
 
   localparam OPERANDS_PER_INSTR = CVA6Cfg.NrRgprPorts / CVA6Cfg.NrIssuePorts;
@@ -141,19 +147,22 @@ module issue_read_operands
   rs3_len_t operand_c_fpr;
   // output flipflop (ID <-> EX)
   fu_data_t [CVA6Cfg.NrIssuePorts-1:0] fu_data_n, fu_data_q;
-  logic [        CVA6Cfg.XLEN-1:0]                   imm_forward_rs3;
+  logic               [CVA6Cfg.VLEN-1:0] pc_n;
+  logic                                  is_compressed_instr_n;
+  branchpredict_sbe_t                    branch_predict_n;
+  logic               [CVA6Cfg.XLEN-1:0] imm_forward_rs3;
 
-  logic [CVA6Cfg.NrIssuePorts-1:0]                   alu_valid_q;
-  logic [CVA6Cfg.NrIssuePorts-1:0]                   mult_valid_q;
-  logic [CVA6Cfg.NrIssuePorts-1:0]                   fpu_valid_q;
-  logic [                     1:0]                   fpu_fmt_q;
-  logic [                     2:0]                   fpu_rm_q;
-  logic [CVA6Cfg.NrIssuePorts-1:0]                   alu2_valid_q;
-  logic [CVA6Cfg.NrIssuePorts-1:0]                   lsu_valid_q;
-  logic [CVA6Cfg.NrIssuePorts-1:0]                   csr_valid_q;
-  logic [CVA6Cfg.NrIssuePorts-1:0]                   branch_valid_q;
-  logic [CVA6Cfg.NrIssuePorts-1:0]                   cvxif_valid_q;
-  logic [                    31:0]                   cvxif_off_instr_q;
+  logic [CVA6Cfg.NrIssuePorts-1:0] alu_valid_n, alu_valid_q;
+  logic [CVA6Cfg.NrIssuePorts-1:0] mult_valid_n, mult_valid_q;
+  logic [CVA6Cfg.NrIssuePorts-1:0] fpu_valid_n, fpu_valid_q;
+  logic [1:0] fpu_fmt_n, fpu_fmt_q;
+  logic [2:0] fpu_rm_n, fpu_rm_q;
+  logic [CVA6Cfg.NrIssuePorts-1:0] alu2_valid_n, alu2_valid_q;
+  logic [CVA6Cfg.NrIssuePorts-1:0] lsu_valid_n, lsu_valid_q;
+  logic [CVA6Cfg.NrIssuePorts-1:0] csr_valid_n, csr_valid_q;
+  logic [CVA6Cfg.NrIssuePorts-1:0] branch_valid_n, branch_valid_q;
+  logic [CVA6Cfg.NrIssuePorts-1:0] cvxif_valid_n, cvxif_valid_q;
+  logic [31:0] cvxif_off_instr_n, cvxif_off_instr_q;
   logic                                              cvxif_instruction_valid;
 
   //fwd logic
@@ -197,7 +206,7 @@ module issue_read_operands
 
   // CVXIF Signals
   logic cvxif_req_allowed;
-  logic x_transaction_rejected;
+  logic x_transaction_rejected, x_transaction_rejected_n;
   logic [OPERANDS_PER_INSTR-1:0] rs_valid;
   logic [OPERANDS_PER_INSTR-1:0][CVA6Cfg.XLEN-1:0] rs;
 
@@ -225,8 +234,7 @@ module issue_read_operands
       .x_off_instr_i   (orig_instr_i[0]),
       .x_trans_id_i    (issue_instr_i[0].trans_id),
       .register_i      (rs),
-      .rs_valid_i      (rs_valid),
-      .cvxif_busy_o    ()
+      .rs_valid_i      (rs_valid)
   );
   if (OPERANDS_PER_INSTR == 3) begin
     assign rs_valid = {~stall_rs3[0], ~stall_rs2[0], ~stall_rs1[0]};
@@ -250,6 +258,8 @@ module issue_read_operands
   for (genvar i = 0; i < CVA6Cfg.NrIssuePorts; i++) begin
     assign rs1_forwarding_o[i] = fu_data_n[i].operand_a[CVA6Cfg.VLEN-1:0];  //forwarding or unregistered rs1 value
     assign rs2_forwarding_o[i] = fu_data_n[i].operand_b[CVA6Cfg.VLEN-1:0];  //forwarding or unregistered rs2 value
+    assign rvfi_rs1_o[i] = fu_data_n[i].operand_a;
+    assign rvfi_rs2_o[i] = fu_data_n[i].operand_b;
   end
 
   assign fu_data_o = fu_data_q;
@@ -284,7 +294,7 @@ module issue_read_operands
 
     // after a multiplication was issued we can only issue another multiplication
     // otherwise we will get contentions on the fixed latency bus
-    if (mult_valid_q) begin
+    if (|mult_valid_q) begin
       fus_busy[0].alu = 1'b1;
       fus_busy[0].ctrl_flow = 1'b1;
       fus_busy[0].csr = 1'b1;
@@ -310,7 +320,7 @@ module issue_read_operands
       fus_busy[1].cvxif = 1'b1;
 
       unique case (issue_instr_i[0].fu)
-        NONE:  fus_busy[1].none = 1'b1;
+        NONE: fus_busy[1].none = 1'b1;
         CTRL_FLOW: begin
           if (CVA6Cfg.SpeculativeSb) begin
             // Issue speculative instruction, will be removed on BMISS
@@ -350,7 +360,7 @@ module issue_read_operands
           // Control hazard
           fus_busy[1] = '1;
         end
-        MULT:  fus_busy[1].mult = 1'b1;
+        MULT: fus_busy[1].mult = 1'b1;
         FPU, FPU_VEC: begin
           fus_busy[1].fpu = 1'b1;
           fus_busy[1].fpu_vec = 1'b1;
@@ -360,6 +370,7 @@ module issue_read_operands
           fus_busy[1].store = 1'b1;
         end
         CVXIF: ;
+        default: ;
       endcase
     end
   end
@@ -776,6 +787,64 @@ module issue_read_operands
     end
   end
 
+  always_comb begin
+    alu_valid_n    = '0;
+    lsu_valid_n    = '0;
+    mult_valid_n   = '0;
+    fpu_valid_n    = '0;
+    fpu_fmt_n      = '0;
+    fpu_rm_n       = '0;
+    alu2_valid_n   = '0;
+    csr_valid_n    = '0;
+    branch_valid_n = '0;
+    for (int unsigned i = 0; i < CVA6Cfg.NrIssuePorts; i++) begin
+      if (!issue_instr_i[i].ex.valid && issue_instr_valid_i[i] && issue_ack_o[i]) begin
+        case (issue_instr_i[i].fu)
+          ALU: begin
+            if (CVA6Cfg.SuperscalarEn && !fus_busy[i].alu2) begin
+              alu2_valid_n[i] = 1'b1;
+            end else begin
+              alu_valid_n[i] = 1'b1;
+            end
+          end
+          CTRL_FLOW: begin
+            branch_valid_n[i] = 1'b1;
+          end
+          MULT: begin
+            mult_valid_n[i] = 1'b1;
+          end
+          LOAD, STORE: begin
+            lsu_valid_n[i] = 1'b1;
+          end
+          CSR: begin
+            csr_valid_n[i] = 1'b1;
+          end
+          default: begin
+            if (issue_instr_i[i].fu == FPU && CVA6Cfg.FpPresent) begin
+              fpu_valid_n[i] = 1'b1;
+              fpu_fmt_n      = orig_instr.rftype.fmt;  // fmt bits from instruction
+              fpu_rm_n       = orig_instr.rftype.rm;  // rm bits from instruction
+            end else if (issue_instr_i[i].fu == FPU_VEC && CVA6Cfg.FpPresent) begin
+              fpu_valid_n[i] = 1'b1;
+              fpu_fmt_n      = orig_instr.rvftype.vfmt;  // vfmt bits from instruction
+              fpu_rm_n       = {2'b0, orig_instr.rvftype.repl};  // repl bit from instruction
+            end
+          end
+        endcase
+      end
+    end
+    // if we got a flush request, de-assert the valid flag, otherwise we will start this
+    // functional unit with the wrong inputs
+    if (flush_i) begin
+      alu_valid_n    = '0;
+      lsu_valid_n    = '0;
+      mult_valid_n   = '0;
+      fpu_valid_n    = '0;
+      alu2_valid_n   = '0;
+      csr_valid_n    = '0;
+      branch_valid_n = '0;
+    end
+  end
   // FU select, assert the correct valid out signal (in the next cycle)
   // This needs to be like this to make verilator happy. I know its ugly.
   always_ff @(posedge clk_i or negedge rst_ni) begin
@@ -790,91 +859,45 @@ module issue_read_operands
       csr_valid_q    <= '0;
       branch_valid_q <= '0;
     end else begin
-      alu_valid_q    <= '0;
-      lsu_valid_q    <= '0;
-      mult_valid_q   <= '0;
-      fpu_valid_q    <= '0;
-      fpu_fmt_q      <= '0;
-      fpu_rm_q       <= '0;
-      alu2_valid_q   <= '0;
-      csr_valid_q    <= '0;
-      branch_valid_q <= '0;
-      // Exception pass through:
-      // If an exception has occurred simply pass it through
-      // we do not want to issue this instruction
-      for (int unsigned i = 0; i < CVA6Cfg.NrIssuePorts; i++) begin
-        if (!issue_instr_i[i].ex.valid && issue_instr_valid_i[i] && issue_ack_o[i]) begin
-          case (issue_instr_i[i].fu)
-            ALU: begin
-              if (CVA6Cfg.SuperscalarEn && !fus_busy[i].alu2) begin
-                alu2_valid_q[i] <= 1'b1;
-              end else begin
-                alu_valid_q[i] <= 1'b1;
-              end
-            end
-            CTRL_FLOW: begin
-              branch_valid_q[i] <= 1'b1;
-            end
-            MULT: begin
-              mult_valid_q[i] <= 1'b1;
-            end
-            LOAD, STORE: begin
-              lsu_valid_q[i] <= 1'b1;
-            end
-            CSR: begin
-              csr_valid_q[i] <= 1'b1;
-            end
-            default: begin
-              if (issue_instr_i[i].fu == FPU && CVA6Cfg.FpPresent) begin
-                fpu_valid_q[i] <= 1'b1;
-                fpu_fmt_q      <= orig_instr.rftype.fmt;  // fmt bits from instruction
-                fpu_rm_q       <= orig_instr.rftype.rm;  // rm bits from instruction
-              end else if (issue_instr_i[i].fu == FPU_VEC && CVA6Cfg.FpPresent) begin
-                fpu_valid_q[i] <= 1'b1;
-                fpu_fmt_q      <= orig_instr.rvftype.vfmt;  // vfmt bits from instruction
-                fpu_rm_q       <= {2'b0, orig_instr.rvftype.repl};  // repl bit from instruction
-              end
-            end
-          endcase
-        end
-      end
-      // if we got a flush request, de-assert the valid flag, otherwise we will start this
-      // functional unit with the wrong inputs
-      if (flush_i) begin
-        alu_valid_q    <= '0;
-        lsu_valid_q    <= '0;
-        mult_valid_q   <= '0;
-        fpu_valid_q    <= '0;
-        alu2_valid_q   <= '0;
-        csr_valid_q    <= '0;
-        branch_valid_q <= '0;
-      end
+      alu_valid_q    <= alu_valid_n;
+      lsu_valid_q    <= lsu_valid_n;
+      mult_valid_q   <= mult_valid_n;
+      fpu_valid_q    <= fpu_valid_n;
+      fpu_fmt_q      <= fpu_fmt_n;
+      fpu_rm_q       <= fpu_rm_n;
+      alu2_valid_q   <= alu2_valid_n;
+      csr_valid_q    <= csr_valid_n;
+      branch_valid_q <= branch_valid_n;
     end
   end
 
   if (CVA6Cfg.CvxifEn) begin
+    always_comb begin
+      cvxif_valid_n = '0;
+      cvxif_off_instr_n = 32'b0;
+      for (int unsigned i = 0; i < CVA6Cfg.NrIssuePorts; i++) begin
+        if (!issue_instr_i[i].ex.valid && issue_instr_valid_i[i] && issue_ack_o[i]) begin
+          case (issue_instr_i[i].fu)
+            CVXIF: begin
+              cvxif_valid_n[i]  = 1'b1;
+              cvxif_off_instr_n = orig_instr[i];
+            end
+            default: ;
+          endcase
+        end
+      end
+      if (flush_i) begin
+        cvxif_valid_n = '0;
+        cvxif_off_instr_n = 32'b0;
+      end
+    end
     always_ff @(posedge clk_i or negedge rst_ni) begin
       if (!rst_ni) begin
         cvxif_valid_q <= '0;
         cvxif_off_instr_q <= 32'b0;
       end else begin
-        cvxif_valid_q <= '0;
-        cvxif_off_instr_q <= 32'b0;
-        for (int unsigned i = 0; i < CVA6Cfg.NrIssuePorts; i++) begin
-          if (!issue_instr_i[i].ex.valid && issue_instr_valid_i[i] && issue_ack_o[i]) begin
-            case (issue_instr_i[i].fu)
-              CVXIF: begin
-                cvxif_valid_q[i]  <= 1'b1;
-                cvxif_off_instr_q <= orig_instr[i];
-              end
-              default: ;
-            endcase
-          end
-        end
-        if (flush_i) begin
-          cvxif_valid_q <= '0;
-          cvxif_off_instr_q <= 32'b0;
-        end
+        cvxif_valid_q <= cvxif_valid_n;
+        cvxif_off_instr_q <= cvxif_off_instr_n;
       end
     end
   end
@@ -1094,6 +1117,30 @@ module issue_read_operands
   // ----------------------
   // Registers (ID <-> EX)
   // ----------------------
+
+  always_comb begin
+    pc_n = '0;
+    is_compressed_instr_n = 1'b0;
+    branch_predict_n = {cf_t'(0), {CVA6Cfg.VLEN{1'b0}}};
+    if (CVA6Cfg.SuperscalarEn) begin
+      if (issue_instr_i[1].fu == CTRL_FLOW) begin
+        pc_n                  = issue_instr_i[1].pc;
+        is_compressed_instr_n = issue_instr_i[1].is_compressed;
+        branch_predict_n      = issue_instr_i[1].bp;
+      end
+    end
+    if (issue_instr_i[0].fu == CTRL_FLOW) begin
+      pc_n                  = issue_instr_i[0].pc;
+      is_compressed_instr_n = issue_instr_i[0].is_compressed;
+      branch_predict_n      = issue_instr_i[0].bp;
+    end
+    x_transaction_rejected_n = 1'b0;
+    if (issue_instr_i[0].fu == CVXIF) begin
+      x_transaction_rejected_n = x_transaction_rejected;
+    end
+  end
+
+
   always_ff @(posedge clk_i or negedge rst_ni) begin
     if (!rst_ni) begin
       fu_data_q <= '0;
@@ -1101,6 +1148,7 @@ module issue_read_operands
         tinst_q <= '0;
       end
       pc_o                     <= '0;
+      is_zcmt_o                <= '0;
       is_compressed_instr_o    <= 1'b0;
       branch_predict_o         <= {cf_t'(0), {CVA6Cfg.VLEN{1'b0}}};
       x_transaction_rejected_o <= 1'b0;
@@ -1120,6 +1168,8 @@ module issue_read_operands
         pc_o                  <= issue_instr_i[0].pc;
         is_compressed_instr_o <= issue_instr_i[0].is_compressed;
         branch_predict_o      <= issue_instr_i[0].bp;
+        if (CVA6Cfg.RVZCMT) is_zcmt_o <= issue_instr_i[0].is_zcmt;
+        else is_zcmt_o <= '0;
       end
       x_transaction_rejected_o <= 1'b0;
       if (issue_instr_i[0].fu == CVXIF) begin

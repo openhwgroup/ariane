@@ -247,7 +247,9 @@ module cva6_tb_wrapper import uvmt_cva6_pkg::*; #(
    assign cvxif_if.compressed_valid    = cvxif_req.compressed_valid;
    assign cvxif_if.compressed_req      = cvxif_req.compressed_req;
    assign cvxif_if.issue_valid         = cvxif_req.issue_valid;
-   assign cvxif_if.issue_req           = cvxif_req.issue_req;
+   assign cvxif_if.issue_req.instr     = cvxif_req.issue_req.instr;
+   assign cvxif_if.issue_req.hartid    = cvxif_req.issue_req.hartid;
+   assign cvxif_if.issue_req.id        = cvxif_req.issue_req.id;
    assign cvxif_if.register_valid      = cvxif_req.register_valid;
    assign cvxif_if.register            = cvxif_req.register;
    assign cvxif_if.commit_valid        = cvxif_req.commit_valid;

@@ -807,4 +807,12 @@ package ariane_pkg;
     return gppn;
   endfunction : make_gppn
 
+  // ----------------------
+  // Helper functions
+  // ----------------------
+  // Avoid negative array slices when defining parametrized sizes
+  function automatic int unsigned avoid_neg(int n);
+    return (n < 0) ? 0 : n;
+  endfunction : avoid_neg
+
 endpackage

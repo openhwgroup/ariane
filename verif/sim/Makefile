@@ -382,6 +382,9 @@ questa-uvm:
 generate_cov_dash:
 	urg -warn none -hvp_proj cva6_embedded -format both -group instcov_for_score -hvp_attributes weight+description+Comment -dir vcs_results/default/vcs.d/simv.vdb -plan cva6.hvp -tgl portsonly
 
+generate_verdi_cov:
+	-verdi -cov -format both -group instcov_for_score -covdir vcs_results/default/vcs.d/simv.vdb -plan cva6.hvp -tgl portsonly
+
 vcs_clean_all:
 	@echo "[VCS] Cleanup (entire vcs_work dir)"
 	rm -rf $(CVA6_REPO_DIR)/verif/sim/vcs_results/ verdiLog/ simv* *.daidir *.vpd *.fsdb *.db csrc ucli.key vc_hdrs.h novas* inter.fsdb uart
