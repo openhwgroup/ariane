@@ -62,7 +62,7 @@ package cva6_config_pkg;
       ExceptionAddress: 64'h808,
       RASDepth: unsigned'(2),
       BTBEntries: unsigned'(0),
-      BPType: config_pkg::BHT,
+      BPType: config_pkg::PH_BHT,
       BHTEntries: unsigned'(32),
       BHTHist: unsigned'(3),
       DmBaseAddress: 64'h0,
