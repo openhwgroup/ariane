@@ -1,0 +1,51 @@
+!Feature
+next_elt_id: 1
+name: entry reconfiguration
+id: 31
+display_order: 31
+subfeatures: !!omap
+- 000_reconfigure_N_pmp_entries: !Subfeature
+    name: 000_reconfigure_N_pmp_entries
+    tag: VP_PMP_F031_S001
+    next_elt_id: 1
+    display_order: 0
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F031_S001_I000
+        description: "reuse of feature descriptions (Cf. Feature: \"cfg NA4/NAPOT/TOR/OFF
+          access S/U/M\")\nreuse of feature descriptions (Cf. Feature: \"CSRs M-mode
+          only\")\nreuse of feature descriptions (Cf. Feature: \"CSRs locked access\"\
+          )\nreuse of feature descriptions (Cf. Feature: \"multi entries NA4/NAPOT/TOR/OFF\"\
+          )"
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "configure any N PMP entries, possibly some with L=1\n\nCONFIGURATION
+          and ACCESS\n    - for each pmp entry, apply any CONFIGURATION+ACCESS scenario
+          above (Cf. Feature: \"cfg NA4/NAPOT/TOR/OFF access S/U/M\")\n    - make
+          sure the pmp entries address ranges are not overlapping/intersecting\n \
+          \   - NB: obviously, pmp entry configurations with different mstatus.MPRV/MPP
+          values cannot be mixed in same test\n\nRECONFIGURATION and ACCESS\n    -
+          for each pmp entry with L=0, apply any other CONFIGURATION+ACCESS scenario
+          above (Cf. Feature: \"cfg NA4/NAPOT/TOR/OFF access S/U/M\")\n    - make
+          sure the pmp entries address ranges are not overlapping/intersecting\n \
+          \   - NB: obviously, pmp entry configurations with different mstatus.MPRV/MPP
+          values cannot be mixed in same test\n\nRESET\n    - if there is any pmp
+          entry with L=1, apply hart reset (or only PMP reset if possible)\n    -
+          and restart with CONFIGURATION and RESET\n\nCHECK\n    - for each pmp entry,
+          we should obtain the expected CHECK result\n\nREUSABILITY\n    - if possible,
+          the number of PMP entries (N) is a configurable parameter\n    - so a single
+          test function can be reused"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: ''
+vptool_gitrev: '$Id: a8b561f68549658061625891c533e7d45996bc9e $'
+io_fmt_gitrev: '$Id: 61ab4e53ca49e21d56c416f0af0fa04d148e8001 $'
+config_gitrev: '$Id: 5192fced2cfa10be5e18e827922e31e7489ed987 $'
+ymlcfg_gitrev: '$Id: ce5e73bd5e8e0099334cb657afb7a624a99afbda $'

@@ -1,0 +1,200 @@
+!Feature
+next_elt_id: 4
+name: multi entries OFF
+id: 24
+display_order: 24
+subfeatures: !!omap
+- 000_1_entry: !Subfeature
+    name: 000_1_entry
+    tag: VP_PMP_F024_S001
+    next_elt_id: 1
+    display_order: 0
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F024_S001_I000
+        description: "{Page 57 Section \"3.7.1 Physical Memory Protection CSRs\" Volume
+          II: RISC-V Privileged Architectures V20211203}\n\nUp to 64 PMP entries are
+          supported"
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "choose a single PMP entry\n\nCONFIGURATION and ACCESS\n    -
+          for each pmp entry, apply any CONFIGURATION+ACCESS scenario above (Cf. Feature:
+          \"cfg OFF access S/U/M\")\n    - make sure the pmp entries address ranges
+          are not overlapping/intersecting\n    - NB: obviously, pmp entry configurations
+          with different mstatus.MPRV/MPP values cannot be mixed in same test\n\n\
+          CHECK\n    - for each pmp entry, we should obtain the expected CHECK result\n\
+          \nREUSABILITY\n    - if possible, the number of PMP entries (N) is a configurable
+          parameter\n    - so a single test function can be reused"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<< link to the old pmp_verif_plan.txt and pmp_verif_plan_features.txt
+          files (not up-to-date) : reading below not mandatory but may help for better
+          understanding >>\n\nTST24(group) => FTR09-g\n  [create scenarios where PMP
+          entries with A=0 (OFF) and with matching permissions\n    - check no address
+          matching for those PMP entries]\n  [create scenarios where all PMP entries
+          with A=0 (OFF) and with matching permissions\n    - check no address matching
+          for all PMP entries]\n  [check S or U mode access fails when all A=OFF with
+          at least one PMP entry implemented] => FTR09-g\nTST24-1 = extension of (TST17-11,
+          TST17-21, TST17-31, TST17-41, TST17-51,\n                        TST17-13,
+          TST17-23, TST17-33, TST17-43, TST17-53,\n                        TST17-14,
+          TST17-24, TST17-34, TST17-44, TST17-54,\n                        TST17-16,
+          TST17-26, TST17-36, TST17-46, TST17-56,\n                        TST18-14,
+          TST18-24, TST18-34, TST18-44, TST18-54, //TODO: M-mode may not raise an
+          exception\n                        TST18-16, TST18-26, TST18-36, TST18-46,
+          TST18-56) //TODO: M-mode may not raise an exception\n                  \
+          \      //TODO: SHOULD WE ADD (TST18-11, TST18-21, TST18-31, TST18-41, TST18-51,\n\
+          \                                               TST18-13, TST18-23, TST18-33,
+          TST18-43, TST18-53) ?\n[configure only one (any, but the first one) PMP
+          entry\n  - execute the chosen kind of access\n  - check appropriate access-fault
+          exception raised]"
+- 001_2_isolated_entries: !Subfeature
+    name: 001_2_isolated_entries
+    tag: VP_PMP_F024_S002
+    next_elt_id: 1
+    display_order: 1
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F024_S002_I000
+        description: "{Page 57 Section \"3.7.1 Physical Memory Protection CSRs\" Volume
+          II: RISC-V Privileged Architectures V20211203}\n\nUp to 64 PMP entries are
+          supported"
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "choose any 2 PMP entries\n\nreuse of VP_PMP_F024_S001_I000 feature
+          description (Cf. Feature: \"multi entries OFF\")"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<< link to the old pmp_verif_plan.txt and pmp_verif_plan_features.txt
+          files (not up-to-date) : reading below not mandatory but may help for better
+          understanding >>\n\nTST24(group) => FTR09-g\n  [create scenarios where PMP
+          entries with A=0 (OFF) and with matching permissions\n    - check no address
+          matching for those PMP entries]\n  [create scenarios where all PMP entries
+          with A=0 (OFF) and with matching permissions\n    - check no address matching
+          for all PMP entries]\n  [check S or U mode access fails when all A=OFF with
+          at least one PMP entry implemented] => FTR09-g\nTST24-2 = extension of compatible
+          pair of (TST17-11, TST17-21, TST17-31, TST17-41, TST17-51,\n           \
+          \              \t\t\t\t\t\t\t\t\t TST17-13, TST17-23, TST17-33, TST17-43,
+          TST17-53,\n                         \t\t\t\t\t\t\t\t\t TST17-14, TST17-24,
+          TST17-34, TST17-44, TST17-54,\n                         \t\t\t\t\t\t\t\t
+          \t TST17-16, TST17-26, TST17-36, TST17-46, TST17-56,\n                 \
+          \        \t\t\t\t\t\t\t\t\t TST18-14, TST18-24, TST18-34, TST18-44, TST18-54,
+          //TODO: M-mode may not raise an exception\n                         \t\t
+          \t\t\t\t\t\t\t TST18-16, TST18-26, TST18-36, TST18-46, TST18-56) //TODO:
+          M-mode may not raise an exception\n                        //TODO: SHOULD
+          WE ADD (TST18-11, TST18-21, TST18-31, TST18-41, TST18-51,\n            \
+          \                                   TST18-13, TST18-23, TST18-33, TST18-43,
+          TST18-53) ?\n[configure 2 non-adjacent PMP entries (highest-numbered ones
+          first) (avoid the first PMP entry)\n  - execute the 2 kinds of accesses
+          (if possible to chain due to access-fault)\n  - check 2 appropriate access-fault
+          exceptions raised]"
+- 002_N_isolated_entries: !Subfeature
+    name: 002_N_isolated_entries
+    tag: VP_PMP_F024_S003
+    next_elt_id: 1
+    display_order: 2
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F024_S003_I000
+        description: "{Page 57 Section \"3.7.1 Physical Memory Protection CSRs\" Volume
+          II: RISC-V Privileged Architectures V20211203}\n\nUp to 64 PMP entries are
+          supported"
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "choose any N PMP entries (2<N<8)\n\nreuse of VP_PMP_F024_S001_I000
+          feature description (Cf. Feature: \"multi entries OFF\")"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<< link to the old pmp_verif_plan.txt and pmp_verif_plan_features.txt
+          files (not up-to-date) : reading below not mandatory but may help for better
+          understanding >>\n\nTST24(group) => FTR09-g\n  [create scenarios where PMP
+          entries with A=0 (OFF) and with matching permissions\n    - check no address
+          matching for those PMP entries]\n  [create scenarios where all PMP entries
+          with A=0 (OFF) and with matching permissions\n    - check no address matching
+          for all PMP entries]\n  [check S or U mode access fails when all A=OFF with
+          at least one PMP entry implemented] => FTR09-g\nTST24-3 = extension of compatible
+          group(N) of (TST17-11, TST17-21, TST17-31, TST17-41, TST17-51,\n       \
+          \                   \t\t\t\t\t\t\t\t\t\t TST17-13, TST17-23, TST17-33, TST17-43,
+          TST17-53,\n                          \t\t\t\t\t\t\t\t\t\t TST17-14, TST17-24,
+          TST17-34, TST17-44, TST17-54,\n                          \t\t\t\t\t\t\t\t
+          \t\t TST17-16, TST17-26, TST17-36, TST17-46, TST17-56,\n               \
+          \           \t\t\t\t\t\t\t\t\t\t TST18-14, TST18-24, TST18-34, TST18-44,
+          TST18-54, //TODO: M-mode may not raise an exception\n                  \
+          \        \t\t\t\t\t\t\t\t\t\t TST18-16, TST18-26, TST18-36, TST18-46, TST18-56)
+          //TODO: M-mode may not raise an exception\n                        //TODO:
+          SHOULD WE ADD (TST18-11, TST18-21, TST18-31, TST18-41, TST18-51,\n     \
+          \                                          TST18-13, TST18-23, TST18-33,
+          TST18-43, TST18-53) ?\n[configure N PMP entries (highest-numbered ones first)
+          (as non-adjacent as possible, and avoid the first PMP entry)\n  - execute
+          the N kinds of accesses (if possible to chain due to access-fault)\n  -
+          check N appropriate access-fault exceptions raised]"
+- 003_8_isolated_entries: !Subfeature
+    name: 003_8_isolated_entries
+    tag: VP_PMP_F024_S004
+    next_elt_id: 1
+    display_order: 3
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F024_S004_I000
+        description: "{Page 57 Section \"3.7.1 Physical Memory Protection CSRs\" Volume
+          II: RISC-V Privileged Architectures V20211203}\n\nUp to 64 PMP entries are
+          supported"
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "choose all 8 PMP entries\n\nreuse of VP_PMP_F024_S001_I000 feature
+          description (Cf. Feature: \"multi entries OFF\")"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<< link to the old pmp_verif_plan.txt and pmp_verif_plan_features.txt
+          files (not up-to-date) : reading below not mandatory but may help for better
+          understanding >>\n\nTST24(group) => FTR09-g\n  [create scenarios where PMP
+          entries with A=0 (OFF) and with matching permissions\n    - check no address
+          matching for those PMP entries]\n  [create scenarios where all PMP entries
+          with A=0 (OFF) and with matching permissions\n    - check no address matching
+          for all PMP entries]\n  [check S or U mode access fails when all A=OFF with
+          at least one PMP entry implemented] => FTR09-g\nTST24-4 = extension of compatible
+          group(8) of (TST17-11, TST17-21, TST17-31, TST17-41, TST17-51,\n       \
+          \                 \t\t\t\t\t\t\t\t\t\t\t TST17-13, TST17-23, TST17-33, TST17-43,
+          TST17-53,\n                        \t\t\t\t\t\t\t\t\t\t\t TST17-14, TST17-24,
+          TST17-34, TST17-44, TST17-54,\n                        \t\t\t\t\t\t\t\t\t
+          \t\t TST17-16, TST17-26, TST17-36, TST17-46, TST17-56,\n               \
+          \         \t\t\t\t\t\t\t\t\t\t\t TST18-14, TST18-24, TST18-34, TST18-44,
+          TST18-54, //TODO: M-mode may not raise an exception\n                  \
+          \      \t\t\t\t\t\t\t\t\t\t\t TST18-16, TST18-26, TST18-36, TST18-46, TST18-56)
+          //TODO: M-mode may not raise an exception\n                        //TODO:
+          SHOULD WE ADD (TST18-11, TST18-21, TST18-31, TST18-41, TST18-51,\n     \
+          \                                          TST18-13, TST18-23, TST18-33,
+          TST18-43, TST18-53) ?\n[configure 8 PMP entries (highest-numbered ones first)\n\
+          \  - execute the 8 kinds of accesses (if possible to chain due to access-fault)\n\
+          \  - check 8 appropriate access-fault exceptions raised]"
+vptool_gitrev: '$Id: a8b561f68549658061625891c533e7d45996bc9e $'
+io_fmt_gitrev: '$Id: 61ab4e53ca49e21d56c416f0af0fa04d148e8001 $'
+config_gitrev: '$Id: 5192fced2cfa10be5e18e827922e31e7489ed987 $'
+ymlcfg_gitrev: '$Id: ce5e73bd5e8e0099334cb657afb7a624a99afbda $'

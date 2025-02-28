@@ -1,0 +1,525 @@
+!Feature
+next_elt_id: 20
+name: cfg NA4 not selectable
+id: 19
+display_order: 19
+subfeatures: !!omap
+- 000_fetch_L0_X1_addr_hit: !Subfeature
+    name: 000_fetch_L0_X1_addr_hit
+    tag: VP_PMP_F019_S011
+    next_elt_id: 1
+    display_order: 0
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F019_S011_I000
+        description: 'reuse of VP_PMP_F019_S011_I000 feature description (Cf. Feature:
+          "cfg NA4 access S/U")'
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "reuse of VP_PMP_F019_S011_I000 verification goals (Cf. Feature:
+          \"cfg NA4 access S/U\")\n\nCONFIGURATION\n    - check that pmpcfg(i).A=OFF
+          (by reading back)\n\nCHECK UPDATE\n  - check instruction fetch access-fault
+          exception raised"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: ''
+- 001_fetch_L1_X1_addr_hit: !Subfeature
+    name: 001_fetch_L1_X1_addr_hit
+    tag: VP_PMP_F019_S014
+    next_elt_id: 1
+    display_order: 1
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F019_S014_I000
+        description: 'reuse of VP_PMP_F019_S014_I000 feature description (Cf. Feature:
+          "cfg NA4 access S/U")'
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "reuse of VP_PMP_F019_S014_I000 verification goals (Cf. Feature:
+          \"cfg NA4 access S/U\")\n\nCONFIGURATION\n    - check that pmpcfg(i).A=OFF
+          (by reading back)\n\nCHECK UPDATE\n  - check instruction fetch access-fault
+          exception raised"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: ''
+- 002_load_L0_R1_addr_hit: !Subfeature
+    name: 002_load_L0_R1_addr_hit
+    tag: VP_PMP_F019_S021
+    next_elt_id: 1
+    display_order: 2
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F019_S021_I000
+        description: 'reuse of VP_PMP_F019_S021_I000 feature description (Cf. Feature:
+          "cfg NA4 access S/U")'
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "reuse of VP_PMP_F019_S021_I000 verification goals (Cf. Feature:
+          \"cfg NA4 access S/U\")\n\nCONFIGURATION\n    - check that pmpcfg(i).A=OFF
+          (by reading back)\n\nCHECK UPDATE\n  - check load access-fault exception
+          raised"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: ''
+- 003_load_L1_R1_addr_hit: !Subfeature
+    name: 003_load_L1_R1_addr_hit
+    tag: VP_PMP_F019_S024
+    next_elt_id: 1
+    display_order: 3
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F019_S024_I000
+        description: 'reuse of VP_PMP_F019_S024_I000 feature description (Cf. Feature:
+          "cfg NA4 access S/U")'
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "reuse of VP_PMP_F019_S024_I000 verification goals (Cf. Feature:
+          \"cfg NA4 access S/U\")\n\nCONFIGURATION\n    - check that pmpcfg(i).A=OFF
+          (by reading back)\n\nCHECK UPDATE\n  - check load access-fault exception
+          raised"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: ''
+- 004_store_L0_W1_addr_hit: !Subfeature
+    name: 004_store_L0_W1_addr_hit
+    tag: VP_PMP_F019_S031
+    next_elt_id: 1
+    display_order: 4
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F019_S031_I000
+        description: 'reuse of VP_PMP_F019_S031_I000 feature description (Cf. Feature:
+          "cfg NA4 access S/U")'
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "reuse of VP_PMP_F019_S031_I000 verification goals (Cf. Feature:
+          \"cfg NA4 access S/U\")\n\nCONFIGURATION\n    - check that pmpcfg(i).A=OFF
+          (by reading back)\n\nCHECK UPDATE\n  - check store access-fault exception
+          raised"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: ''
+- 005_store_L1_W1_addr_hit: !Subfeature
+    name: 005_store_L1_W1_addr_hit
+    tag: VP_PMP_F019_S034
+    next_elt_id: 1
+    display_order: 5
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F019_S034_I000
+        description: 'reuse of VP_PMP_F019_S034_I000 feature description (Cf. Feature:
+          "cfg NA4 access S/U")'
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "reuse of VP_PMP_F019_S034_I000 verification goals (Cf. Feature:
+          \"cfg NA4 access S/U\")\n\nCONFIGURATION\n    - check that pmpcfg(i).A=OFF
+          (by reading back)\n\nCHECK UPDATE\n  - check store access-fault exception
+          raised"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: ''
+- 006_load_MPP_L0_R1_addr_hit: !Subfeature
+    name: 006_load_MPP_L0_R1_addr_hit
+    tag: VP_PMP_F019_S041
+    next_elt_id: 1
+    display_order: 6
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F019_S041_I000
+        description: 'reuse of VP_PMP_F019_S041_I000 feature description (Cf. Feature:
+          "cfg NA4 access S/U")'
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "reuse of VP_PMP_F019_S041_I000 verification goals (Cf. Feature:
+          \"cfg NA4 access S/U\")\n\nCONFIGURATION\n    - check that pmpcfg(i).A=OFF
+          (by reading back)\n\nCHECK UPDATE\n  - check load access-fault exception
+          raised"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: ''
+- 007_load_MPP_L1_R1_addr_hit: !Subfeature
+    name: 007_load_MPP_L1_R1_addr_hit
+    tag: VP_PMP_F019_S044
+    next_elt_id: 1
+    display_order: 7
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F019_S044_I000
+        description: 'reuse of VP_PMP_F019_S044_I000 feature description (Cf. Feature:
+          "cfg NA4 access S/U")'
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "reuse of VP_PMP_F019_S044_I000 verification goals (Cf. Feature:
+          \"cfg NA4 access S/U\")\n\nCONFIGURATION\n    - check that pmpcfg(i).A=OFF
+          (by reading back)\n\nCHECK UPDATE\n  - check load access-fault exception
+          raised"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: ''
+- 008_store_MPP_L0_W1_addr_hit: !Subfeature
+    name: 008_store_MPP_L0_W1_addr_hit
+    tag: VP_PMP_F019_S051
+    next_elt_id: 1
+    display_order: 8
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F019_S051_I000
+        description: 'reuse of VP_PMP_F019_S051_I000 feature description (Cf. Feature:
+          "cfg NA4 access S/U")'
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "reuse of VP_PMP_F019_S051_I000 verification goals (Cf. Feature:
+          \"cfg NA4 access S/U\")\n\nCONFIGURATION\n    - check that pmpcfg(i).A=OFF
+          (by reading back)\n\nCHECK UPDATE\n  - check store access-fault exception
+          raised"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: ''
+- 009_store_MPP_L1_W1_addr_hit: !Subfeature
+    name: 009_store_MPP_L1_W1_addr_hit
+    tag: VP_PMP_F019_S054
+    next_elt_id: 1
+    display_order: 9
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F019_S054_I000
+        description: 'reuse of VP_PMP_F019_S054_I000 feature description (Cf. Feature:
+          "cfg NA4 access S/U")'
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "reuse of VP_PMP_F019_S054_I000 verification goals (Cf. Feature:
+          \"cfg NA4 access S/U\")\n\nCONFIGURATION\n    - check that pmpcfg(i).A=OFF
+          (by reading back)\n\nCHECK UPDATE\n  - check store access-fault exception
+          raised"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: ''
+- 010_fetch_L0_X1_addr_hit: !Subfeature
+    name: 010_fetch_L0_X1_addr_hit
+    tag: VP_PMP_F019_S011
+    next_elt_id: 1
+    display_order: 10
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F019_S011_I000
+        description: 'reuse of VP_PMP_F019_S011_I000 feature description (Cf. Feature:
+          "cfg NA4 access M")'
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "reuse of VP_PMP_F019_S011_I000 verification goals (Cf. Feature:
+          \"cfg NA4 access M\")\n\nCONFIGURATION\n    - check that pmpcfg(i).A=OFF
+          (by reading back)"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: ''
+- 011_fetch_L1_X1_addr_hit: !Subfeature
+    name: 011_fetch_L1_X1_addr_hit
+    tag: VP_PMP_F019_S014
+    next_elt_id: 1
+    display_order: 11
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F019_S014_I000
+        description: 'reuse of VP_PMP_F019_S014_I000 feature description (Cf. Feature:
+          "cfg NA4 access M")'
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "reuse of VP_PMP_F019_S014_I000 verification goals (Cf. Feature:
+          \"cfg NA4 access M\")\n\nCONFIGURATION\n    - check that pmpcfg(i).A=OFF
+          (by reading back)\n\nCHECK UPDATE\n  - check store access-fault exception
+          raised (TODO: is M mode access prevented by A=OFF)"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: ''
+- 012_load_L0_R1_addr_hit: !Subfeature
+    name: 012_load_L0_R1_addr_hit
+    tag: VP_PMP_F019_S021
+    next_elt_id: 1
+    display_order: 12
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F019_S021_I000
+        description: 'reuse of VP_PMP_F019_S021_I000 feature description (Cf. Feature:
+          "cfg NA4 access M")'
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "reuse of VP_PMP_F019_S021_I000 verification goals (Cf. Feature:
+          \"cfg NA4 access M\")\n\nCONFIGURATION\n    - check that pmpcfg(i).A=OFF
+          (by reading back)"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: ''
+- 013_load_L1_R1_addr_hit: !Subfeature
+    name: 013_load_L1_R1_addr_hit
+    tag: VP_PMP_F019_S024
+    next_elt_id: 1
+    display_order: 13
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F019_S024_I000
+        description: 'reuse of VP_PMP_F019_S024_I000 feature description (Cf. Feature:
+          "cfg NA4 access M")'
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "reuse of VP_PMP_F019_S024_I000 verification goals (Cf. Feature:
+          \"cfg NA4 access M\")\n\nCONFIGURATION\n    - check that pmpcfg(i).A=OFF
+          (by reading back)\n\nCHECK UPDATE\n  - check store access-fault exception
+          raised (TODO: is M mode access prevented by A=OFF)"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: ''
+- 014_store_L0_W1_addr_hit: !Subfeature
+    name: 014_store_L0_W1_addr_hit
+    tag: VP_PMP_F019_S031
+    next_elt_id: 1
+    display_order: 14
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F019_S031_I000
+        description: 'reuse of VP_PMP_F019_S031_I000 feature description (Cf. Feature:
+          "cfg NA4 access M")'
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "reuse of VP_PMP_F019_S031_I000 verification goals (Cf. Feature:
+          \"cfg NA4 access M\")\n\nCONFIGURATION\n    - check that pmpcfg(i).A=OFF
+          (by reading back)"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: ''
+- 015_store_L1_W1_addr_hit: !Subfeature
+    name: 015_store_L1_W1_addr_hit
+    tag: VP_PMP_F019_S034
+    next_elt_id: 1
+    display_order: 15
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F019_S034_I000
+        description: 'reuse of VP_PMP_F019_S034_I000 feature description (Cf. Feature:
+          "cfg NA4 access M")'
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "reuse of VP_PMP_F019_S034_I000 verification goals (Cf. Feature:
+          \"cfg NA4 access M\")\n\nCONFIGURATION\n    - check that pmpcfg(i).A=OFF
+          (by reading back)\n\nCHECK UPDATE\n  - check store access-fault exception
+          raised (TODO: is M mode access prevented by A=OFF)"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: ''
+- 016_load_MPP_L0_R1_addr_hit: !Subfeature
+    name: 016_load_MPP_L0_R1_addr_hit
+    tag: VP_PMP_F019_S041
+    next_elt_id: 1
+    display_order: 16
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F019_S041_I000
+        description: 'reuse of VP_PMP_F019_S041_I000 feature description (Cf. Feature:
+          "cfg NA4 access M")'
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "reuse of VP_PMP_F019_S041_I000 verification goals (Cf. Feature:
+          \"cfg NA4 access M\")\n\nCONFIGURATION\n    - check that pmpcfg(i).A=OFF
+          (by reading back)"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: ''
+- 017_load_MPP_L1_R1_addr_hit: !Subfeature
+    name: 017_load_MPP_L1_R1_addr_hit
+    tag: VP_PMP_F019_S044
+    next_elt_id: 1
+    display_order: 17
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F019_S044_I000
+        description: 'reuse of VP_PMP_F019_S044_I000 feature description (Cf. Feature:
+          "cfg NA4 access M")'
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "reuse of VP_PMP_F019_S044_I000 verification goals (Cf. Feature:
+          \"cfg NA4 access M\")\n\nCONFIGURATION\n    - check that pmpcfg(i).A=OFF
+          (by reading back)\n\nCHECK UPDATE\n  - check store access-fault exception
+          raised (TODO: is M mode access prevented by A=OFF)"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: ''
+- 018_store_MPP_L0_W1_addr_hit: !Subfeature
+    name: 018_store_MPP_L0_W1_addr_hit
+    tag: VP_PMP_F019_S051
+    next_elt_id: 1
+    display_order: 18
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F019_S051_I000
+        description: 'reuse of VP_PMP_F019_S051_I000 feature description (Cf. Feature:
+          "cfg NA4 access M")'
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "reuse of VP_PMP_F019_S051_I000 verification goals (Cf. Feature:
+          \"cfg NA4 access M\")\n\nCONFIGURATION\n    - check that pmpcfg(i).A=OFF
+          (by reading back)"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: ''
+- 019_store_MPP_L1_W1_addr_hit: !Subfeature
+    name: 019_store_MPP_L1_W1_addr_hit
+    tag: VP_PMP_F019_S054
+    next_elt_id: 1
+    display_order: 19
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F019_S054_I000
+        description: 'reuse of VP_PMP_F019_S054_I000 feature description (Cf. Feature:
+          "cfg NA4 access M")'
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "reuse of VP_PMP_F019_S054_I000 verification goals (Cf. Feature:
+          \"cfg NA4 access M\")\n\nCONFIGURATION\n    - check that pmpcfg(i).A=OFF
+          (by reading back)\n\nCHECK UPDATE\n  - check store access-fault exception
+          raised (TODO: is M mode access prevented by A=OFF)"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: ''
+vptool_gitrev: '$Id: a8b561f68549658061625891c533e7d45996bc9e $'
+io_fmt_gitrev: '$Id: 61ab4e53ca49e21d56c416f0af0fa04d148e8001 $'
+config_gitrev: '$Id: 5192fced2cfa10be5e18e827922e31e7489ed987 $'
+ymlcfg_gitrev: '$Id: ce5e73bd5e8e0099334cb657afb7a624a99afbda $'

@@ -1,0 +1,376 @@
+!Feature
+next_elt_id: 6
+name: multi entries NAPOT
+id: 22
+display_order: 22
+subfeatures: !!omap
+- 000_1_entry: !Subfeature
+    name: 000_1_entry
+    tag: VP_PMP_F022_S001
+    next_elt_id: 1
+    display_order: 0
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F022_S001_I000
+        description: "{Page 57 Section \"3.7.1 Physical Memory Protection CSRs\" Volume
+          II: RISC-V Privileged Architectures V20211203}\n\nUp to 64 PMP entries are
+          supported"
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "choose a single PMP entry\n\nCONFIGURATION and ACCESS\n    -
+          for each pmp entry, apply any CONFIGURATION+ACCESS scenario above (Cf. Feature:
+          \"cfg NAPOT access S/U/M\")\n    - make sure the pmp entries address ranges
+          are not overlapping/intersecting\n    - NB: obviously, pmp entry configurations
+          with different mstatus.MPRV/MPP values cannot be mixed in same test\n\n\
+          CHECK\n    - for each pmp entry, we should obtain the expected CHECK result\n\
+          \nREUSABILITY\n    - if possible, the number of PMP entries (N) is a configurable
+          parameter\n    - so a single test function can be reused"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<< link to the old pmp_verif_plan.txt and pmp_verif_plan_features.txt
+          files (not up-to-date) : reading below not mandatory but may help for better
+          understanding >>\n\nTST22(group)\n  [create scenarios where PMP entries
+          with A=3 (NAPOT) and with/without matching permissions\n    - check only
+          NAPOT defined addresses are matching]\nTST22-1 = extension of (TST13-11,
+          TST13-21, TST13-31, TST13-41, TST13-51,\n                        TST13-12,
+          TST13-22, TST13-32, TST13-42, TST13-52,\n                        TST13-13,
+          TST13-23, TST13-33, TST13-43, TST13-53,\n                        TST13-14,
+          TST13-24, TST13-34, TST13-44, TST13-54,\n                        TST13-15,
+          TST13-25, TST13-35, TST13-45, TST13-55,\n                        TST13-16,
+          TST13-26, TST13-36, TST13-46, TST13-56,\n                        TST14-11,
+          TST14-21, TST14-31, TST14-41, TST14-51,\n                        TST14-12,
+          TST14-22, TST14-32, TST14-42, TST14-52,\n                        TST14-13,
+          TST14-23, TST14-33, TST14-43, TST14-53,\n                        TST14-14,
+          TST14-24, TST14-34, TST14-44, TST14-54,\n                        TST14-15,
+          TST14-25, TST14-35, TST14-45, TST14-55,\n                        TST14-16,
+          TST14-26, TST14-36, TST14-46, TST14-56)\n[configure only one (any, but the
+          first one) PMP entry\n  - use A=NAPOT for the PMP entry configuration\n\
+          \  - execute the chosen kind of access\n  - should be same result]"
+- 001_2_isolated_entries: !Subfeature
+    name: 001_2_isolated_entries
+    tag: VP_PMP_F022_S002
+    next_elt_id: 1
+    display_order: 1
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F022_S002_I000
+        description: "{Page 57 Section \"3.7.1 Physical Memory Protection CSRs\" Volume
+          II: RISC-V Privileged Architectures V20211203}\n\nUp to 64 PMP entries are
+          supported"
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "choose any 2 PMP entries\n\nreuse of VP_PMP_F022_S001_I000 feature
+          description (Cf. Feature: \"multi entries NAPOT\")"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<< link to the old pmp_verif_plan.txt and pmp_verif_plan_features.txt
+          files (not up-to-date) : reading below not mandatory but may help for better
+          understanding >>\n\nTST22(group)\n  [create scenarios where PMP entries
+          with A=3 (NAPOT) and with/without matching permissions\n    - check only
+          NAPOT defined addresses are matching]\nTST22-2 = extension of compatible
+          pair of (TST13-11, TST13-21, TST13-31, TST13-41, TST13-51,\n           \
+          \             \t\t\t\t\t\t\t\t\t TST13-12, TST13-22, TST13-32, TST13-42,
+          TST13-52,\n                        \t\t\t\t\t\t\t\t\t TST13-13, TST13-23,
+          TST13-33, TST13-43, TST13-53,\n                        \t\t\t\t\t\t\t\t\t
+          TST13-14, TST13-24, TST13-34, TST13-44, TST13-54,\n                    \
+          \    \t\t\t\t\t\t\t\t\t TST13-15, TST13-25, TST13-35, TST13-45, TST13-55,\n\
+          \                        \t\t\t\t \t\t\t\t\t TST13-16, TST13-26, TST13-36,
+          TST13-46, TST13-56,\n                        \t\t\t\t\t\t\t\t\t TST14-11,
+          TST14-21, TST14-31, TST14-41, TST14-51,\n                        \t\t\t\t
+          \t\t\t\t\t TST14-12, TST14-22, TST14-32, TST14-42, TST14-52,\n         \
+          \               \t\t\t\t\t\t\t\t\t TST14-13, TST14-23, TST14-33, TST14-43,
+          TST14-53,\n                        \t\t\t\t\t\t\t\t\t TST14-14, TST14-24,
+          TST14-34, TST14-44, TST14-54,\n                        \t\t\t\t\t\t\t\t\t
+          TST14-15, TST14-25, TST14-35, TST14-45, TST14-55,\n                    \
+          \    \t\t\t\t\t\t\t\t\t TST14-16, TST14-26, TST14-36, TST14-46, TST14-56)\n
+          [configure 2 non-adjacent PMP entries (highest-numbered ones first) (avoid
+          the first PMP entry)\n  - use A=NAPOT for each PMP entry configuration\n\
+          \  - execute the 2 kinds of accesses (if possible to chain due to potential
+          access-fault exception)\n  - should be same 2 results]"
+- 002_N_isolated_entries: !Subfeature
+    name: 002_N_isolated_entries
+    tag: VP_PMP_F022_S003
+    next_elt_id: 1
+    display_order: 2
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F022_S003_I000
+        description: "{Page 57 Section \"3.7.1 Physical Memory Protection CSRs\" Volume
+          II: RISC-V Privileged Architectures V20211203}\n\nUp to 64 PMP entries are
+          supported"
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "choose any N PMP entries (2<N<8)\n\nreuse of VP_PMP_F022_S001_I000
+          feature description (Cf. Feature: \"multi entries NAPOT\")"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<< link to the old pmp_verif_plan.txt and pmp_verif_plan_features.txt
+          files (not up-to-date) : reading below not mandatory but may help for better
+          understanding >>\n\nTST22(group)\n  [create scenarios where PMP entries
+          with A=3 (NAPOT) and with/without matching permissions\n    - check only
+          NAPOT defined addresses are matching]\nTST22-3 = extension of compatible
+          group(N) of (TST13-11, TST13-21, TST13-31, TST13-41, TST13-51,\n       \
+          \                 \t\t\t\t \t\t\t\t\t\t\t TST13-12, TST13-22, TST13-32,
+          TST13-42, TST13-52,\n                        \t\t\t\t\t\t\t\t\t\t\t TST13-13,
+          TST13-23, TST13-33, TST13-43, TST13-53,\n                        \t\t\t\t
+          \t\t\t\t\t\t\t TST13-14, TST13-24, TST13-34, TST13-44, TST13-54,\n     \
+          \                   \t\t\t\t \t\t\t\t\t\t\t TST13-15, TST13-25, TST13-35,
+          TST13-45, TST13-55,\n                        \t\t\t\t\t\t\t\t\t\t\t TST13-16,
+          TST13-26, TST13-36, TST13-46, TST13-56,\n                        \t\t\t\t
+          \t\t\t\t\t\t\t TST14-11, TST14-21, TST14-31, TST14-41, TST14-51,\n     \
+          \                   \t\t\t\t \t\t\t\t\t\t\t TST14-12, TST14-22, TST14-32,
+          TST14-42, TST14-52,\n                        \t\t\t\t\t\t\t\t\t\t\t TST14-13,
+          TST14-23, TST14-33, TST14-43, TST14-53,\n                        \t\t\t\t
+          \t\t\t\t\t\t\t TST14-14, TST14-24, TST14-34, TST14-44, TST14-54,\n     \
+          \                   \t\t\t\t \t\t\t\t\t\t\t TST14-15, TST14-25, TST14-35,
+          TST14-45, TST14-55,\n                        \t\t\t\t\t\t\t\t\t\t\t TST14-16,
+          TST14-26, TST14-36, TST14-46, TST14-56)\n[configure N PMP entries (highest-numbered
+          ones first) (as non-adjacent as possible, and avoid the first PMP entry)\n\
+          \  - use A=NAPOT for each PMP entry configuration\n  - execute the N kinds
+          of accesses (if possible to chain due to potential access-fault exception)\n\
+          \  - should be same N results]"
+- 003_8_isolated_entries: !Subfeature
+    name: 003_8_isolated_entries
+    tag: VP_PMP_F022_S004
+    next_elt_id: 1
+    display_order: 3
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F022_S004_I000
+        description: "{Page 57 Section \"3.7.1 Physical Memory Protection CSRs\" Volume
+          II: RISC-V Privileged Architectures V20211203}\n\nUp to 64 PMP entries are
+          supported"
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "choose all 8 PMP entries\n\nreuse of VP_PMP_F022_S001_I000 feature
+          description (Cf. Feature: \"multi entries NAPOT\")"
+        pfc: 3
+        test_type: 3
+        cov_method: 0
+        cores: -1
+        coverage_loc: ''
+        comments: "<< link to the old pmp_verif_plan.txt and pmp_verif_plan_features.txt
+          files (not up-to-date) : reading below not mandatory but may help for better
+          understanding >>\n\nTST22(group)\n  [create scenarios where PMP entries
+          with A=3 (NAPOT) and with/without matching permissions\n    - check only
+          NAPOT defined addresses are matching]\nTST22-4 = extension of compatible
+          group(8) of (TST13-11, TST13-21, TST13-31, TST13-41, TST13-51,\n       \
+          \                 \t\t\t\t \t\t\t\t\t\t\t TST13-12, TST13-22, TST13-32,
+          TST13-42, TST13-52,\n                        \t\t\t\t\t\t\t\t\t\t\t TST13-13,
+          TST13-23, TST13-33, TST13-43, TST13-53,\n                        \t\t\t\t
+          \t\t\t\t\t\t\t TST13-14, TST13-24, TST13-34, TST13-44, TST13-54,\n     \
+          \                   \t\t\t\t \t\t\t\t\t\t\t TST13-15, TST13-25, TST13-35,
+          TST13-45, TST13-55,\n                        \t\t\t\t\t\t\t\t\t\t\t TST13-16,
+          TST13-26, TST13-36, TST13-46, TST13-56,\n                        \t\t\t\t
+          \t\t\t\t\t\t\t TST14-11, TST14-21, TST14-31, TST14-41, TST14-51,\n     \
+          \                   \t\t\t\t \t\t\t\t\t\t\t TST14-12, TST14-22, TST14-32,
+          TST14-42, TST14-52,\n                        \t\t\t\t\t\t\t\t\t\t\t TST14-13,
+          TST14-23, TST14-33, TST14-43, TST14-53,\n                        \t\t\t\t
+          \t\t\t\t\t\t\t TST14-14, TST14-24, TST14-34, TST14-44, TST14-54,\n     \
+          \                   \t\t\t\t \t\t\t\t\t\t\t TST14-15, TST14-25, TST14-35,
+          TST14-45, TST14-55,\n                        \t\t\t\t\t\t\t\t\t\t\t TST14-16,
+          TST14-26, TST14-36, TST14-46, TST14-56)\n[configure 8 PMP entries (highest-numbered
+          ones first)\n  - use A=NAPOT for each PMP entry configuration\n  - execute
+          the 8 kinds of accesses (if possible to chain due to potential access-fault
+          exception)\n  - should be same 8 results]"
+- 004_2_intersecting_entries_fail: !Subfeature
+    name: 004_2_intersecting_entries_fail
+    tag: VP_PMP_F022_S005
+    next_elt_id: 1
+    display_order: 4
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F022_S005_I000
+        description: "{Page 57 Section \"3.7.1 Physical Memory Protection CSRs\" Volume
+          II: RISC-V Privileged Architectures V20211203}\n\nUp to 64 PMP entries are
+          supported"
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "choose any 2 PMP entries\n\nCONFIGURATION and ACCESS (Cf. Feature:
+          \"cfg NAPOT access S/U/M\")\n    - for the least-numbered pmp entry, apply
+          any CONFIGURATION+ACCESS scenario with access-fault\n    - for the highest-numbered
+          pmp entry, apply any CONFIGURATION+ACCESS scenario without access-fault\n\
+          \    - make sure the pmp entries address ranges are overlapping/intersecting
+          (at least at 4 consecutive bytes)\n    - for each pmp entry, execute one
+          access in its associated pmp address region but outside the overlapping/intersecting
+          address range\n    - execute one additional access inside the overlapping/intersecting
+          address range\n    - NB: obviously, pmp entry configurations with different
+          access-modes (S/U vs. M) cannot be easily mixed in same test\n    - NB:
+          obviously, pmp entry configurations with different mstatus.MPRV/MPP values
+          cannot be mixed in same test\n\nCHECK\n    - for each pmp entry, access
+          outside the overlapping/intersecting address range should give the expected
+          CHECK result\n    - access inside the overlapping/intersecting address range
+          should generate the access-type related access-fault\n\nREUSABILITY\n  \
+          \  - if possible, the number of PMP entries (N) is a configurable parameter\n\
+          \    - so a single test function can be reused"
+        pfc: 3
+        test_type: 4
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<< link to the old pmp_verif_plan.txt and pmp_verif_plan_features.txt
+          files (not up-to-date) : reading below not mandatory but may help for better
+          understanding >>\n\nTST51(group) => FTR09-a, FTR09-b and FTR09-c\n  [create
+          scenarios where 2 PMP entries with same pmpaddr\n    - one without matching
+          permissions or with A=OFF\n    - one with matching permissions and A=NA4/NAPOT/TOR\n\
+          \    - any of them can be the lowest-numbered PMP entry]\nTST51-1\n[configure
+          2 PMP entries\n  - configure the lowest-numbered PMP entry with  (TST11-12,
+          TST11-22, TST11-32, TST11-42, TST11-52,\n                        \t\t\t\t
+          \t\t\t\t\t \t\t\t\t TST11-15, TST11-25, TST11-35, TST11-45, TST11-55,\n\
+          \                        \t\t\t\t\t\t\t\t\t \t\t\t\t TST12-12, TST12-22,
+          TST12-32, TST12-42, TST12-52,\n                        \t\t\t\t\t\t\t\t\t
+          \t\t\t\t TST12-15, TST12-25, TST12-35, TST12-45, TST12-55,\n           \
+          \                                        TST13-12, TST13-22, TST13-32, TST13-42,
+          TST13-52,\n                        \t\t\t\t\t\t\t\t\t \t\t\t\t TST13-15,
+          TST13-25, TST13-35, TST13-45, TST13-55,\n                        \t\t\t\t
+          \t\t\t\t\t \t\t\t\t TST14-12, TST14-22, TST14-32, TST14-42, TST14-52,\n\
+          \                        \t\t\t\t\t\t\t\t\t \t\t\t\t TST14-15, TST14-25,
+          TST14-35, TST14-45, TST14-55,\n                                        \
+          \           TST15-12, TST15-22, TST15-32, TST15-42, TST15-52,\n        \
+          \                \t\t\t\t\t\t\t\t\t \t\t\t\t TST15-15, TST15-25, TST15-35,
+          TST15-45, TST15-55,\n                        \t\t\t\t\t\t\t\t\t \t\t\t\t
+          TST16-12, TST16-22, TST16-32, TST16-42, TST16-52,\n                    \
+          \    \t\t\t\t\t\t\t\t\t \t\t\t\t TST16-15, TST16-25, TST16-35, TST16-45,
+          TST16-55,\n                                                   TST17-12,
+          TST17-22, TST17-32, TST17-42, TST17-52,\n                        \t\t\t\t
+          \t\t\t\t\t \t\t\t\t TST17-15, TST17-25, TST17-35, TST17-45, TST17-55,\n\
+          \                        \t\t\t\t\t\t\t\t\t \t\t\t\t TST18-12, TST18-22,
+          TST18-32, TST18-42, TST18-52,\n                        \t\t\t\t\t\t\t\t\t
+          \t\t\t\t TST18-15, TST18-25, TST18-35, TST18-45, TST18-55)\n  - configure
+          the highest-numbered PMP entry with  (TST11-11, TST11-21, TST11-31, TST11-41,
+          TST11-51,\n                        \t\t\t\t\t\t\t\t\t \t\t\t\t  TST11-14,
+          TST11-24, TST11-34, TST11-44, TST11-54,\n                        \t\t\t\t
+          \t\t\t\t\t \t\t\t\t  TST12-11, TST12-21, TST12-31, TST12-41, TST12-51,\n\
+          \                        \t\t\t\t\t\t\t\t\t \t\t\t\t  TST12-14, TST12-24,
+          TST12-34, TST12-44, TST12-54,\n                                        \
+          \            TST13-11, TST13-21, TST13-31, TST13-41, TST13-51,\n       \
+          \                 \t\t\t\t\t\t\t\t\t \t\t\t\t\tTST13-14, TST13-24, TST13-34,
+          TST13-44, TST13-54,\n                        \t\t\t\t\t\t\t\t\t \t\t\t\t
+          \tTST14-11, TST14-21, TST14-31, TST14-41, TST14-51,\n                  \
+          \      \t\t\t\t\t\t\t\t\t \t\t\t\t\tTST14-14, TST14-24, TST14-34, TST14-44,
+          TST14-54,\n                                                    TST15-11,
+          TST15-21, TST15-31, TST15-41, TST15-51,\n                        \t\t\t\t
+          \t\t\t\t\t \t\t\t\t  TST15-14, TST15-24, TST15-34, TST15-44, TST15-54,\n\
+          \                        \t\t\t\t\t\t\t\t\t \t\t\t\t  TST16-11, TST16-21,
+          TST16-31, TST16-41, TST16-51,\n                        \t\t\t\t\t\t\t\t\t
+          \t\t\t\t  TST16-14, TST16-24, TST16-34, TST16-44, TST16-54)\n  - execute
+          the associated access\n  - check associated access-fault exception raised]"
+- 005_2_intersecting_entries_succeed: !Subfeature
+    name: 005_2_intersecting_entries_succeed
+    tag: VP_PMP_F022_S006
+    next_elt_id: 1
+    display_order: 5
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F022_S006_I000
+        description: "{Page 57 Section \"3.7.1 Physical Memory Protection CSRs\" Volume
+          II: RISC-V Privileged Architectures V20211203}\n\nUp to 64 PMP entries are
+          supported"
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "choose any 2 PMP entries\n\nCONFIGURATION and ACCESS (Cf. Feature:
+          \"cfg NAPOT access S/U/M\")\n    - for the least-numbered pmp entry, apply
+          any CONFIGURATION+ACCESS scenario without access-fault\n    - for the highest-numbered
+          pmp entry, apply any CONFIGURATION+ACCESS scenario with access-fault\n \
+          \   - make sure the pmp entries address ranges are overlapping/intersecting
+          (at least at 4 consecutive bytes)\n    - for each pmp entry, execute one
+          access in its associated pmp address region but outside the overlapping/intersecting
+          address range\n    - execute one additional access inside the overlapping/intersecting
+          address range\n    - NB: obviously, pmp entry configurations with different
+          access-modes (S/U vs. M) cannot be easily mixed in same test\n    - NB:
+          obviously, pmp entry configurations with different mstatus.MPRV/MPP values
+          cannot be mixed in same test\n\nCHECK\n    - for each pmp entry, access
+          outside the overlapping/intersecting address range should give the expected
+          CHECK result\n    - access inside the overlapping/intersecting address range
+          should not generate any access-fault\n\nREUSABILITY\n    - if possible,
+          the number of PMP entries (N) is a configurable parameter\n    - so a single
+          test function can be reused"
+        pfc: 3
+        test_type: 4
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<< link to the old pmp_verif_plan.txt and pmp_verif_plan_features.txt
+          files (not up-to-date) : reading below not mandatory but may help for better
+          understanding >>\n\nTST51(group) => FTR09-a, FTR09-b and FTR09-c\n  [create
+          scenarios where 2 PMP entries with same pmpaddr\n    - one without matching
+          permissions or with A=OFF\n    - one with matching permissions and A=NA4/NAPOT/TOR\n\
+          \    - any of them can be the lowest-numbered PMP entry]\nTST51-2\n[configure
+          2 PMP entries\n  - configure the lowest-numbered PMP entry with  (TST11-11,
+          TST11-21, TST11-31, TST11-41, TST11-51,\n                        \t\t\t\t
+          \t\t\t\t\t \t\t\t\t TST11-14, TST11-24, TST11-34, TST11-44, TST11-54,\n\
+          \                        \t\t\t\t\t\t\t\t\t \t\t\t\t TST12-11, TST12-21,
+          TST12-31, TST12-41, TST12-51,\n                        \t\t\t\t\t\t\t\t\t
+          \t\t\t\t TST12-14, TST12-24, TST12-34, TST12-44, TST12-54,\n           \
+          \                                        TST13-11, TST13-21, TST13-31, TST13-41,
+          TST13-51,\n                        \t\t\t\t\t\t\t\t\t \t\t\t\t TST13-14,
+          TST13-24, TST13-34, TST13-44, TST13-54,\n                        \t\t\t\t
+          \t\t\t\t\t \t\t\t\t TST14-11, TST14-21, TST14-31, TST14-41, TST14-51,\n\
+          \                        \t\t\t\t\t\t\t\t\t \t\t\t\t TST14-14, TST14-24,
+          TST14-34, TST14-44, TST14-54,\n                                        \
+          \           TST15-11, TST15-21, TST15-31, TST15-41, TST15-51,\n        \
+          \                \t\t\t\t\t\t\t\t\t \t\t\t\t TST15-14, TST15-24, TST15-34,
+          TST15-44, TST15-54,\n                        \t\t\t\t\t\t\t\t\t \t\t\t\t
+          TST16-11, TST16-21, TST16-31, TST16-41, TST16-51,\n                    \
+          \    \t\t\t\t\t\t\t\t\t \t\t\t\t TST16-14, TST16-24, TST16-34, TST16-44,
+          TST16-54)\n  - configure the highest-numbered PMP entry with  (TST11-12,
+          TST11-22, TST11-32, TST11-42, TST11-52,\n                        \t\t\t\t
+          \t\t\t\t\t \t\t\t\t  TST11-15, TST11-25, TST11-35, TST11-45, TST11-55,\n\
+          \                        \t\t\t\t\t\t\t\t\t \t\t\t\t  TST12-12, TST12-22,
+          TST12-32, TST12-42, TST12-52,\n                        \t\t\t\t\t\t\t\t\t
+          \t\t\t\t  TST12-15, TST12-25, TST12-35, TST12-45, TST12-55,\n          \
+          \                                          TST13-12, TST13-22, TST13-32,
+          TST13-42, TST13-52,\n                        \t\t\t\t\t\t\t\t\t \t\t\t\t\
+          \  TST13-15, TST13-25, TST13-35, TST13-45, TST13-55,\n                 \
+          \       \t\t\t\t\t\t\t\t\t \t\t\t\t  TST14-12, TST14-22, TST14-32, TST14-42,
+          TST14-52,\n                        \t\t\t\t\t\t\t\t\t \t\t\t\t  TST14-15,
+          TST14-25, TST14-35, TST14-45, TST14-55,\n                              \
+          \                      TST15-12, TST15-22, TST15-32, TST15-42, TST15-52,\n\
+          \                        \t\t\t\t\t\t\t\t\t \t\t\t\t  TST15-15, TST15-25,
+          TST15-35, TST15-45, TST15-55,\n                        \t\t\t\t\t\t\t\t\t
+          \t\t\t\t  TST16-12, TST16-22, TST16-32, TST16-42, TST16-52,\n          \
+          \              \t\t\t\t\t\t\t\t\t \t\t\t\t  TST16-15, TST16-25, TST16-35,
+          TST16-45, TST16-55,\n                                                  \
+          \  TST17-12, TST17-22, TST17-32, TST17-42, TST17-52,\n                 \
+          \       \t\t\t\t\t\t\t\t\t \t\t\t\t  TST17-15, TST17-25, TST17-35, TST17-45,
+          TST17-55,\n                        \t\t\t\t\t\t\t\t\t \t\t\t\t  TST18-12,
+          TST18-22, TST18-32, TST18-42, TST18-52,\n                        \t\t\t\t
+          \t\t\t\t\t \t\t\t\t  TST18-15, TST18-25, TST18-35, TST18-45, TST18-55)\n\
+          \  - execute the associated access\n  - check no access-fault exception]"
+vptool_gitrev: '$Id: a8b561f68549658061625891c533e7d45996bc9e $'
+io_fmt_gitrev: '$Id: 61ab4e53ca49e21d56c416f0af0fa04d148e8001 $'
+config_gitrev: '$Id: 5192fced2cfa10be5e18e827922e31e7489ed987 $'
+ymlcfg_gitrev: '$Id: ce5e73bd5e8e0099334cb657afb7a624a99afbda $'

@@ -1,0 +1,224 @@
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+-19-FTR01
+
+FTR01-a
+[PMP allows physical memory access privileges (read, write, execute) to be specified for each physical memory region]
+
+FTR01-b
+[the standard PMP encoding supports regions as small as four bytes.]
+
+FTR01-c
+[Certain regions’ privileges can be hardwired: so only ever be visible in machine mode but in no lower-privilege layers.]
+FTR01-c-extended
+[PMP regions hardwired privileges can only be observed in M-mode]
+
+FTR01-d
+[PMP checks are applied to all accesses whose effective privilege mode is S or U]
+
+FTR01-e
+[PMP checks are also applied to page-table accesses for virtual-address translation, for which the effective privilege mode is S]
+
+FTR01-f (refers to FTR08-e1)
+[PMP checks may additionally apply to M-mode accesses, in which case the PMP registers themselves are locked, so that even M-mode software cannot change them until the hart is reset]
+
+FTR01-g1
+[by default (PMP entry not yet configured), S and U modes have no PMP permissions]
+FTR01-g2
+[by default (PMP entry not yet configured), M-mode has full permissions.]
+
+FTR01-h
+[PMP violations are always trapped precisely at the processor]
+
+////////////////////////////
+-21-FTR02
+
+FTR02-a
+[Up to 64 PMP entries are supported]
+
+FTR02-b1
+[the lowest-numbered PMP CSRs must be implemented first (does it mean programmed first)]
+FTR02-b2
+[All PMP CSR fields are WARL and may be read-only zero (does read-only zero mean not implemented?)]
+
+FTR02-d
+[PMP CSRs are only accessible to M-mode]
+
+FTR02-e
+[2 CSRs, pmpcfg0–pmpcfg1, hold the configurations pmp0cfg–pmp7cfg for the 8 PMP entries]
+
+
+////////////////////////////
+-23-FTR03
+
+FTR03-a
+[Each PMP address register encodes bits 33–2 of a 34-bit physical address]
+
+FTR03-b (NOT TOTALLY UNDERSTOOD!!!)
+[Not all physical address bits may be implemented, and so the pmpaddr registers are WARL]
+
+////////////////////////////
+-25-FTR04
+
+FTR04-a
+[The R, W, and X fields form a collective WARL field for which the combinations with R=0 and W=1 are reserved.]
+
+FTR04-b
+[Attempting to fetch an instruction from a PMP region that does not have execute permissions raises an instruction access-fault exception]
+
+FTR04-c
+[Attempting to execute a load or load-reserved instruction which accesses a physical address within a PMP region without read permissions raises a load access-fault exception]
+
+FTR04-d
+[Attempting to execute a store, store-conditional, or AMO instruction which accesses a physical address within a PMP region without write permissions raises a store access-fault exception]
+
+FTR04-e
+[if MXLEN is changed, the contents of the pmp(x)cfg fields are preserved, but appear in the pmpcfg(y) CSR prescribed by the new setting of MXLEN]
+FTR04-e-assumption
+[we assume MXLEN is always 32bits]
+
+////////////////////////////
+-27-FTR05
+
+FTR05-a
+[The A field in a PMP entry’s configuration register encodes the address-matching mode of the associated PMP address register]
+[When A=OFF, this PMP entry is disabled and matches no addresses]
+[When A=TOR, top boundary of an arbitrary range]
+[When A=NA4, naturally aligned four-byte regions]
+[When A=NAPOT, naturally aligned power-of-2 regions]
+[These modes support four-bytes granularity]
+
+////////////////////////////
+-28-FTR06
+
+FTR06-a
+[If PMP entry i’s A field is set to TOR, the entry matches any address y such that pmpaddr(i−1) ≤ y < pmpaddr(i) (irrespective of the value of pmpcfg(i−1))]
+
+FTR06-b
+[If PMP entry 0’s A field is set to TOR, zero is used for the lower bound, and so it matches any address y < pmpaddr(0)]
+
+FTR06-c
+[If pmpaddr(i−1) ≥ pmpaddr(i) and pmpcfg(i).A=TOR, then PMP entry i matches no addresses]
+
+////////////////////////////
+-30-FTR07
+
+FTR07-a
+[Although the PMP mechanism supports regions as small as 4 bytes, platforms may specify coarser PMP regions]
+[the PMP grain is 2^(G+2) bytes and must be the same across all PMP regions]
+
+FTR07-b
+[Software may determine the PMP granularity by writing zero to pmp(0)cfg, then writing all ones to pmpaddr(0), then reading back pmpaddr(0). If G is the index of the least-significant bit set, the PMP granularity is 2^(G+2) bytes]
+
+FTR07-c
+[If the current XLEN is greater than MXLEN, the PMP address registers are zero-extended from MXLEN to XLEN bits for the purposes of address matching]
+FTR07-c-assumption
+[we assume XLEN=MXLEN=32 bits]
+
+////////////////////////////
+-32-FTR08
+
+FTR08-a
+[The L bit indicates that the PMP entry is locked, i.e., writes to the configuration register and associated address registers are ignored]
+[If PMP entry (i) is locked, writes to pmp(i)cfg and pmpaddr(i) are ignored]
+
+FTR08-b
+[Locked PMP entries remain locked until the hart is reset]
+
+FTR08-c
+[if PMP entry (i) is locked and pmp(i)cfg.A is set to TOR, writes to pmpaddr(i-1) are ignored]
+
+FTR08-d
+[Setting the L bit locks the PMP entry even when the A field is set to OFF]
+
+FTR08-e
+[L bit indicates whether the R/W/X permissions are enforced on M-mode accesses]
+FTR08-e1 (refers to FTR01-f) (refers to FTR09-d2-1)
+[When the L bit is set, these permissions are enforced for all privilege modes]
+FTR08-e2-1 (refers to  FTR09-d1)
+[When the L bit is clear, any M-mode access matching the PMP entry will succeed]
+FTR08-e2-2 (refers to FTR09-d2-2)
+[When the L bit is clear, the R/W/X permissions apply only to S and U modes]
+
+////////////////////////////
+-34-FTR09
+
+FTR09-a
+[PMP entries are statically prioritized]
+[The lowest-numbered PMP entry that matches any byte of an access determines whether that access succeeds or fails]
+
+FTR09-b
+[The matching PMP entry must match all bytes of an access, or the access fails, irrespective of the L, R, W, and X bits]
+
+FTR09-c
+[If a PMP entry matches all bytes of an access, then the L, R, W, and X bits determine whether the access succeeds or fails]
+
+FTR09-d1 (refers to FTR08-e2-1)
+[If the L bit is clear and the privilege mode of the access is M, the access succeeds]
+FTR09-d2-1 (refers to FTR08-e1) (refers to FTR01-f)
+[if the L bit is set, then the access succeeds only if the R, W, or X bit corresponding to the access type is set]
+FTR09-d2-2 (L=0 refers to FTR08-e2-2)
+[if the privilege mode of the access is S or U (whatever L), then the access succeeds only if the R, W, or X bit corresponding to the access type is set]
+
+FTR09-e
+[If no PMP entry matches an M-mode access, the access succeeds]
+FTR09-e-question
+[what happens if no PMP entry is implemented ?]
+
+FTR09-f
+[If no PMP entry matches an S-mode or U-mode access, but at least one PMP entry is implemented, the access fails]
+FTR09-f-question
+[what happens if no PMP entry is implemented ?]
+
+FTR09-g
+[If at least one PMP entry is implemented, but all PMP entries’ A fields are set to OFF, then all S-mode and U-mode memory accesses will fail]
+FTR09-g-question (same as FTR09-f-question if 'memory access' is no different matter)
+[what happens if no PMP entry is implemented ?]
+
+question are the pmpaddr(i) aligned to 4bytes ?
+ - NA4: naturally aligned four-byte regions
+ - NAPOT: naturally aligned power-of-2 regions
+ - TOR:
+ These modes support four-byte granularity
+ Each PMP address register encodes bits 33–2 of a 34-bit physical address for RV32
+
+////////////////////////////
+-36-FTR10
+
+FTR10-a
+[An access-fault exception is generated if at least one access generated by an instruction fails, though other accesses generated by that instruction may succeed with visible side effects]
+
+FTR10-b
+[instructions that reference virtual memory are decomposed into multiple accesses]
+FTR10-b-assumption
+[we assume no virtual memory is implemented]
+[we assume page-based virtual memory is not implemented]
+
+FTR10-c
+[misaligned loads, stores, and instruction fetches may also be decomposed into multiple accesses, some of which may succeed before an access-fault exception occurs]
+
+////////////////////////////
+-38-FTR11
+FTR11-assumption
+[we assume no virtual memory is implemented]
+[we assume page-based virtual memory is not implemented]
+
+FTR11-a
+[instructions that access virtual memory may result in multiple physical-memory accesses, including implicit references to the page tables. The PMP checks apply to all of these accesses]
+
+FTR11-b
+[The effective privilege mode for implicit page-table accesses is S]
+
+FTR11-c
+[The PMP settings for the resulting physical address may be checked (and possibly cached) at any point between the address
+translation and the explicit memory access]
+
+FTR11-d
+[when the PMP settings are modified, M-mode software must synchronize the PMP settings with the virtual memory system and any PMP or address-translation caches]
+
+FTR11-e
+[If page-based virtual memory is not implemented, memory accesses check the PMP settings synchronously, so no SFENCE.VMA is needed]
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

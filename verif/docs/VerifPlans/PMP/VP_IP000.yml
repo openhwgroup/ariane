@@ -1,0 +1,358 @@
+!Feature
+next_elt_id: 15
+name: TRISTAN Restrictions
+id: 0
+display_order: 0
+subfeatures: !!omap
+- 000_general: !Subfeature
+    name: 000_general
+    tag: VP_PMP_F000_S000
+    next_elt_id: 1
+    display_order: 0
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F000_S000_I000
+        description: "\nthe verif plan is written for 32bits architecture only"
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: ''
+        pfc: -1
+        test_type: -1
+        cov_method: -1
+        cores: -1
+        coverage_loc: ''
+        comments: ''
+- 001_number of harts: !Subfeature
+    name: 001_number of harts
+    tag: VP_PMP_F000_S001
+    next_elt_id: 2
+    display_order: 1
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F000_S001_I000
+        description: "\nthere is only 1 hart in cv32a6"
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: ''
+        pfc: -1
+        test_type: -1
+        cov_method: -1
+        cores: -1
+        coverage_loc: ''
+        comments: ''
+- 002_mxlen: !Subfeature
+    name: 002_mxlen
+    tag: VP_PMP_F000_S002
+    next_elt_id: 1
+    display_order: 2
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F000_S002_I000
+        description: "\nMXLEN is always 32bits"
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: ''
+        pfc: -1
+        test_type: -1
+        cov_method: -1
+        cores: -1
+        coverage_loc: ''
+        comments: ''
+- 003_xlen: !Subfeature
+    name: 003_xlen
+    tag: VP_PMP_F000_S003
+    next_elt_id: 1
+    display_order: 3
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F000_S003_I000
+        description: "\nXLEN=MXLEN=32, so the PMP address registers are XLEN bits
+          long, so no zero-extension needed"
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: ''
+        pfc: -1
+        test_type: -1
+        cov_method: -1
+        cores: -1
+        coverage_loc: ''
+        comments: ''
+- 004_granularity: !Subfeature
+    name: 004_granularity
+    tag: VP_PMP_F000_S004
+    next_elt_id: 1
+    display_order: 4
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F000_S004_I000
+        description: "\nPMP granularity is 8 bytes (G=1), but the verif plan is written
+          to take G=0 into account (NA4)"
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: ''
+        pfc: -1
+        test_type: -1
+        cov_method: -1
+        cores: -1
+        coverage_loc: ''
+        comments: ''
+- 005_number of pmp entries: !Subfeature
+    name: 005_number of pmp entries
+    tag: VP_PMP_F000_S005
+    next_elt_id: 1
+    display_order: 5
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F000_S005_I000
+        description: "\nthere are 8 HW implemented PMP entries"
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: ''
+        pfc: -1
+        test_type: -1
+        cov_method: -1
+        cores: -1
+        coverage_loc: ''
+        comments: ''
+- 006_hardwired regions: !Subfeature
+    name: 006_hardwired regions
+    tag: VP_PMP_F000_S006
+    next_elt_id: 1
+    display_order: 6
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F000_S006_I000
+        description: "\nnone of the 8 PMP entries is hardwired privileges"
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: ''
+        pfc: -1
+        test_type: -1
+        cov_method: -1
+        cores: -1
+        coverage_loc: ''
+        comments: ''
+- 007_virtual memory: !Subfeature
+    name: 007_virtual memory
+    tag: VP_PMP_F000_S007
+    next_elt_id: 1
+    display_order: 7
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F000_S007_I000
+        description: "\nno virtual memory is implemented\nas a consequence no page-based
+          virtual memory is implemented"
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: ''
+        pfc: -1
+        test_type: -1
+        cov_method: -1
+        cores: -1
+        coverage_loc: ''
+        comments: ''
+- 008_physical memory regions: !Subfeature
+    name: 008_physical memory regions
+    tag: VP_PMP_F000_S008
+    next_elt_id: 1
+    display_order: 8
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F000_S008_I000
+        description: "\nthe list of all physical memory regions\n - system memory
+          regions\n - I-$\n - D-$\n - I-scratchpad (preload mode)\n - I-scratchpad
+          (functional mode)\n - D-scratchpad\n - ahb_periph"
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: ''
+        pfc: -1
+        test_type: -1
+        cov_method: -1
+        cores: -1
+        coverage_loc: ''
+        comments: ''
+- 009_pmp entry disabling: !Subfeature
+    name: 009_pmp entry disabling
+    tag: VP_PMP_F000_S009
+    next_elt_id: 1
+    display_order: 9
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F000_S009_I000
+        description: "\nwe assume an already written PMP entry (i) can be disabled\n\
+          \  - if L=0, by clearing pmpcfg(i)\n  - if L=1, only by hart reset"
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: ''
+        pfc: -1
+        test_type: -1
+        cov_method: -1
+        cores: -1
+        coverage_loc: ''
+        comments: ''
+- 010_access-faults (violations): !Subfeature
+    name: 010_access-faults (violations)
+    tag: VP_PMP_F000_S010
+    next_elt_id: 1
+    display_order: 10
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F000_S010_I000
+        description: "\nThe testbench/testcases architecture ensures that:\n - any
+          time there is an access-fault type, we check it matches the related access-type\n
+          - all violations are trapped at the processor\n\n{Page 56 Volume II: RISC-V
+          Privileged Architectures V20211203}\nPMP violations are always trapped precisely
+          at the processor"
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: ''
+        pfc: -1
+        test_type: -1
+        cov_method: -1
+        cores: -1
+        coverage_loc: ''
+        comments: ''
+- 011_testcases modularity: !Subfeature
+    name: 011_testcases modularity
+    tag: VP_PMP_F000_S011
+    next_elt_id: 1
+    display_order: 11
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F000_S011_I000
+        description: "\nThe verif plan is written assuming there is a way (like SystemVerilog
+          interaction):\n - to factorize the testcases in code blocks (in particular
+          configuration code block and access code block)\n - to randomize the code
+          blocks data and addresses\n - to randomize the sequence of code blocks"
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: ''
+        pfc: -1
+        test_type: -1
+        cov_method: -1
+        cores: -1
+        coverage_loc: ''
+        comments: ''
+- 012_access types: !Subfeature
+    name: 012_access types
+    tag: VP_PMP_F000_S012
+    next_elt_id: 1
+    display_order: 12
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F000_S012_I000
+        description: "at the time of writing,\nthe verif plan makes no distinction
+          between load and load-reserved instructions. they are gathered in the same
+          access type, subtleties unknown\nthe verif plan makes no distinction between
+          store, store-conditional, and AMO instructions. they are gathered in the
+          same access type, subtleties unknown"
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: ''
+        pfc: -1
+        test_type: -1
+        cov_method: -1
+        cores: -1
+        coverage_loc: ''
+        comments: ''
+- 013_multiple accesses instructions: !Subfeature
+    name: 013_multiple accesses instructions
+    tag: VP_PMP_F000_S013
+    next_elt_id: 1
+    display_order: 13
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F000_S013_I000
+        description: "\nwe assume there is no added value to test multiple accesses
+          instructions"
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: ''
+        pfc: -1
+        test_type: -1
+        cov_method: -1
+        cores: -1
+        coverage_loc: ''
+        comments: ''
+- 014_misaligned instructions: !Subfeature
+    name: 014_misaligned instructions
+    tag: VP_PMP_F000_S014
+    next_elt_id: 1
+    display_order: 14
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F000_S014_I000
+        description: "\nwe assume that instructions are mandatorily aligned"
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: ''
+        pfc: -1
+        test_type: -1
+        cov_method: -1
+        cores: -1
+        coverage_loc: ''
+        comments: ''
+vptool_gitrev: '$Id: a8b561f68549658061625891c533e7d45996bc9e $'
+io_fmt_gitrev: '$Id: 61ab4e53ca49e21d56c416f0af0fa04d148e8001 $'
+config_gitrev: '$Id: 5192fced2cfa10be5e18e827922e31e7489ed987 $'
+ymlcfg_gitrev: '$Id: ce5e73bd5e8e0099334cb657afb7a624a99afbda $'

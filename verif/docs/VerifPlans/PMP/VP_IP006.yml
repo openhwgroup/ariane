@@ -1,0 +1,82 @@
+!Feature
+next_elt_id: 2
+name: CSRs reserved values
+id: 6
+display_order: 6
+subfeatures: !!omap
+- 000_access with L=0: !Subfeature
+    name: 000_access with L=0
+    tag: VP_PMP_F006_S001
+    next_elt_id: 1
+    display_order: 0
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F006_S001_I000
+        description: "{Page 58 Volume II: RISC-V Privileged Architectures V20211203}\n
+          \nThe R, W, and X fields form a collective WARL field for which the combinations
+          with R=0 and W=1 are reserved."
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "repeat following sequence several times on some PMP entries\n\
+          \  - write totally random values to pmp(i)cfg and pmpaddr(i), but with L=0\n\
+          \  - check all pmp(i)cfg and pmpaddr(i) can be read back exactly the same
+          as written except:\n      - except with the reserved combinations [R=0 and
+          W=1]\n      - except with A=NA4 which must not be selectable as G>0"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<< link to the old pmp_verif_plan.txt and pmp_verif_plan_features.txt
+          files (not up-to-date) : reading below not mandatory but may help for better
+          understanding >>\n\nTST06 => FTR04-a\n[PMP CSR fields are WARL: PMP entry
+          combinations with R=0 and W=1 are reserved/can’t be read]\n[permissions
+          fields could be randomly written; should we try randomization ?]\n\nTST06-1
+          (HIGH-PRIO) extends TST02-4\n  - write totally random values to pmp(i)cfg
+          and pmpaddr(i)\n  - check all pmp(i)cfg and pmpaddr(i) can be read exactly
+          the same as written except for the reserved combinations with R=0 and W=1"
+- 001_access with L=1: !Subfeature
+    name: 001_access with L=1
+    tag: VP_PMP_F006_S002
+    next_elt_id: 1
+    display_order: 1
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F006_S002_I000
+        description: "{Page 58 Volume II: RISC-V Privileged Architectures V20211203}\n
+          \nThe R, W, and X fields form a collective WARL field for which the combinations
+          with R=0 and W=1 are reserved."
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "repeat following sequence several times on some PMP entries\n\
+          \  - write totally random values to pmp(i)cfg and pmpaddr(i), but with L=1\n\
+          \  - check all pmp(i)cfg and pmpaddr(i) can be read back exactly the same
+          as written:\n      - except with the reserved combinations [R=0 and W=1]\n\
+          \      - except with A=NA4 which must not be selectable as G>0\n  - apply
+          hart reset"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<< link to the old pmp_verif_plan.txt and pmp_verif_plan_features.txt
+          files (not up-to-date) : reading below not mandatory but may help for better
+          understanding >>\n\nTST06 => FTR04-a\n[PMP CSR fields are WARL: PMP entry
+          combinations with R=0 and W=1 are reserved/can’t be read]\n[permissions
+          fields could be randomly written; should we try randomization ?]\n\nTST06-2
+          (LOW-PRIO) extends TST03-5\n  - write totally random values to pmp(i)cfg
+          and pmpaddr(i)\n  - check all pmp(i)cfg and pmpaddr(i) can be read exactly
+          the same as written except for the reserved combinations with R=0 and W=1
+          (before hart reset)"
+vptool_gitrev: '$Id: a8b561f68549658061625891c533e7d45996bc9e $'
+io_fmt_gitrev: '$Id: 61ab4e53ca49e21d56c416f0af0fa04d148e8001 $'
+config_gitrev: '$Id: 5192fced2cfa10be5e18e827922e31e7489ed987 $'
+ymlcfg_gitrev: '$Id: ce5e73bd5e8e0099334cb657afb7a624a99afbda $'

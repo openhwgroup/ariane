@@ -964,7 +964,6 @@ def load_config(args, cwd):
 
   args.spike_params = get_full_spike_param_args(args.spike_params) if args.spike_params else ""
 
-
 def incorrect_version_exit(tool, tool_version, required_version):
   if tool == "Spike":
     logging.error(f"Please clean up Spike by executing: rm -r tools/spike verif/core-v-verif/vendor/riscv/riscv-isa-sim/build")

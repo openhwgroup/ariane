@@ -1,0 +1,159 @@
+!Feature
+next_elt_id: 4
+name: CSRs M-mode only
+id: 2
+display_order: 2
+subfeatures: !!omap
+- 000_configure_1_pmp_entry: !Subfeature
+    name: 000_configure_1_pmp_entry
+    tag: VP_PMP_F002_S001
+    next_elt_id: 1
+    display_order: 0
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F002_S001_I000
+        description: "{Section 3.7.1 Page 57 Volume II: RISC-V Privileged Architectures
+          V20211203}\n\nPMP CSRs are only accessible to M-mode"
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "configure 1 PMP entry (i) (the 1st one),\n  - check for each
+          PMP entry (i) reset value (read zero) by reading in M mode\n  - check for
+          each PMP entry (i) that pmp(i)cfg and pmpaddr(i) are not writable/readable
+          in S or U modes\n  - check for each PMP entry (i) that pmp(i)cfg and pmpaddr(i)
+          are writable/readable in M-mode only\n  - check for each PMP entry (i) that
+          pmp(i)cfg and pmpaddr(i) are not writable/readable in S or U modes"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<< link to the old pmp_verif_plan.txt and pmp_verif_plan_features.txt
+          files (not up-to-date) : reading below not mandatory but may help for better
+          understanding >>\n\nTST02(group) => FTR02-d\n  [check that all 8 HW implemented
+          PMP entries are writable/readable in M-mode (L=0)]\n  [check that no HW
+          implemented PMP entry are writable/readable in S or U modes (L=0)]\n   \
+          \ - random values may be used\n    - before any configuration (after hart
+          reset), check all pmp(i)cfg and pmpaddr(i) are M-mode read zero\n\nTST02-1
+          (HIGH-PRIO)\n[configure 1 PMP entry ([FTR02-b1]: maybe mandatorily the first
+          one): with L=0,\n  - if possible, the PMP entry number is a configurable
+          parameter\n  - check for PMP entry (i) where L=0 that pmp(i)cfg and pmpaddr(i)
+          are not writable/readable in S or U modes\n  - check for PMP entry (i) where
+          L=0 that pmp(i)cfg and pmpaddr(i) are writable/readable in M-mode only\n\
+          \  - check for PMP entry (i) where L=0 that pmp(i)cfg and pmpaddr(i) are
+          not writable/readable in S or U modes]"
+- 001_configure_2_pmp_entries: !Subfeature
+    name: 001_configure_2_pmp_entries
+    tag: VP_PMP_F002_S002
+    next_elt_id: 1
+    display_order: 1
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F002_S002_I000
+        description: "{Section 3.7.1 Page 57 Volume II: RISC-V Privileged Architectures
+          V20211203}\n\nPMP CSRs are only accessible to M-mode"
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "configure 2 PMP entries (the 2 first ones in incrementing order),\n\
+          \  - reuse of VP_PMP_F002_S001_I000 sequence"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<< link to the old pmp_verif_plan.txt and pmp_verif_plan_features.txt
+          files (not up-to-date) : reading below not mandatory but may help for better
+          understanding >>\n\nTST02(group) => FTR02-d\n  [check that all 8 HW implemented
+          PMP entries are writable/readable in M-mode (L=0)]\n  [check that no HW
+          implemented PMP entry are writable/readable in S or U modes (L=0)]\n   \
+          \ - random values may be used\n    - before any configuration (after hart
+          reset), check all pmp(i)cfg and pmpaddr(i) are M-mode read zero\n\nTST02-2
+          (LOW-PRIO) = 2 times reuse/call of TST02-1\n[configure 2 PMP entries ([FTR02-b1]:
+          maybe mandatorily the 2 first ones): both with L=0,\n  - check for PMP entry
+          (i) where L=0 that pmp(i)cfg and pmpaddr(i) are not writable/readable in
+          S or U modes\n  - check for PMP entry (i) where L=0 that pmp(i)cfg and pmpaddr(i)
+          are writable/readable in M-mode only\n  - check for PMP entry (i) where
+          L=0 that pmp(i)cfg and pmpaddr(i) are not writable/readable in S or U modes]"
+- 002_configure_N_pmp_entries: !Subfeature
+    name: 002_configure_N_pmp_entries
+    tag: VP_PMP_F002_S003
+    next_elt_id: 1
+    display_order: 2
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F002_S003_I000
+        description: "{Section 3.7.1 Page 57 Volume II: RISC-V Privileged Architectures
+          V20211203}\n\nPMP CSRs are only accessible to M-mode"
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "configure N PMP entries (the N first ones in incrementing order),\n\
+          \  - reuse of VP_PMP_F002_S001_I000 sequence"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<< link to the old pmp_verif_plan.txt and pmp_verif_plan_features.txt
+          files (not up-to-date) : reading below not mandatory but may help for better
+          understanding >>\n\nTST02(group) => FTR02-d\n  [check that all 8 HW implemented
+          PMP entries are writable/readable in M-mode (L=0)]\n  [check that no HW
+          implemented PMP entry are writable/readable in S or U modes (L=0)]\n   \
+          \ - random values may be used\n    - before any configuration (after hart
+          reset), check all pmp(i)cfg and pmpaddr(i) are M-mode read zero\n\nTST02-3
+          (LOW-PRIO) = N times reuse/call of TST02-1\n[configure N PMP entries ([FTR02-b1]:
+          maybe mandatorily the N first ones): all with L=0,\n  - check for PMP entry
+          (i) where L=0 that pmp(i)cfg and pmpaddr(i) are not writable/readable in
+          S or U modes\n  - check for PMP entry (i) where L=0 that pmp(i)cfg and pmpaddr(i)
+          are writable/readable in M-mode only\n  - check for PMP entry (i) where
+          L=0 that pmp(i)cfg and pmpaddr(i) are not writable/readable in S or U modes]"
+- 003_configure_8_pmp_entries: !Subfeature
+    name: 003_configure_8_pmp_entries
+    tag: VP_PMP_F002_S004
+    next_elt_id: 1
+    display_order: 3
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F002_S004_I000
+        description: "{Section 3.7.1 Page 57 Volume II: RISC-V Privileged Architectures
+          V20211203}\n\nPMP CSRs are only accessible to M-mode"
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: "configure all 8 PMP entries (in incrementing order),\n  - reuse
+          of VP_PMP_F002_S001_I000 sequence"
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<< link to the old pmp_verif_plan.txt and pmp_verif_plan_features.txt
+          files (not up-to-date) : reading below not mandatory but may help for better
+          understanding >>\n\nTST02(group) => FTR02-d\n  [check that all 8 HW implemented
+          PMP entries are writable/readable in M-mode (L=0)]\n  [check that no HW
+          implemented PMP entry are writable/readable in S or U modes (L=0)]\n   \
+          \ - random values may be used\n    - before any configuration (after hart
+          reset), check all pmp(i)cfg and pmpaddr(i) are M-mode read zero\n\nTST02-4
+          (HIGH-PRIO) = 8 times reuse/call of TST02-1\n[configure 8 PMP entries: all
+          with L=0,\n  - check for PMP entry (i) where L=0 that pmp(i)cfg and pmpaddr(i)
+          are not writable/readable in S or U modes\n  - check for PMP entry (i) where
+          L=0 that pmp(i)cfg and pmpaddr(i) are writable/readable in M-mode only\n\
+          \  - check for PMP entry (i) where L=0 that pmp(i)cfg and pmpaddr(i) are
+          not writable/readable in S or U modes]"
+vptool_gitrev: '$Id: a8b561f68549658061625891c533e7d45996bc9e $'
+io_fmt_gitrev: '$Id: 61ab4e53ca49e21d56c416f0af0fa04d148e8001 $'
+config_gitrev: '$Id: 5192fced2cfa10be5e18e827922e31e7489ed987 $'
+ymlcfg_gitrev: '$Id: ce5e73bd5e8e0099334cb657afb7a624a99afbda $'

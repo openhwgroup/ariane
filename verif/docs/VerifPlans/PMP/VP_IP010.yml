@@ -1,0 +1,128 @@
+!Feature
+next_elt_id: 4
+name: no cfg matching/defined
+id: 10
+display_order: 10
+subfeatures: !!omap
+- 000_no matching entry - M mode access: !Subfeature
+    name: 000_no matching entry - M mode access
+    tag: VP_PMP_F010_S001
+    next_elt_id: 1
+    display_order: 0
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F010_S001_I000
+        description: "{Page 60 Section \"Priority and Matching Logic\" Volume II:
+          RISC-V Privileged Architectures V20211203}\n\nIf no PMP entry matches an
+          M-mode access, the access succeeds"
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: check M-mode access succeeds if no PMP entry matches
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<< link to the old pmp_verif_plan.txt and pmp_verif_plan_features.txt
+          files (not up-to-date) : reading below not mandatory but may help for better
+          understanding >>\n\nFTR09-e\n[If no PMP entry matches an M-mode access,
+          the access succeeds]\n \nTST10-1 (HIGH-PRIO) => FTR09-e\n[check M-mode access
+          succeeds if no PMP entry matches]"
+- 001_no defined entry - M mode access: !Subfeature
+    name: 001_no defined entry - M mode access
+    tag: VP_PMP_F010_S002
+    next_elt_id: 1
+    display_order: 1
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F010_S002_I000
+        description: "{Page 60 Section \"Priority and Matching Logic\" Volume II:
+          RISC-V Privileged Architectures V20211203}\n\nIf no PMP entry matches an
+          M-mode access, the access succeeds\nQUESTION: what happens if no PMP entry
+          is implemented ?\nASSUMPTION: access succeeds"
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: check M-mode access succeeds if no PMP entry defined
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<< link to the old pmp_verif_plan.txt and pmp_verif_plan_features.txt
+          files (not up-to-date) : reading below not mandatory but may help for better
+          understanding >>\n\nFTR09-e-question\n[what happens if no PMP entry is implemented
+          ?]\n \nTST10-2 (HIGH-PRIO) => FTR09-e-question\n[check M-mode access succeeds
+          if no PMP entry defined]"
+- 002_no matching entry - S/U mode access: !Subfeature
+    name: 002_no matching entry - S/U mode access
+    tag: VP_PMP_F010_S003
+    next_elt_id: 1
+    display_order: 2
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F010_S003_I000
+        description: "{Page 60 Section \"Priority and Matching Logic\" Volume II:
+          RISC-V Privileged Architectures V20211203}\n\nIf no PMP entry matches an
+          S-mode or U-mode access, but at least one PMP entry is implemented, the
+          access fails"
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: check S or U mode access fails when no PMP entry matching and
+          at least one PMP entry implemented
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<< link to the old pmp_verif_plan.txt and pmp_verif_plan_features.txt
+          files (not up-to-date) : reading below not mandatory but may help for better
+          understanding >>\n\nFTR09-f\n[If no PMP entry matches an S-mode or U-mode
+          access, but at least one PMP entry is implemented, the access fails]\n\n
+          TST10-3 (HIGH-PRIO) => FTR09-f\n[check S or U mode access fails when no
+          PMP entry matching and at least one PMP entry implemented]"
+- 003_no defined entry - S/U mode access: !Subfeature
+    name: 003_no defined entry - S/U mode access
+    tag: VP_PMP_F010_S004
+    next_elt_id: 1
+    display_order: 3
+    items: !!omap
+    - '000': !VerifItem
+        name: '000'
+        tag: VP_PMP_F010_S004_I000
+        description: "{Page 60 Section \"Priority and Matching Logic\" Volume II:
+          RISC-V Privileged Architectures V20211203}\n\nIf no PMP entry matches an
+          S-mode or U-mode access, but at least one PMP entry is implemented, the
+          access fails\nQUESTION: what happens if no PMP entry is implemented ?\n
+          ASSUMPTION: access fails"
+        reqt_doc: ''
+        ref_mode: page
+        ref_page: ''
+        ref_section: ''
+        ref_viewer: firefox
+        verif_goals: check S or U mode access fails when no PMP entry implemented
+        pfc: 3
+        test_type: 3
+        cov_method: 1
+        cores: -1
+        coverage_loc: ''
+        comments: "<< link to the old pmp_verif_plan.txt and pmp_verif_plan_features.txt
+          files (not up-to-date) : reading below not mandatory but may help for better
+          understanding >>\n\nFTR09-f-question\n[what happens if no PMP entry is implemented
+          ?]\n \nTST10-4 (HIGH-PRIO) => FTR09-f-question\n[check S or U mode access
+          fails when no PMP entry implemented]"
+vptool_gitrev: '$Id: a8b561f68549658061625891c533e7d45996bc9e $'
+io_fmt_gitrev: '$Id: 61ab4e53ca49e21d56c416f0af0fa04d148e8001 $'
+config_gitrev: '$Id: 5192fced2cfa10be5e18e827922e31e7489ed987 $'
+ymlcfg_gitrev: '$Id: ce5e73bd5e8e0099334cb657afb7a624a99afbda $'
