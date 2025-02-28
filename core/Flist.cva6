@@ -197,4 +197,10 @@ ${CVA6_REPO_DIR}/core/cva6_mmu/cva6_ptw.sv
 ${CVA6_REPO_DIR}/core/cva6_mmu/cva6_tlb.sv
 ${CVA6_REPO_DIR}/core/cva6_mmu/cva6_shared_tlb.sv
 
+//Trace Interface 
+${CVA6_REPO_DIR}/core/cva6_te_connector/include/connector_pkg.sv
+${CVA6_REPO_DIR}/core/cva6_te_connector/rtl/cva6_te_connector.sv
+${CVA6_REPO_DIR}/core/cva6_te_connector/rtl/fsm.sv
+${CVA6_REPO_DIR}/core/cva6_te_connector/rtl/itype_detector.sv
+  
 // end of manifest
