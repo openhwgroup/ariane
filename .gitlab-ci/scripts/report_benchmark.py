@@ -23,8 +23,8 @@ valid_cycles = {
     "dhrystone_single": 24127,
     "coremark_dual": 1001191,
     "coremark_single": 1300030,
-    "dhrystone_cv32a65x": 31976,
-    "dhrystone_cv32a60x": 39449,
+    "dhrystone_cv32a65x": 30793,
+    "dhrystone_cv32a60x": 38556,
 }
 
 for arg in sys.argv[1:]:
