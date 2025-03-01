@@ -134,7 +134,8 @@ int __attribute__((weak)) main(int argc, char** argv)
 
 static void init_tls()
 {
-  register void* thread_pointer asm("tp");
+  register void *thread_pointer;
+  asm("mv %0, tp" : "=r"(thread_pointer));
   extern char _tdata_begin, _tdata_end, _tbss_end;
   size_t tdata_size = &_tdata_end - &_tdata_begin;
   memcpy(thread_pointer, &_tdata_begin, tdata_size);
