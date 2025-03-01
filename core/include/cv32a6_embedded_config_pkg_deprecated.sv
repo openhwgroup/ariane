@@ -62,6 +62,8 @@ package cva6_config_pkg;
   localparam CVA6ConfigRASDepth = 2;
   localparam CVA6ConfigBTBEntries = 0;
   localparam CVA6ConfigBHTEntries = 32;
+  localparam CVA6ConfigBHTHist = 3;
+  localparam config_pkg::bp_type_t CVA6ConfigBPType = config_pkg::BHT;
 
   localparam CVA6ConfigTvalEn = 0;
 
@@ -117,7 +119,9 @@ package cva6_config_pkg;
       ExceptionAddress: 64'h808,
       RASDepth: unsigned'(CVA6ConfigRASDepth),
       BTBEntries: unsigned'(CVA6ConfigBTBEntries),
+      BPType: CVA6ConfigBPType,
       BHTEntries: unsigned'(CVA6ConfigBHTEntries),
+      BHTHist: unsigned'(CVA6ConfigBHTHist),
       DmBaseAddress: 64'h0,
       TvalEn: bit'(CVA6ConfigTvalEn),
       DirectVecOnly: bit'(0),

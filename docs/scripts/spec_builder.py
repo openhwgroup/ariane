@@ -181,6 +181,7 @@ def main():
         file.append("../core/cva6.sv")
         file.append("../core/frontend/frontend.sv")
         file.append("../core/frontend/bht.sv")
+        file.append("../core/frontend/bht2lvl.sv")
         file.append("../core/frontend/btb.sv")
         file.append("../core/frontend/ras.sv")
         file.append("../core/frontend/instr_queue.sv")

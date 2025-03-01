@@ -22,6 +22,7 @@ ariane:
     src/ex_stage.sv,
     src/frontend/btb.sv,
     src/frontend/bht.sv,
+    src/frontend/bht2lvl.sv,
     src/frontend/ras.sv,
     src/frontend/instr_scan.sv,
     src/frontend/frontend.sv,

@@ -35,6 +35,12 @@ package config_pkg;
     HPDCACHE_WT_WB = 4
   } cache_type_t;
 
+  /// Branch predictor parameter
+  typedef enum logic {
+    BHT = 0,  // Bimodal predictor
+    PH_BHT = 1  // Private History Bimodal predictor
+  } bp_type_t;
+
   /// Data and Address length
   typedef enum logic [3:0] {
     ModeOff  = 0,
@@ -214,8 +220,12 @@ package config_pkg;
     int unsigned                 RASDepth;
     // Branch target buffer entries
     int unsigned                 BTBEntries;
+    // Branch predictor type
+    bp_type_t                    BPType;
     // Branch history entries
     int unsigned                 BHTEntries;
+    // Branch history bits
+    int unsigned                 BHTHist;
     // MMU instruction TLB entries
     int unsigned                 InstrTlbEntries;
     // MMU data TLB entries
@@ -299,7 +309,9 @@ package config_pkg;
     logic [63:0] ExceptionAddress;
     int unsigned RASDepth;
     int unsigned BTBEntries;
+    bp_type_t    BPType;
     int unsigned BHTEntries;
+    int unsigned BHTHist;
     int unsigned InstrTlbEntries;
     int unsigned DataTlbEntries;
     bit unsigned UseSharedTlb;

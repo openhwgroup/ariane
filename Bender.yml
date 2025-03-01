@@ -122,6 +122,7 @@ sources:
       # Frontend (i.e., fetch, decode, dispatch)
       - core/frontend/btb.sv
       - core/frontend/bht.sv
+      - core/frontend/bht2lvl.sv
       - core/frontend/ras.sv
       - core/frontend/instr_scan.sv
       - core/frontend/instr_queue.sv

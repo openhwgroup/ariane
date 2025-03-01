@@ -144,6 +144,7 @@ ${CVA6_REPO_DIR}/core/cva6_fifo_v3.sv
 // What is "frontend"?
 ${CVA6_REPO_DIR}/core/frontend/btb.sv
 ${CVA6_REPO_DIR}/core/frontend/bht.sv
+${CVA6_REPO_DIR}/core/frontend/bht2lvl.sv
 ${CVA6_REPO_DIR}/core/frontend/ras.sv
 ${CVA6_REPO_DIR}/core/frontend/instr_scan.sv
 ${CVA6_REPO_DIR}/core/frontend/instr_queue.sv
