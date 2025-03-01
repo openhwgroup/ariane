@@ -1767,6 +1767,7 @@ module cva6
       .exception_t        (exception_t),
       .scoreboard_entry_t (scoreboard_entry_t),
       .lsu_ctrl_t         (lsu_ctrl_t),
+      .bp_resolve_t       (bp_resolve_t),
       .rvfi_probes_instr_t(rvfi_probes_instr_t),
       .rvfi_probes_csr_t  (rvfi_probes_csr_t),
       .rvfi_probes_t      (rvfi_probes_t)
@@ -1802,7 +1803,7 @@ module cva6
 
       .csr_i(rvfi_csr),
       .irq_i(irq_i),
-
+      .resolved_branch_i(resolved_branch),
       .rvfi_probes_o(rvfi_probes_o)
 
   );

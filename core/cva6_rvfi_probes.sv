@@ -16,6 +16,7 @@ module cva6_rvfi_probes
     parameter type exception_t = logic,
     parameter type scoreboard_entry_t = logic,
     parameter type lsu_ctrl_t = logic,
+    parameter type bp_resolve_t = logic,
     parameter type rvfi_probes_instr_t = logic,
     parameter type rvfi_probes_csr_t = logic,
     parameter type rvfi_probes_t = logic
@@ -52,6 +53,7 @@ module cva6_rvfi_probes
 
     input rvfi_probes_csr_t csr_i,
     input logic [1:0] irq_i,
+    input bp_resolve_t resolved_branch_i,
 
     output rvfi_probes_t rvfi_probes_o
 );
@@ -81,6 +83,7 @@ module cva6_rvfi_probes
 
     instr.ex_commit_cause = ex_commit_i.cause;
     instr.ex_commit_valid = ex_commit_i.valid;
+    instr.tval = ex_commit_i.tval;
 
     instr.priv_lvl = priv_lvl_i;
 
@@ -108,6 +111,9 @@ module cva6_rvfi_probes
     instr.commit_drop = commit_drop_i;
     instr.commit_ack = commit_ack_i;
     instr.wdata = wdata_i;
+
+    instr.branch_valid = resolved_branch_i.valid;
+    instr.is_taken = resolved_branch_i.is_taken;
 
     csr = csr_i;
     csr.mip_q = csr_i.mip_q | ({{CVA6Cfg.XLEN - 1{1'b0}}, CVA6Cfg.RVS && irq_i[1]} << riscv::IRQ_S_EXT);

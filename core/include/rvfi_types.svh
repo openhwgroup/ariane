@@ -126,6 +126,9 @@
   logic [Cfg.PLEN-1:0] mem_paddr; \
   logic debug_mode; \
   logic [Cfg.NrCommitPorts-1:0][Cfg.XLEN-1:0] wdata; \
+  logic branch_valid; \
+  logic is_taken; \
+  logic tval; \
 }
 
 `define RVFI_PROBES_CSR_T(Cfg) struct packed { \
